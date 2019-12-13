@@ -1,3 +1,5 @@
+# custom
+.envVarsHelper.sh
 # Local .terraform directories
 **/.terraform/*
 
