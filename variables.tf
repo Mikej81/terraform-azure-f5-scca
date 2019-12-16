@@ -11,8 +11,8 @@ variable rest_vm_as3_file { default = "vm_as3_data.json" }
 variable prefix { default = "scca" }
 variable uname { default = "xadmin" }
 variable upassword { default = "2018F5Networks!!" }
-variable location { default = "eastus" }
-variable region { default = "East US" }
+variable location { default = "usgovvirginia" }
+variable region { default = "USGov Virginia" }
 
 # NETWORK
 variable cidr { default = "10.90.0.0/16" }

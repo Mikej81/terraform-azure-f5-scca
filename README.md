@@ -57,5 +57,7 @@ Ex.
   ```
 - In order to pass traffic from your clients to the servers, after launching the template, you must create virtual server(s) on the BIG-IP VE.  See [Creating a virtual server](#creating-virtual-servers-on-the-big-ip-ve).
 - See the **[Configuration Example](#configuration-example)** section for a configuration diagram and description for this solution.
+
+* Location and Region are currently hard coded, make sure to fix those..
  
 cleaning up PIP mappings for DO / AS3 since no PIPs...

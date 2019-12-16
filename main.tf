@@ -351,6 +351,7 @@ data "template_file" "vm_onboard" {
     onboard_log    = "${var.onboard_log}"
   }
 }
+#test
 
 data "template_file" "vm01_do_json" {
   template = "${file("${path.module}/cluster.json")}"
