@@ -46,7 +46,7 @@ destroy:
 	sh -c "terraform destroy --auto-approve"
 
 
-test: test1
+test: build test1
 
 test1:
 	@echo "terraform install"
