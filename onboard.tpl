@@ -102,3 +102,36 @@ do
   sleep 10
 done
 
+# vars
+cat << 'EOF' > /config/cloud/do1.json
+    ${do_body_01}
+EOF
+cat << 'EOF' > /config/cloud/do2.json
+    ${do_body_02}
+EOF
+cat << 'EOF' > /config/cloud/as3.json
+    ${as3_body}
+EOF
+DO_BODY_01="/config/cloud/do1.json"
+DO_BODY_02="/config/cloud/do2.json"
+AS3_BODY="/config/cloud/as3.json"
+
+DO_URL_POST="/mgmt/shared/declarative-onboarding"
+AS3_URL_POST="/mgmt/shared/appsvcs/declare"
+# run DO
+if [ $1 == "1" ]; then
+    # DO_BODY=`cat /config/cloud/do1.json`
+    restcurl -u $CREDS -X POST "mgmt/shared/declarative-onboarding" -d $DO_BODY_01
+else
+    # DO_BODY=`cat /config/cloud/do2.json`
+    restcurl -u $CREDS -X POST "mgmt/shared/declarative-onboarding" -d $DO_BODY_02
+fi
+#curl -k -X POST https://localhost:8100$DO_URL_POST?async=true -u $CREDS -d @$DO_BODY_01 
+# run as3
+# AS3_BODY=`cat /config/cloud/as3.json`
+restcurl -u $CREDS -X POST "/mgmt/shared/appsvcs/declare" -d $AS3_BODY
+# curl -k -X POST https://localhost:8100$AS3_URL_POST?async=true -u $CREDS -d @$AS3_BODY
+#
+# rm -f /config/cloud/do1.json
+# rm -f /config/cloud/do2.json
+# rm -f /config/cloud/as3.json

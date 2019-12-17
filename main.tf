@@ -187,6 +187,28 @@ resource "azurerm_network_security_group" "main" {
   }
 }
 
+# Create a Public IP for the Virtual Machines
+resource "azurerm_public_ip" "f5vmpip01" {
+  name                = "${var.prefix}-vm01-mgmt-pip01"
+  location            = "${azurerm_resource_group.main.location}"
+  resource_group_name = "${azurerm_resource_group.main.name}"
+  allocation_method   = "Dynamic"
+
+  tags = {
+    Name = "${var.prefix}-f5vm-public-ip"
+  }
+}
+resource "azurerm_public_ip" "f5vmpip02" {
+  name                = "${var.prefix}-vm02-mgmt-pip02"
+  location            = "${azurerm_resource_group.main.location}"
+  resource_group_name = "${azurerm_resource_group.main.name}"
+  allocation_method   = "Dynamic"
+
+  tags = {
+    Name = "${var.prefix}-f5vm-public-ip"
+  }
+}
+
 # Create the first network interface card for Management 
 resource "azurerm_network_interface" "vm01-mgmt-nic" {
   name                      = "${var.prefix}-vm01-mgmt-nic"
@@ -199,6 +221,7 @@ resource "azurerm_network_interface" "vm01-mgmt-nic" {
     subnet_id                     = "${azurerm_subnet.mgmt.id}"
     private_ip_address_allocation = "Static"
     private_ip_address            = "${var.f5vm01mgmt}"
+    public_ip_address_id          = "${azurerm_public_ip.f5vmpip01.id}"
   }
 
   tags = {
@@ -222,6 +245,7 @@ resource "azurerm_network_interface" "vm02-mgmt-nic" {
     subnet_id                     = "${azurerm_subnet.mgmt.id}"
     private_ip_address_allocation = "Static"
     private_ip_address            = "${var.f5vm02mgmt}"
+    public_ip_address_id          = "${azurerm_public_ip.f5vmpip02.id}"
   }
 
   tags = {
@@ -349,6 +373,9 @@ data "template_file" "vm_onboard" {
     AS3_URL        = "${var.AS3_URL}"
     libs_dir       = "${var.libs_dir}"
     onboard_log    = "${var.onboard_log}"
+    do_body_01     = "${data.template_file.vm01_do_json.rendered}"
+    do_body_02     = "${data.template_file.vm02_do_json.rendered}"
+    as3_body       = "${data.template_file.as3_json.rendered}"
   }
 }
 #test
@@ -579,7 +606,7 @@ resource "azurerm_virtual_machine_extension" "f5vm01-run-startup-cmd" {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "bash /var/lib/waagent/CustomData; curl -k -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; sleep 10; curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm01_do_file}; curl -k -X ${var.rest_as3_method} https://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}"
+        "commandToExecute": "bash /var/lib/waagent/CustomData 1"
     }
   SETTINGS
 
@@ -605,7 +632,7 @@ resource "azurerm_virtual_machine_extension" "f5vm02-run-startup-cmd" {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "bash /var/lib/waagent/CustomData; curl -k -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; sleep 10; curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm01_do_file}; curl -k -X ${var.rest_as3_method} https://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}"
+        "commandToExecute": "bash /var/lib/waagent/CustomData 2"
     }
   SETTINGS
 
