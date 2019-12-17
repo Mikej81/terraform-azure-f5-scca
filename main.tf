@@ -682,16 +682,6 @@ resource "null_resource" "f5vm02-run-REST" {
 }
 
 ## OUTPUTS ###
-data "azurerm_public_ip" "vm01mgmtpip" {
-  name                = "${azurerm_public_ip.vm01mgmtpip.name}"
-  resource_group_name = "${azurerm_resource_group.main.name}"
-  depends_on          = ["azurerm_virtual_machine_extension.f5vm01-run-startup-cmd"]
-}
-data "azurerm_public_ip" "vm02mgmtpip" {
-  name                = "${azurerm_public_ip.vm02mgmtpip.name}"
-  resource_group_name = "${azurerm_resource_group.main.name}"
-  depends_on          = ["azurerm_virtual_machine_extension.f5vm02-run-startup-cmd"]
-}
 data "azurerm_public_ip" "lbpip" {
   name                = "${azurerm_public_ip.lbpip.name}"
   resource_group_name = "${azurerm_resource_group.main.name}"
