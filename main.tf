@@ -573,16 +573,13 @@ resource "azurerm_virtual_machine_extension" "f5vm01-run-startup-cmd" {
   location             = "${var.region}"
   resource_group_name  = "${azurerm_resource_group.main.name}"
   virtual_machine_name = "${azurerm_virtual_machine.f5vm01.name}"
-  publisher            = "Microsoft.OSTCExtensions"
-  type                 = "CustomScriptForLinux"
-  type_handler_version = "1.2"
-  # publisher            = "Microsoft.Azure.Extensions"
-  # type                 = "CustomScript"
-  # type_handler_version = "2.0"
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.0"
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "bash /var/lib/waagent/CustomData"
+        "commandToExecute": "bash /var/lib/waagent/CustomData; curl -k -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; sleep 10; curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm01_do_file}; curl -k -X ${var.rest_as3_method} https://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}"
     }
   SETTINGS
 
@@ -602,16 +599,13 @@ resource "azurerm_virtual_machine_extension" "f5vm02-run-startup-cmd" {
   location             = "${var.region}"
   resource_group_name  = "${azurerm_resource_group.main.name}"
   virtual_machine_name = "${azurerm_virtual_machine.f5vm02.name}"
-  publisher            = "Microsoft.OSTCExtensions"
-  type                 = "CustomScriptForLinux"
-  type_handler_version = "1.2"
-  # publisher            = "Microsoft.Azure.Extensions"
-  # type                 = "CustomScript"
-  # type_handler_version = "2.0"
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.0"
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "bash /var/lib/waagent/CustomData"
+        "commandToExecute": "bash /var/lib/waagent/CustomData; curl -k -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; sleep 10; curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm01_do_file}; curl -k -X ${var.rest_as3_method} https://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}"
     }
   SETTINGS
 
@@ -639,93 +633,6 @@ resource "local_file" "vm02_do_file" {
 resource "local_file" "vm_as3_file" {
   content  = "${data.template_file.as3_json.rendered}"
   filename = "${path.module}/vm_as3_data.json"
-}
-
-resource "null_resource" "f5vm01-run-REST" {
-  depends_on = ["azurerm_virtual_machine_extension.f5vm01-run-startup-cmd"]
-  # Running DO REST API
-  provisioner "remote-exec" {
-
-    connection {
-      type  = "ssh"
-      agent = false
-      host  = ""
-      user     = "${var.uname}"
-      password = "${var.upassword}"
-      timeout  = "5m"
-    }
-    #command = <<-EOF
-      #!/bin/bash
-      inline = [
-      "curl -k -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}",
-      "sleep 10",
-      "curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm01_do_file}"
-      ]
-    #EOF
-  }
-
-  # Running AS3 REST API
-  provisioner "remote-exec" {
-
-        connection {
-      type  = "ssh"
-      agent = false
-      host  = ""
-      user     = "${var.uname}"
-      password = "${var.upassword}"
-      timeout  = "5m"
-    }
-    #command = <<-EOF
-      #!/bin/bash
-      #      sleep 15
-      inline = [
-      "curl -k -X ${var.rest_as3_method} https://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}"
-      ]
-    #EOF
-  }
-}
-
-resource "null_resource" "f5vm02-run-REST" {
-  depends_on = ["azurerm_virtual_machine_extension.f5vm02-run-startup-cmd"]
-  # Running DO REST API
-  provisioner "remote-exec" {
-
-        connection {
-      type  = "ssh"
-      agent = false
-      host  = ""
-      user     = "${var.uname}"
-      password = "${var.upassword}"
-      timeout  = "5m"
-    }
-    #command = <<-EOF
-      #!/bin/bash
-      #  sleep 5
-      inline = [
-      "curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm02_do_file}"
-      ]
-    #EOF
-  }
-
-  # Running AS3 REST API
-  provisioner "remote-exec" {
-
-        connection {
-      type  = "ssh"
-      agent = false
-      host  = ""
-      user     = "${var.uname}"
-      password = "${var.upassword}"
-      timeout  = "5m"
-    }
-    #command = <<-EOF
-      #!/bin/bash
-      #      sleep 10
-      inline = [
-      "curl -k -X ${var.rest_as3_method} https://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}"
-      ]
-      #EOF
-  }
 }
 
 ## OUTPUTS ###
