@@ -351,6 +351,7 @@ data "template_file" "vm_onboard" {
     onboard_log    = "${var.onboard_log}"
   }
 }
+#test
 
 data "template_file" "vm01_do_json" {
   template = "${file("${path.module}/cluster.json")}"
@@ -643,53 +644,88 @@ resource "local_file" "vm_as3_file" {
 resource "null_resource" "f5vm01-run-REST" {
   depends_on = ["azurerm_virtual_machine_extension.f5vm01-run-startup-cmd"]
   # Running DO REST API
-  #provisioner "local-exec" {
+  provisioner "remote-exec" {
+
+    connection {
+      type  = "ssh"
+      agent = false
+      host  = ""
+      user     = "${var.uname}"
+      password = "${var.upassword}"
+      timeout  = "5m"
+    }
     #command = <<-EOF
       #!/bin/bash
-      #curl -k -X GET https://${data.azurerm_public_ip.vm01mgmtpip.ip_address}${var.rest_do_uri} \
-      #        -u ${var.uname}:${var.upassword}
-      #      sleep 10
-      #curl -k -X ${var.rest_do_method} https://${data.azurerm_public_ip.vm01mgmtpip.ip_address}${var.rest_do_uri} \
-      #        -u ${var.uname}:${var.upassword} \
-      #        -d @${var.rest_vm01_do_file}
+      inline = [
+      "curl -k -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}",
+      "sleep 10",
+      "curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm01_do_file}"
+      ]
     #EOF
-  #}
+  }
 
   # Running AS3 REST API
-  #provisioner "local-exec" {
+  provisioner "remote-exec" {
+
+        connection {
+      type  = "ssh"
+      agent = false
+      host  = ""
+      user     = "${var.uname}"
+      password = "${var.upassword}"
+      timeout  = "5m"
+    }
     #command = <<-EOF
       #!/bin/bash
       #      sleep 15
-      #curl -k -X ${var.rest_as3_method} https://${data.azurerm_public_ip.vm01mgmtpip.ip_address}${var.rest_as3_uri} \
-      #        -u ${var.uname}:${var.upassword} \
-      #        -d @${var.rest_vm_as3_file}
+      inline = [
+      "curl -k -X ${var.rest_as3_method} https://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}"
+      ]
     #EOF
-  #}
+  }
 }
 
 resource "null_resource" "f5vm02-run-REST" {
   depends_on = ["azurerm_virtual_machine_extension.f5vm02-run-startup-cmd"]
   # Running DO REST API
-  #provisioner "local-exec" {
+  provisioner "remote-exec" {
+
+        connection {
+      type  = "ssh"
+      agent = false
+      host  = ""
+      user     = "${var.uname}"
+      password = "${var.upassword}"
+      timeout  = "5m"
+    }
     #command = <<-EOF
       #!/bin/bash
-#      sleep 5
-      #curl -k -X ${var.rest_do_method} https://${data.azurerm_public_ip.vm02mgmtpip.ip_address}${var.rest_do_uri} \
-      #        -u ${var.uname}:${var.upassword} \
-      #        -d @${var.rest_vm02_do_file}
+      #  sleep 5
+      inline = [
+      "curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm02_do_file}"
+      ]
     #EOF
-  #}
+  }
 
   # Running AS3 REST API
-  #provisioner "local-exec" {
+  provisioner "remote-exec" {
+
+        connection {
+      type  = "ssh"
+      agent = false
+      host  = ""
+      user     = "${var.uname}"
+      password = "${var.upassword}"
+      timeout  = "5m"
+    }
     #command = <<-EOF
       #!/bin/bash
-#      sleep 10
-      #curl -k -X ${var.rest_as3_method} https://${data.azurerm_public_ip.vm02mgmtpip.ip_address}${var.rest_as3_uri} \
-      #        -u ${var.uname}:${var.upassword} \
-      #        -d @${var.rest_vm_as3_file}
-    #EOF
-  #}
+      #      sleep 10
+      inline = [
+      "curl -k -X ${var.rest_as3_method} https://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}"
+      ]
+      #EOF
+  }
 }
 
 ## OUTPUTS ###
