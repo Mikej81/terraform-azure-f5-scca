@@ -636,51 +636,6 @@ resource "local_file" "vm_as3_file" {
   filename    = "${path.module}/vm_as3_data.json"
 }
 
-resource "null_resource" "f5vm01-run-REST" {
-  depends_on    = ["azurerm_virtual_machine_extension.f5vm01-run-startup-cmd"]
-  # Running DO REST API
-  provisioner "local-exec" {
-    command = <<-EOF
-      #!/bin/bash
-      #curl -k -X GET https://${data.azurerm_public_ip.vm01mgmtpip.ip_address}${var.rest_do_uri} -u ${var.uname}:${var.upassword}
-      #sleep 10
-      #curl -k -X ${var.rest_do_method} https://${data.azurerm_public_ip.vm01mgmtpip.ip_address}${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm01_do_file}
-    EOF
-  }
-
-  # Running AS3 REST API
-  provisioner "local-exec" {
-    command = <<-EOF
-      #!/bin/bash
-      #      sleep 15
-      #curl -k -X ${var.rest_as3_method} https://${data.azurerm_public_ip.vm01mgmtpip.ip_address}${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}
-    EOF
-  }
-}
-
-resource "null_resource" "f5vm02-run-REST" {
-  depends_on    = ["azurerm_virtual_machine_extension.f5vm02-run-startup-cmd"]
-  # Running DO REST API
-  provisioner "local-exec" {
-    command = <<-EOF
-      #!/bin/bash
-      #      sleep 5
-      #curl -k -X ${var.rest_do_method} https://${data.azurerm_public_ip.vm02mgmtpip.ip_address}${var.rest_do_uri} \
-      #        -u ${var.uname}:${var.upassword} \
-      #        -d @${var.rest_vm02_do_file}
-    EOF
-  }
-
-  # Running AS3 REST API
-  provisioner "local-exec" {
-    command = <<-EOF
-      #!/bin/bash
-      #      sleep 10
-      #curl -k -X ${var.rest_as3_method} https://${data.azurerm_public_ip.vm02mgmtpip.ip_address}${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}
-    EOF
-  }
-}
-
 ## OUTPUTS ###
 data "azurerm_public_ip" "lbpip" {
   name                = "${azurerm_public_ip.lbpip.name}"
@@ -696,10 +651,10 @@ output "ALB_app1_pip" { value = "${data.azurerm_public_ip.lbpip.ip_address}" }
 
 output "f5vm01_id" { value = "${azurerm_virtual_machine.f5vm01.id}"  }
 output "f5vm01_mgmt_private_ip" { value = "${azurerm_network_interface.vm01-mgmt-nic.private_ip_address}" }
-output "f5vm01_mgmt_public_ip" { value = "${data.azurerm_public_ip.vm01mgmtpip.ip_address}" }
+#output "f5vm01_mgmt_public_ip" { value = "${data.azurerm_public_ip.vm01mgmtpip.ip_address}" }
 output "f5vm01_ext_private_ip" { value = "${azurerm_network_interface.vm01-ext-nic.private_ip_address}" }
 
 output "f5vm02_id" { value = "${azurerm_virtual_machine.f5vm02.id}"  }
 output "f5vm02_mgmt_private_ip" { value = "${azurerm_network_interface.vm02-mgmt-nic.private_ip_address}" }
-output "f5vm02_mgmt_public_ip" { value = "${data.azurerm_public_ip.vm02mgmtpip.ip_address}" }
+#output "f5vm02_mgmt_public_ip" { value = "${data.azurerm_public_ip.vm02mgmtpip.ip_address}" }
 output "f5vm02_ext_private_ip" { value = "${azurerm_network_interface.vm02-ext-nic.private_ip_address}" }
