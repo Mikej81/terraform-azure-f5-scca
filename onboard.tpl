@@ -44,6 +44,10 @@ DO_FN=$(basename "$DO_URL")
 AS3_URL='${AS3_URL}'
 AS3_FN=$(basename "$AS3_URL")
 
+DO1='${DO1_Document}'
+DO2='${DO2_Document}'
+AS3='${AS3_Document}'
+
 mkdir -p ${libs_dir}
 
 echo -e "\n"$(date) "Download Declarative Onboarding Pkg"
