@@ -614,7 +614,7 @@ resource "azurerm_virtual_machine_extension" "f5vm01-run-startup-cmd" {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "bash /var/lib/waagent/CustomData; echo -e $DO1 base64 -d > do1.json; echo -e $AS3 base64 -d > AS3.json; curl -k -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d do1.json"
+        "commandToExecute": "bash /var/lib/waagent/CustomData; echo -e $DO1 base64 -d > do1.json; echo -e $AS3 base64 -d > AS3.json; restcurl -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; restcurl -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d do1.json"
     }
   SETTINGS
 
@@ -640,7 +640,7 @@ resource "azurerm_virtual_machine_extension" "f5vm02-run-startup-cmd" {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "bash /var/lib/waagent/CustomData; echo -e $DO2 base64 -d > do2.json; curl -k -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d do2.json"
+        "commandToExecute": "bash /var/lib/waagent/CustomData; echo -e $DO2 base64 -d > do2.json; restcurl -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; restcurl -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d do2.json"
     }
   SETTINGS
 
@@ -686,8 +686,8 @@ resource "null_resource" "f5vm01-run-REST" {
   provisioner "local-exec" {
     command = <<-EOF
       #!/bin/bash
-#      sleep 15
-      curl -k -X ${var.rest_as3_method} https://${data.azurerm_public_ip.vm01mgmtpip.ip_address}${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}
+      #      sleep 15
+      #curl -k -X ${var.rest_as3_method} https://${data.azurerm_public_ip.vm01mgmtpip.ip_address}${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}
     EOF
   }
 }
@@ -709,10 +709,8 @@ resource "null_resource" "f5vm02-run-REST" {
   provisioner "local-exec" {
     command = <<-EOF
       #!/bin/bash
-#      sleep 10
-      curl -k -X ${var.rest_as3_method} https://${data.azurerm_public_ip.vm02mgmtpip.ip_address}${var.rest_as3_uri} \
-              -u ${var.uname}:${var.upassword} \
-              -d @${var.rest_vm_as3_file}
+      #      sleep 10
+      #curl -k -X ${var.rest_as3_method} https://${data.azurerm_public_ip.vm02mgmtpip.ip_address}${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}
     EOF
   }
 }
