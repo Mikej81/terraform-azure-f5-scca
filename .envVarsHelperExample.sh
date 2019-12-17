@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 ## set vars
 # azure
 arm_resource_group=""
