@@ -579,7 +579,7 @@ resource "azurerm_virtual_machine_extension" "f5vm01-run-startup-cmd" {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "bash /var/lib/waagent/CustomData; echo file(${path.module}/vm01_do_data.json) > vm01_do_data.json; curl -k -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; sleep 10; curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm01_do_file}; curl -k -X ${var.rest_as3_method} https://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}"
+        "commandToExecute": "bash /var/lib/waagent/CustomData; echo file(${path.module}/vm01_do_data.json) > vm01_do_data.json; curl -k -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; sleep 10; curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d ${data.template_file.vm01_do_json.rendered}; curl -k -X ${var.rest_as3_method} https://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d ${data.template_file.as3_json.rendered}"
     }
   SETTINGS
 
@@ -605,7 +605,7 @@ resource "azurerm_virtual_machine_extension" "f5vm02-run-startup-cmd" {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "bash /var/lib/waagent/CustomData; curl -k -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; sleep 10; curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm01_do_file}; curl -k -X ${var.rest_as3_method} https://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d @${var.rest_vm_as3_file}"
+        "commandToExecute": "bash /var/lib/waagent/CustomData; curl -k -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; sleep 10; curl -k -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d ${data.template_file.vm02_do_json.rendered}; curl -k -X ${var.rest_as3_method} https://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d ${data.template_file.as3_json.rendered}"
     }
   SETTINGS
 
