@@ -52,7 +52,7 @@
                         {
                             "servicePort": 3389,
                             "serverAddresses": [
-                                "192.168.1.55"
+                                "10.90.2.101"
                             ]
                         }
                     ]
@@ -89,7 +89,7 @@
                         {
                             "servicePort": 22,
                             "serverAddresses": [
-                                "192.168.1.54"
+                                "10.90.2.101"
                             ]
                         }
                     ]

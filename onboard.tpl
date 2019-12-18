@@ -44,9 +44,9 @@ DO_FN=$(basename "$DO_URL")
 AS3_URL='${AS3_URL}'
 AS3_FN=$(basename "$AS3_URL")
 
-DO1='${DO1_Document}'
-DO2='${DO2_Document}'
-AS3='${AS3_Document}'
+echo ${DO1_Document} | base64 -d > do1.json
+echo ${DO2_Document} | base64 -d > do2.json
+echo ${AS3_Document} | base64 -d > as3.json
 
 mkdir -p ${libs_dir}
 
