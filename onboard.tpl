@@ -103,7 +103,7 @@ do
   do
     status=$(restcurl -u $CREDS $rpmInstallUrl/$install | jq -r .status)
     echo "status: $status"
-    case "status" in 
+    case $status in 
         FINISHED)
             # valid checksum
             echo " $filename status: $install "
@@ -190,15 +190,71 @@ as3Status=$(checkAS3)
 echo "$as3Status"
 # tsStatus=$(checkTS)
 # echo "$tsStatus"
-
+function runDO() {
+    CNT=0
+    while [ $CNT -le 10 ]
+        do 
+        task=$(curl -s -u $CREDS -H "Content-Type: Application/json" -H 'Expect:' -X POST http://localhost:8100/mgmt/shared/declarative-onboarding -d @/config/$1 | jq -r .id)
+        sleep 1
+        status=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .status)
+        sleep 1
+        case $status in 
+        FINISHED)
+            # finished
+            echo " $task status: $status "
+            break
+            ;;
+        STARTED)
+            # started
+            echo " $filename status: $status "
+            sleep 20
+            ;;
+        RUNNING)
+            # running
+            echo "status: $status"
+            CNT=$[$CNT+1]
+            ;;
+        FAILED)
+            # failed
+            error=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .status,.result)
+            echo "failed $task, $error"
+            CNT=$[$CNT+1]
+            ;;
+        ERROR)
+            # error
+            error=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .status,.result)
+            echo "Error $task, $error"
+            CNT=$[$CNT+1]
+            ;;
+        *)
+            # other
+            error=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .status,.result)
+            echo "Other $task, $error"
+            CNT=$[$CNT+1]
+            sleep 10
+            ;;
+        esac
+    done
+}
 # run DO
 if [ $1 == "1" ]; then
     echo "running do for 01"
-    restcurl -u $CREDS -X POST "mgmt/shared/declarative-onboarding" -d $DO_BODY_01
+    CNT=0
+    while [ $CNT -le 10 ]
+    do 
+        runDO do1.json
+        echo "Try: $CNT"
+    done
 else
     echo "running do for 02"
-    restcurl -u $CREDS -X POST "mgmt/shared/declarative-onboarding" -d $DO_BODY_02
+    CNT=0
+    while [ $CNT -le 10 ]
+    do 
+        runDO do2.json
+        echo "Try: $CNT"
+    done
 fi
+
 as3Status=$(checkAS3)
 echo "$as3Status"
 
@@ -208,7 +264,7 @@ while true
 do
     if [[ $as3Status == *"online"* ]]; then
         echo "running as3"
-        restcurl -u $CREDS -X POST "/mgmt/shared/appsvcs/declare" -d $AS3_BODY
+        curl -i -u $CREDS -H "Content-Type: Application/json" -H 'Expect:' -X POST http://localhost:8100/mgmt/shared/appsvcs/declare -d @/config/as3.json
         break
     elif [ $CNT -le 6 ]; then
         echo "Status code: $as3Status  As3 not ready yet..."
