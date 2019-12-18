@@ -372,9 +372,9 @@ data "template_file" "vm_onboard" {
     AS3_URL		          = "${var.AS3_URL}"
     libs_dir		        = "${var.libs_dir}"
     onboard_log		      = "${var.onboard_log}"
-    DO1_Document        = "${base64encode(data.template_file.vm01_do_json.rendered)}"
-    DO2_Document        = "${base64encode(data.template_file.vm02_do_json.rendered)}"
-    AS3_Document        = "${base64encode(data.template_file.vm01_do_json.rendered)}"
+    DO1_Document        = "${data.template_file.vm01_do_json.rendered}"
+    DO2_Document        = "${data.template_file.vm02_do_json.rendered}"
+    AS3_Document        = "${data.template_file.vm01_do_json.rendered}"
   }
 }
 
@@ -604,7 +604,7 @@ resource "azurerm_virtual_machine_extension" "f5vm01-run-startup-cmd" {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "bash /var/lib/waagent/CustomData; echo -e $DO1 base64 -d > do1.json; echo -e $AS3 base64 -d > AS3.json; restcurl -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; restcurl -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d do1.json"
+        "commandToExecute": "bash /var/lib/waagent/CustomData 1"
     }
   SETTINGS
 
@@ -630,7 +630,7 @@ resource "azurerm_virtual_machine_extension" "f5vm02-run-startup-cmd" {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "bash /var/lib/waagent/CustomData; echo -e $DO2 base64 -d > do2.json; restcurl -X GET https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; restcurl -X ${var.rest_do_method} https://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d do2.json"
+        "commandToExecute": "bash /var/lib/waagent/CustomData 2"
     }
   SETTINGS
 
