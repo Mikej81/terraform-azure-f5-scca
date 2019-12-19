@@ -41,6 +41,7 @@ locals {
   depends_on = ["azurerm_subnet.mgmt", "azurerm_subnet.External"]
   mgmt_gw    = "${cidrhost(azurerm_subnet.mgmt.address_prefix, 1)}"
   ext_gw     = "${cidrhost(azurerm_subnet.External.address_prefix, 1)}"
+  int_gw     = "${cidrhost(azurerm_subnet.Internal.address_prefix, 1)}"
 }
 
 # Create a Public IP for the Virtual Machines
@@ -85,18 +86,33 @@ resource "azurerm_lb_probe" "lb_probe" {
   loadbalancer_id     = "${azurerm_lb.lb.id}"
   name                = "tcpProbe"
   protocol            = "tcp"
-  port                = 8443
+  port                = 443
   interval_in_seconds = 5
   number_of_probes    = 2
 }
 
-resource "azurerm_lb_rule" "lb_rule" {
-  name                           = "LBRule"
+resource "azurerm_lb_rule" "https_rule" {
+  name                           = "HTTPRule"
   resource_group_name            = "${azurerm_resource_group.main.name}"
   loadbalancer_id                = "${azurerm_lb.lb.id}"
   protocol                       = "tcp"
   frontend_port                  = 443
-  backend_port                   = 8443
+  backend_port                   = 443
+  frontend_ip_configuration_name = "LoadBalancerFrontEnd"
+  enable_floating_ip             = false
+  backend_address_pool_id        = "${azurerm_lb_backend_address_pool.backend_pool.id}"
+  idle_timeout_in_minutes        = 5
+  probe_id                       = "${azurerm_lb_probe.lb_probe.id}"
+  depends_on                     = ["azurerm_lb_probe.lb_probe"]
+}
+
+resource "azurerm_lb_rule" "ssh_rule" {
+  name                           = "SSHRule"
+  resource_group_name            = "${azurerm_resource_group.main.name}"
+  loadbalancer_id                = "${azurerm_lb.lb.id}"
+  protocol                       = "tcp"
+  frontend_port                  = 22
+  backend_port                   = 22
   frontend_ip_configuration_name = "LoadBalancerFrontEnd"
   enable_floating_ip             = false
   backend_address_pool_id        = "${azurerm_lb_backend_address_pool.backend_pool.id}"
@@ -346,6 +362,57 @@ resource "azurerm_network_interface" "backend01-ext-nic" {
   }
 }
 
+# Create the third network interface card for Internal
+resource "azurerm_network_interface" "vm01-int-nic" {
+  name                = "${var.prefix}-vm01-int-nic"
+  location            = "${azurerm_resource_group.main.location}"
+  resource_group_name = "${azurerm_resource_group.main.name}"
+  network_security_group_id = "${azurerm_network_security_group.main.id}"
+  #depends_on          = ["azurerm_lb_backend_address_pool.backend_pool"]
+
+  ip_configuration {
+    name                          = "primary"
+    subnet_id                     = "${azurerm_subnet.Internal.id}"
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "${var.f5vm01int}"
+    primary			  = true
+  }
+
+  tags = {
+    Name           = "${var.environment}-vm01-int-int"
+    environment    = "${var.environment}"
+    owner          = "${var.owner}"
+    group          = "${var.group}"
+    costcenter     = "${var.costcenter}"
+    application    = "${var.application}"
+  }
+}
+
+resource "azurerm_network_interface" "vm02-int-nic" {
+  name                = "${var.prefix}-vm02-int-nic"
+  location            = "${azurerm_resource_group.main.location}"
+  resource_group_name = "${azurerm_resource_group.main.name}"
+  network_security_group_id = "${azurerm_network_security_group.main.id}"
+  #depends_on          = ["azurerm_lb_backend_address_pool.backend_pool"]
+
+  ip_configuration {
+    name                          = "primary"
+    subnet_id                     = "${azurerm_subnet.Internal.id}"
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "${var.f5vm02int}"
+    primary			  = true
+  }
+
+  tags = {
+    Name           = "${var.environment}-vm02-int-int"
+    environment    = "${var.environment}"
+    owner          = "${var.owner}"
+    group          = "${var.group}"
+    costcenter     = "${var.costcenter}"
+    application    = "${var.application}"
+  }
+}
+
 # Associate the Network Interface to the BackendPool
 resource "azurerm_network_interface_backend_address_pool_association" "bpool_assc_vm01" {
   depends_on          = ["azurerm_lb_backend_address_pool.backend_pool", "azurerm_network_interface.vm01-ext-nic"]
@@ -372,9 +439,15 @@ data "template_file" "vm_onboard" {
     AS3_URL		          = "${var.AS3_URL}"
     libs_dir		        = "${var.libs_dir}"
     onboard_log		      = "${var.onboard_log}"
+<<<<<<< HEAD
     DO1_Document        = "${data.template_file.vm01_do_json.rendered}"
     DO2_Document        = "${data.template_file.vm02_do_json.rendered}"
     AS3_Document        = "${data.template_file.as3_json.rendered}"
+=======
+    DO1_Document        = "${base64encode(data.template_file.vm01_do_json.rendered)}"
+    DO2_Document        = "${base64encode(data.template_file.vm02_do_json.rendered)}"
+    AS3_Document        = "${base64encode(data.template_file.as3_json.rendered)}"
+>>>>>>> master
   }
 }
 
@@ -432,7 +505,7 @@ resource "azurerm_virtual_machine" "f5vm01" {
   location                     = "${azurerm_resource_group.main.location}"
   resource_group_name          = "${azurerm_resource_group.main.name}"
   primary_network_interface_id = "${azurerm_network_interface.vm01-mgmt-nic.id}"
-  network_interface_ids        = ["${azurerm_network_interface.vm01-mgmt-nic.id}", "${azurerm_network_interface.vm01-ext-nic.id}"]
+  network_interface_ids        = ["${azurerm_network_interface.vm01-mgmt-nic.id}", "${azurerm_network_interface.vm01-ext-nic.id}", "${azurerm_network_interface.vm01-int-nic.id}"]
   vm_size                      = "${var.instance_type}"
   availability_set_id          = "${azurerm_availability_set.avset.id}"
 
@@ -489,7 +562,7 @@ resource "azurerm_virtual_machine" "f5vm02" {
   location                     = "${azurerm_resource_group.main.location}"
   resource_group_name          = "${azurerm_resource_group.main.name}"
   primary_network_interface_id = "${azurerm_network_interface.vm02-mgmt-nic.id}"
-  network_interface_ids        = ["${azurerm_network_interface.vm02-mgmt-nic.id}", "${azurerm_network_interface.vm02-ext-nic.id}"]
+  network_interface_ids        = ["${azurerm_network_interface.vm02-mgmt-nic.id}", "${azurerm_network_interface.vm02-ext-nic.id}", "${azurerm_network_interface.vm02-int-nic.id}"]
   vm_size                      = "${var.instance_type}"
   availability_set_id          = "${azurerm_availability_set.avset.id}"
 
@@ -566,7 +639,7 @@ resource "azurerm_virtual_machine" "backendvm" {
 
     os_profile {
         computer_name  = "backend01"
-        admin_username = "azureuser"
+        admin_username = "${var.uname}"
         admin_password = "${var.upassword}"
         custom_data = <<-EOF
               #!/bin/bash
@@ -604,7 +677,11 @@ resource "azurerm_virtual_machine_extension" "f5vm01-run-startup-cmd" {
 
   settings = <<SETTINGS
     {
+<<<<<<< HEAD
         "commandToExecute": "bash /var/lib/waagent/CustomData 1"
+=======
+        "commandToExecute": "bash /var/lib/waagent/CustomData; curl -X GET http://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; curl -X ${var.rest_do_method} http://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d /var/lib/waagent/do1.json; curl -X ${var.rest_as3_method} http://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d /var/lib/waagent/as3.json"
+>>>>>>> master
     }
   SETTINGS
 
@@ -630,7 +707,11 @@ resource "azurerm_virtual_machine_extension" "f5vm02-run-startup-cmd" {
 
   settings = <<SETTINGS
     {
+<<<<<<< HEAD
         "commandToExecute": "bash /var/lib/waagent/CustomData 2"
+=======
+        "commandToExecute": "bash /var/lib/waagent/CustomData; curl -X GET http://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; curl -X ${var.rest_do_method} http://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d /var/lib/waagent/do2.json"
+>>>>>>> master
     }
   SETTINGS
 

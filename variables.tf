@@ -27,9 +27,11 @@ variable "subnets" {
 variable f5vm01mgmt { default = "10.90.1.4" }
 variable f5vm01ext { default = "10.90.2.4" }
 variable f5vm01ext_sec { default = "10.90.2.11" }
+variable f5vm01int { default = "10.90.3.4"}
 variable f5vm02mgmt { default = "10.90.1.5" }
 variable f5vm02ext { default = "10.90.2.5" }
 variable f5vm02ext_sec { default = "10.90.2.12" }
+variable f5vm02int { default = "10.90.3.5"}
 variable backend01ext { default = "10.90.2.101" }
 
 # BIGIP Image

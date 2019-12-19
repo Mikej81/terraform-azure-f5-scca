@@ -76,7 +76,26 @@ do
   sleep 10
 done
 
+<<<<<<< HEAD
 # download latest atc tools
+=======
+### DOWNLOAD ONBOARDING PKGS
+# Could be pre-packaged or hosted internally
+
+admin_username='${uname}'
+admin_password='${upassword}'
+CREDS="admin:"$admin_password
+DO_URL='${DO_onboard_URL}'
+DO_FN=$(basename "$DO_URL")
+AS3_URL='${AS3_URL}'
+AS3_FN=$(basename "$AS3_URL")
+
+echo ${DO1_Document} | base64 -d > do1.json
+echo ${DO2_Document} | base64 -d > do2.json
+echo ${AS3_Document} | base64 -d > as3.json
+
+mkdir -p ${libs_dir}
+>>>>>>> master
 
 for tool in $atc
 do
