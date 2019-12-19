@@ -190,62 +190,86 @@ as3Status=$(checkAS3)
 echo "$as3Status"
 # tsStatus=$(checkTS)
 # echo "$tsStatus"
+
 function runDO() {
     CNT=0
     while [ $CNT -le 10 ]
         do 
+        # make task
         task=$(curl -s -u $CREDS -H "Content-Type: Application/json" -H 'Expect:' -X POST http://localhost:8100/mgmt/shared/declarative-onboarding -d @/config/$1 | jq -r .id)
+        echo "starting task: $task"
         sleep 1
-        status=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .status)
+        # check task code
+        code=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .code)
         sleep 1
-        case $status in 
-        FINISHED)
-            # finished
-            echo " $task status: $status "
-            break
-            ;;
-        STARTED)
-            # started
-            echo " $filename status: $status "
-            sleep 20
-            ;;
-        RUNNING)
-            # running
-            echo "status: $status"
-            CNT=$[$CNT+1]
-            sleep 30
-            status=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .status)
-            if [ $status == "FINISHED" ]; then
-                echo "do done for do for $1"
+        if  [ "$code" == "null" ] || [ -z "$code" ]; then
+            sleep 1
+            status=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .result.status)
+            sleep 1
+            #FINISHED,STARTED,RUNNING,ROLLING_BACK,FAILED,ERROR,NULL
+            case $status in 
+            FINISHED)
+                # finished
+                echo " $task status: $status "
                 break
-            elif [ $status == "RUNNING" ]; then
-                echo "Status code: $status  Not done yet..."
-                sleep 30
-            else
-                echo "other $status"
+                ;;
+            STARTED)
+                # started
+                echo " $filename status: $status "
+                sleep 20
+                ;;
+            RUNNING)
+                # running
+                echo "DO status: $status $task"
                 CNT=$[$CNT+1]
-             fi 
-            ;;
-        FAILED)
-            # failed
-            error=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .status,.result)
-            echo "failed $task, $error"
+                sleep 60
+                status=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .result.status)
+                if [ $status == "FINISHED" ]; then
+                    echo "do done for $task for $1"
+                    break
+                elif [ $status == "RUNNING" ]; then
+                    echo "Status code: $status  Not done yet..."
+                    sleep 30
+                elif [ $status == "OK" ]; then
+                    echo "Done Status code: $status  No change $task"
+                    break
+                else
+                    echo "other $status"
+                    CNT=$[$CNT+1]
+                fi 
+                ;;
+            FAILED)
+                # failed
+                error=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .result.status)
+                echo "failed $task, $error"
+                CNT=$[$CNT+1]
+                ;;
+            ERROR)
+                # error
+                error=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .result.status)
+                echo "Error $task, $error"
+                CNT=$[$CNT+1]
+                ;;
+            OK)
+                # complete no change
+                echo "Complete no change status: $status"
+                break
+                ;;
+            *)
+                # other
+                echo "other: $status"
+                debug=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq .)
+                echo "debug: $debug"
+                error=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .result.status)
+                echo "Other $task, $error"
+                CNT=$[$CNT+1]
+                sleep 60
+                ;;
+            esac
+        else
+            echo "DO code: $code"
             CNT=$[$CNT+1]
-            ;;
-        ERROR)
-            # error
-            error=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .status,.result)
-            echo "Error $task, $error"
-            CNT=$[$CNT+1]
-            ;;
-        *)
-            # other
-            error=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .status,.result)
-            echo "Other $task, $error"
-            CNT=$[$CNT+1]
-            sleep 10
-            ;;
-        esac
+        fi
     done
 }
 # run DO
@@ -270,13 +294,55 @@ fi
 as3Status=$(checkAS3)
 echo "$as3Status"
 
+function runAS3 () {
+    CNT=0
+    while [ $CNT -le 10 ]
+        do
+        echo "running as3"
+        task=$(curl -s -u $CREDS -H "Content-Type: Application/json" -H 'Expect:' -X POST http://localhost:8100$as3Url?async=true -d @/config/as3.json | jq -r .id)
+        status=$(curl -s -u $CREDS http://localhost:8100/mgmt/shared/appsvcs/task/$task | jq -r '.results[].message')
+        case $status in
+        no*change)
+            # finished
+            echo " $task status: $status "
+            break
+            ;;
+        in*progress)
+            # in progress
+            echo "Running: $task status: $status "
+            sleep 60
+            status=$(curl -s -u $CREDS http://localhost:8100/mgmt/shared/appsvcs/task/$task | jq -r '.results[].message')
+            if [[ $status == * ]]; then
+                echo "status: $status"
+                break
+            fi
+            ;;
+        Error*)
+            # error
+            echo "Error: $task status: $status "
+            ;;
+        
+        *)
+            # other
+            echo "status: $status"
+            debug=$(curl -s -u $CREDS http://localhost:8100/mgmt/shared/appsvcs/task/$task | jq .)
+            echo "debug: $debug"
+            error=$(curl -s -u $CREDS http://localhost:8100/mgmt/shared/appsvcs/task/$task | jq -r '.results[].message')
+            echo "Other: $task, $error"
+            CNT=$[$CNT+1]
+            ;;
+        esac
+    done
+}
+
+
 # run as3
 CNT=0
 while true
 do
     if [[ $as3Status == *"online"* ]]; then
         echo "running as3"
-        curl -i -u $CREDS -H "Content-Type: Application/json" -H 'Expect:' -X POST http://localhost:8100/mgmt/shared/appsvcs/declare -d @/config/as3.json
+        runAS3
         break
     elif [ $CNT -le 6 ]; then
         echo "Status code: $as3Status  As3 not ready yet..."

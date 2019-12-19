@@ -1,3 +1,6 @@
+# as3 uuid generation
+resource "random_uuid" "as3_uuid" { }
+
 # Create a Resource Group for the new Virtual Machine
 resource "azurerm_resource_group" "main" {
   name     = "${var.prefix}_rg"
@@ -491,6 +494,9 @@ data "template_file" "vm02_do_json" {
 
 data "template_file" "as3_json" {
   template = "${file("${path.module}/scca.json")}"
+  vars ={
+      uuid = "${random_uuid.as3_uuid.result}"
+  }
 }
 
 # Create F5 BIGIP VMs
