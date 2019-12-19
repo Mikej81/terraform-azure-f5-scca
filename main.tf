@@ -439,15 +439,9 @@ data "template_file" "vm_onboard" {
     AS3_URL		          = "${var.AS3_URL}"
     libs_dir		        = "${var.libs_dir}"
     onboard_log		      = "${var.onboard_log}"
-<<<<<<< HEAD
     DO1_Document        = "${data.template_file.vm01_do_json.rendered}"
     DO2_Document        = "${data.template_file.vm02_do_json.rendered}"
     AS3_Document        = "${data.template_file.as3_json.rendered}"
-=======
-    DO1_Document        = "${base64encode(data.template_file.vm01_do_json.rendered)}"
-    DO2_Document        = "${base64encode(data.template_file.vm02_do_json.rendered)}"
-    AS3_Document        = "${base64encode(data.template_file.as3_json.rendered)}"
->>>>>>> master
   }
 }
 
@@ -677,11 +671,7 @@ resource "azurerm_virtual_machine_extension" "f5vm01-run-startup-cmd" {
 
   settings = <<SETTINGS
     {
-<<<<<<< HEAD
         "commandToExecute": "bash /var/lib/waagent/CustomData 1"
-=======
-        "commandToExecute": "bash /var/lib/waagent/CustomData; curl -X GET http://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; curl -X ${var.rest_do_method} http://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d /var/lib/waagent/do1.json; curl -X ${var.rest_as3_method} http://localhost:8100${var.rest_as3_uri} -u ${var.uname}:${var.upassword} -d /var/lib/waagent/as3.json"
->>>>>>> master
     }
   SETTINGS
 
@@ -707,11 +697,7 @@ resource "azurerm_virtual_machine_extension" "f5vm02-run-startup-cmd" {
 
   settings = <<SETTINGS
     {
-<<<<<<< HEAD
         "commandToExecute": "bash /var/lib/waagent/CustomData 2"
-=======
-        "commandToExecute": "bash /var/lib/waagent/CustomData; curl -X GET http://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword}; curl -X ${var.rest_do_method} http://localhost:8100${var.rest_do_uri} -u ${var.uname}:${var.upassword} -d /var/lib/waagent/do2.json"
->>>>>>> master
     }
   SETTINGS
 
