@@ -213,6 +213,18 @@ function runDO() {
             # running
             echo "status: $status"
             CNT=$[$CNT+1]
+            sleep 30
+            status=$(restcurl -u $CREDS /mgmt/shared/declarative-onboarding/task/$task | jq -r .status)
+            if [ $status == "FINISHED" ]; then
+                echo "do done for do for $1"
+                break
+            elif [ $status == "RUNNING" ]; then
+                echo "Status code: $status  Not done yet..."
+                sleep 30
+            else
+                echo "other $status"
+                CNT=$[$CNT+1]
+             fi 
             ;;
         FAILED)
             # failed

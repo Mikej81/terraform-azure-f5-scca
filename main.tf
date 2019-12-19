@@ -374,7 +374,7 @@ data "template_file" "vm_onboard" {
     onboard_log		      = "${var.onboard_log}"
     DO1_Document        = "${data.template_file.vm01_do_json.rendered}"
     DO2_Document        = "${data.template_file.vm02_do_json.rendered}"
-    AS3_Document        = "${data.template_file.vm01_do_json.rendered}"
+    AS3_Document        = "${data.template_file.as3_json.rendered}"
   }
 }
 
