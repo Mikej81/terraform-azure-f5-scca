@@ -102,31 +102,30 @@ do
   while true
   do
     status=$(restcurl -u $CREDS $rpmInstallUrl/$install | jq -r .status)
-    echo "status: $status"
     case $status in 
         FINISHED)
-            # valid checksum
-            echo " $filename status: $install "
+            # finished
+            echo " rpm: $filename task: $install status: $status"
             break
             ;;
         STARTED)
             # started
-            echo " $filename status: $install "
+            echo " rpm: $filename task: $install status: $status"
             ;;
         RUNNING)
             # running
-            echo "status: $install"
+            echo " rpm: $filename task: $install status: $status"
             ;;
         FAILED)
             # failed
             error=$(restcurl -u $CREDS $rpmInstallUrl/$install | jq .errorMessage)
-            echo "failed $filename, $error"
+            echo "failed $filename task: $install error: $error"
             break
             ;;
         *)
             # other
-            error=$(restcurl -u $CREDS $rpmInstallUrl/$install | jq .errorMessage)
-            echo "failed $filename, $error"
+            debug=$(restcurl -u $CREDS $rpmInstallUrl/$install | jq .)
+            echo "failed $filename task: $install error: $debug"
             break
             ;;
         esac
@@ -229,7 +228,7 @@ function runDO() {
                     break
                 elif [ $status == "RUNNING" ]; then
                     echo "Status code: $status  Not done yet..."
-                    sleep 30
+                    sleep 120
                 elif [ $status == "OK" ]; then
                     echo "Done Status code: $status  No change $task"
                     break
