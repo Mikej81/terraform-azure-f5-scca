@@ -273,22 +273,12 @@ function runDO() {
     done
 }
 # run DO
-if [ $1 == "1" ]; then
+if [ $1 == 1 ] && [[ "$doStatus" = *"online"* ]]; then 
     echo "running do for 01"
-    CNT=0
-    while [ $CNT -le 10 ]
-    do 
         runDO do1.json
-        echo "Try: $CNT"
-    done
 else
     echo "running do for 02"
-    CNT=0
-    while [ $CNT -le 10 ]
-    do 
         runDO do2.json
-        echo "Try: $CNT"
-    done
 fi
 
 as3Status=$(checkAS3)
