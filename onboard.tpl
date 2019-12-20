@@ -275,10 +275,12 @@ function runDO() {
 # run DO
 if [ $1 == 1 ] && [[ "$doStatus" = *"online"* ]]; then 
     echo "running do for 01"
-        runDO do1.json
-else
+    runDO do1.json
+elif [[ "$doStatus" = *"online"* ]]; then
     echo "running do for 02"
-        runDO do2.json
+    runDO do2.json
+else
+    echo "DO not online status: $doStatus"
 fi
 
 as3Status=$(checkAS3)
