@@ -18,30 +18,6 @@
                     "class": "iRule",
                     "iRule": "when HTTP_REQUEST {\n    HTTP::respond 200 content {\n        <html>\n        <head>\n        <title>Health Check</title>\n        </head>\n        <body>\n        System is online.\n        </body>\n        </html>\n        }\n}"
                 },
-                "bot_defense" :{
-                    "class": "Security_Log_Profile",
-                    "botDefense": {
-                        "localPublisher": {
-                            "bigip":"/Common/local-db-publisher"
-                        },
-                        "logBotSignatureMatchedRequests": true,
-                        "logCaptchaChallengedRequests": true,
-                        "logChallengedRequests": true,
-                        "logIllegalRequests": true,
-                        "logLegalRequests": true
-                    }
-                },
-                "local_afm_log": {
-                    "network": {
-                        "publisher": {
-                            "bigip": "/Common/local-db-publisher"
-                        },
-                        "logRuleMatchAccepts": true,
-                        "logRuleMatchRejects": true,
-                        "logRuleMatchDrops": true
-                    },
-                    "class": "Security_Log_Profile"
-                },
                 "sccaBaselineWAFPolicy":{
                     "class": "WAF_Policy",
                     "url": "https://raw.githubusercontent.com/Mikej81/f5-securecloud-AS3/master/asm/13.1/sccaBaselineASMPolicy.xml"
@@ -168,10 +144,10 @@
                     ],
                     "securityLogProfiles": [
                         {
-                            "use": "/Common/Shared/local_afm_log"
+                            "bigip": "/Common/local_afm_log"
                         },
                         {
-                            "use": "/Common/Shared/bot_defense"
+                            "bigip": "/Common/local_sec_log"
                         },
                         {
                             "bigip": "/Common/local-dos"
@@ -206,10 +182,10 @@
                     "pool": "rdp_pool",
                     "securityLogProfiles": [
                         {
-                            "use": "/Common/Shared/local_afm_log"
+                            "bigip": "/Common/local_afm_log"
                         },
                         {
-                            "use": "/Common/Shared/bot_defense"
+                            "bigip": "/Common/local_sec_log"
                         },
                         {
                             "bigip": "/Common/local-dos"
@@ -238,10 +214,10 @@
                     "pool": "ssh_pool",
                     "securityLogProfiles": [
                         {
-                            "use": "/Common/Shared/local_afm_log"
+                            "bigip": "/Common/local_afm_log"
                         },
                         {
-                            "use": "/Common/Shared/bot_defense"
+                            "bigip": "/Common/local_sec_log"
                         },
                         {
                             "bigip": "/Common/local-dos"
@@ -279,10 +255,10 @@
                     "layer4": "tcp",
                     "securityLogProfiles": [
                         {
-                            "use": "/Common/Shared/local_afm_log"
+                            "bigip": "/Common/local_afm_log"
                         },
                         {
-                            "use": "/Common/Shared/bot_defense"
+                            "bigip": "/Common/local_sec_log"
                         },
                         {
                             "bigip": "/Common/local-dos"
@@ -321,10 +297,10 @@
                     ],
                     "securityLogProfiles": [
                         {
-                            "use": "/Common/Shared/local_afm_log"
+                            "bigip": "/Common/local_afm_log"
                         },
                         {
-                            "use": "/Common/Shared/bot_defense"
+                            "bigip": "/Common/local_sec_log"
                         },
                         {
                             "bigip": "/Common/local-dos"
