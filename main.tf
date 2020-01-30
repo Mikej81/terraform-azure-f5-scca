@@ -283,6 +283,7 @@ resource "azurerm_network_interface" "vm01-ext-nic" {
   resource_group_name = "${azurerm_resource_group.main.name}"
   network_security_group_id = "${azurerm_network_security_group.main.id}"
   depends_on          = ["azurerm_lb_backend_address_pool.backend_pool"]
+  enable_accelerated_networking = true
 
   ip_configuration {
     name                          = "primary"
@@ -306,6 +307,8 @@ resource "azurerm_network_interface" "vm01-ext-nic" {
     group          = "${var.group}"
     costcenter     = "${var.costcenter}"
     application    = "${var.application}"
+    f5_cloud_failover_label = "saca"
+    f5_cloud_failover_nic_map = "external"
   }
 }
 
@@ -315,6 +318,7 @@ resource "azurerm_network_interface" "vm02-ext-nic" {
   resource_group_name = "${azurerm_resource_group.main.name}"
   network_security_group_id = "${azurerm_network_security_group.main.id}"
   depends_on          = ["azurerm_lb_backend_address_pool.backend_pool"]
+  enable_accelerated_networking = true
 
   ip_configuration {
     name                          = "primary"
@@ -338,6 +342,8 @@ resource "azurerm_network_interface" "vm02-ext-nic" {
     group          = "${var.group}"
     costcenter     = "${var.costcenter}"
     application    = "${var.application}"
+    f5_cloud_failover_label = "saca"
+    f5_cloud_failover_nic_map = "external"
   }
 }
 
@@ -372,6 +378,7 @@ resource "azurerm_network_interface" "vm01-int-nic" {
   resource_group_name = "${azurerm_resource_group.main.name}"
   network_security_group_id = "${azurerm_network_security_group.main.id}"
   #depends_on          = ["azurerm_lb_backend_address_pool.backend_pool"]
+  enable_accelerated_networking = true
 
   ip_configuration {
     name                          = "primary"
@@ -397,6 +404,7 @@ resource "azurerm_network_interface" "vm02-int-nic" {
   resource_group_name = "${azurerm_resource_group.main.name}"
   network_security_group_id = "${azurerm_network_security_group.main.id}"
   #depends_on          = ["azurerm_lb_backend_address_pool.backend_pool"]
+  enable_accelerated_networking = true
 
   ip_configuration {
     name                          = "primary"

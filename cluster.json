@@ -81,7 +81,7 @@
             "saveOnAutoSync": false,
             "networkFailover": true,
             "fullLoadOnSync": false,
-            "asmSync": false
+            "asmSync": true
         },
         "trust": {
             "class": "DeviceTrust",
