@@ -27,6 +27,7 @@ doTaskUrl="/mgmt/shared/declarative-onboarding/task"
 # as3
 as3Url="/mgmt/shared/appsvcs/declare"
 as3CheckUrl="/mgmt/shared/appsvcs/info"
+as3TaskUrl="/mgmt/shared/appsvcs/task/"
 # ts
 tsUrl="/mgmt/shared/telemetry/declare"
 tsCheckUrl="/mgmt/shared/telemetry/info" 
@@ -586,31 +587,77 @@ function runAS3 () {
             # check task code
         while true
         do
-            status=$(curl -s -u $CREDS http://localhost:8100/mgmt/shared/appsvcs/task/$taskId | jq -r '.results[].message')
-            case $status in
+            #status=$(curl -s -u $CREDS http://localhost:8100/mgmt/shared/appsvcs/task/$taskId | jq -r '.results[].message')
+            # some weirdness with rest curl
+            #   {
+            #     "code": 200,
+            #     "message": "success",
+            #     "lineCount": 19,
+            #     "host": "localhost",
+            #     "tenant": "Common",
+            #     "runTime": 15532
+            #   }
+            # get values
+            status=$(restcurl -s -u $CREDS $as3TaskUrl/$taskId | jq ".items[] | select(.id | contains (\"$taskId\")) | .results")
+            # codes=$(echo "$status" | jq .[].code)
+            messages=$(echo "$status" | jq -r .[].message)
+            tenants=$(echo "$status" | jq .[].tenant)
+            # # push to arrays
+            # codesArray=()
+            # for code in $codes;do
+            #     codesArray+=($code)
+            # done
+            # messagesArray=()
+            # for message in $messages;do
+            #     echo "$message"
+            #     messagesArray+=($message)
+            # done
+            # tenantsArray=()
+            # for tenant in $tenants;do
+            #     tenantsArray+=($tenant)
+            # done
+            # # check responses
+            # n=0
+            # for code in $codesArray;do
+            #     if [[ $code = "200" ]]; then
+            #         echo $code, $tenantsArray,$messagesArray
+            #         n=$[$n+1]
+            #     else
+            #         echo $code, $tenantsArray,$messagesArray
+            #         #break 2
+            #         n=$[$n+1]
+            #     fi
+            # done
+            # unset n
+            case $messages in
+            *Error*)
+                # error
+                echo -e "Error: $taskId status: $messages tenants: $tenants "
+                break
+                ;;
+            *failed*)
+                # failed
+                echo -e "failed: $taskId status: $messages tenants: $tenants "
+                break
+                ;;
             *success*)
                 # successful!
-                echo " $taskId status: $status "
-                break
+                echo -e "success: $taskId status: $messages tenants: $tenants "
+                break 3
                 ;;
             no*change)
                 # finished
-                echo " $taskId status: $status "
+                echo -e "no change: $taskId status: $messages tenants: $tenants "
                 break 3
                 ;;
             in*progress)
                 # in progress
-                echo "Running: $taskId status: $status "
+                echo -e "Running: $taskId status: $messages tenants: $tenants "
                 sleep 60
                 ;;
-            Error*)
-                # error
-                echo "Error: $taskId status: $status "
-                ;;
-            
             *)
             # other
-            echo "status: $status"
+            echo "status: $messages"
             debug=$(curl -s -u $CREDS http://localhost:8100/mgmt/shared/appsvcs/task/$taskId | jq .)
             echo "debug: $debug"
             error=$(curl -s -u $CREDS http://localhost:8100/mgmt/shared/appsvcs/task/$taskId | jq -r '.results[].message')
@@ -643,7 +690,7 @@ do
             echo "running as3"
             runAS3
             echo "done with as3"
-            results=$(restcurl -u $CREDS $as3Task | jq '.items[] | .id, .results')
+            results=$(restcurl -u $CREDS $as3TaskUrl | jq '.items[] | .id, .results')
             echo "as3 results: $results"
             break
         else
