@@ -1,3 +1,8 @@
+# custom
+.envVarsHelper.sh
+vm_as3_data.json
+vm01_do_data.json
+vm02_do_data.json
 # Local .terraform directories
 **/.terraform/*
 

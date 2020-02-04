@@ -2,11 +2,13 @@
 
 ## Contents
 
-- [Introduction](#introduction)
-- [Prerequisites](#prerequisites)
-- [Important Configuration Notes](#important-configuration-notes)
-- [Security](#security)
-- [Configuration Example](#configuration-example)
+- [Deploying BIG-IP VEs in Azure - ConfigSync Cluster (Active/Standby): Two NICs](#deploying-big-ip-ves-in-azure---configsync-cluster-activestandby-two-nics)
+  - [Contents](#contents)
+  - [Introduction](#introduction)
+  - [Prerequisites](#prerequisites)
+  - [Important configuration notes](#important-configuration-notes)
+  - [docker](#docker)
+    - [requirements](#requirements)
 
 ## Introduction
 
@@ -61,3 +63,25 @@ Ex.
 * Location and Region are currently hard coded, make sure to fix those..
  
 cleaning up PIP mappings for DO / AS3 since no PIPs...
+
+## docker
+
+1. requires docker on host
+2. create or populate and run .envarshelper.sh
+```bash
+. .envVarsHelper.sh
+```
+3. use make to test
+```bash
+make test
+```
+4. make shell for interactive mode
+```bash
+make shell
+```
+5. make azure to init/plan/apply
+```bash
+make azure
+```
+### requirements
+make sure you have popluated and run the env helper
