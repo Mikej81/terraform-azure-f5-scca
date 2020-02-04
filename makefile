@@ -2,7 +2,7 @@
 
 export DIR = $(shell pwd)
 export WORK_DIR = $(shell dirname ${DIR})
-export CONTAINER_IMAGE = "f5-scca-terraform"
+export CONTAINER_IMAGE = 'f5-scca-terraform'
 
 run: build shell
 
@@ -18,7 +18,7 @@ shell:
 	-e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
 	-e ARM_TENANT_ID=${ARM_TENANT_ID} \
 	-v ${SSH_KEY_DIR}/:/root/.ssh/:ro \
-	f5-scca-terraform \
+	${CONTAINER_IMAGE} \
 
 
 azure:
@@ -30,7 +30,7 @@ azure:
 	-e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET} \
 	-e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
 	-e ARM_TENANT_ID=${ARM_TENANT_ID} \
-	f5-scca-terraform \
+	${CONTAINER_IMAGE} \
 	sh -c "terraform init; terraform plan; terraform apply --auto-approve"
 
 destroy:
@@ -42,7 +42,7 @@ destroy:
 	-e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET} \
 	-e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
 	-e ARM_TENANT_ID=${ARM_TENANT_ID} \
-	f5-scca-terraform \
+	${CONTAINER_IMAGE} \
 	sh -c "terraform destroy --auto-approve"
 
 
@@ -56,5 +56,5 @@ test1:
 	-e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET} \
 	-e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
 	-e ARM_TENANT_ID=${ARM_TENANT_ID} \
-	f5-scca-terraform \
+	${CONTAINER_IMAGE} \
 	sh -c "terraform --version "
