@@ -230,15 +230,48 @@ touch /config/cloud/azure/FIRST_BOOT_COMPLETE
 nohup /config/installCloudLibs.sh >> /var/log/cloud/azure/install.log < /dev/null
 
 # download latest atc tools
-
+toolsList=$(cat -<<EOF
+{
+  "tools": [
+      {
+        "name": "f5-declarative-onboarding",
+        "version": "${doVersion}",
+        "url": "${doExternalDeclarationUrl}"
+      },
+      {
+        "name": "f5-appsvcs-extension",
+        "version": "${as3Version}",
+        "url": "${as3ExternalDeclarationUrl}"
+      },
+      {
+        "name": "f5-telemetry-streaming",
+        "version": "${tsVersion}",
+        "url": "${tsExternalDeclarationUrl}"
+      },
+      {
+        "name": "f5-cloud-failover-extension",
+        "version": "${cfVersion}",
+        "url": "${cfExternalDeclarationUrl}"
+      }
+  ]
+}
+EOF
+)
+function getAtc () {
+atc=$(echo $toolsList | jq -r .tools[].name)
 for tool in $atc
 do
-    
-    echo "downloading $tool"
-    if [ $tool == "f5-cloud-failover-extension" ]; then
-        files=$(/usr/bin/curl -sk --interface mgmt https://api.github.com/repos/f5devcentral/$tool/releases/latest | jq -r '.assets[] | select(.name | contains (".rpm")) | .browser_download_url')
+    version=$(echo $toolsList | jq -r ".tools[]| select(.name| contains (\"$tool\")).version")
+    if [ $version == "latest" ]; then
+        path=''
     else
-        files=$(/usr/bin/curl -sk --interface mgmt https://api.github.com/repos/F5Networks/$tool/releases/latest | jq -r '.assets[] | select(.name | contains (".rpm")) | .browser_download_url')
+        path='tags/v'
+    fi
+    echo "downloading $tool, $version"
+    if [ $tool == "f5-cloud-failover-extension" ]; then
+        files=$(/usr/bin/curl -sk --interface mgmt https://api.github.com/repos/f5devcentral/$tool/releases/$path$version | jq -r '.assets[] | select(.name | contains (".rpm")) | .browser_download_url')
+    else
+        files=$(/usr/bin/curl -sk --interface mgmt https://api.github.com/repos/F5Networks/$tool/releases/$path$version | jq -r '.assets[] | select(.name | contains (".rpm")) | .browser_download_url')
     fi
     for file in $files
     do
@@ -249,6 +282,8 @@ do
     result=$(/usr/bin/curl -Lsk  $file -o /var/config/rest/downloads/$name)
     done
 done
+}
+getAtc
 
 # install atc tools
 rpms=$(find $rpmFilePath -name "*.rpm" -type f)

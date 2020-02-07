@@ -446,6 +446,16 @@ data "template_file" "vm_onboard" {
   vars = {
     uname        	      = "${var.uname}"
     upassword        	  = "${var.upassword}"
+    doVersion             = "latest"
+    #example version:
+    #as3Version            = "3.16.0"
+    as3Version            = "latest"
+    tsVersion             = "latest"
+    cfVersion             = "latest"
+    doExternalDeclarationUrl = "https://example.domain.com/do.json"
+    as3ExternalDeclarationUrl = "https://example.domain.com/as3.json"
+    tsExternalDeclarationUrl = "https://example.domain.com/ts.json"
+    cfExternalDeclarationUrl = "https://example.domain.com/cf.json"
     DO_onboard_URL      = "${var.DO_onboard_URL}"
     AS3_URL		          = "${var.AS3_URL}"
     libs_dir		        = "${var.libs_dir}"
