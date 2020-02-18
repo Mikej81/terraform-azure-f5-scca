@@ -1,3 +1,5 @@
+
+
 # templates directory
 variable "templates" {
   default = "/workspace/templates"
@@ -7,9 +9,37 @@ variable "templates" {
 variable "resourceGroup" {
     default= "scca-tf-rg"
 }
+# admin credentials
+variable adminUserName { default = "admin" }
+variable adminPassword { default = "2017F5Networks!!" }
+variable "sshPublicKey" { default = "/mykey.pub" }
+# cloud info
+variable "region" { default = "east-us1" }
+variable "securityGroup" {
+  default = "none"
+}
+variable "availabilitySet" {
+  
+}
 
-
+variable "prefix" {
+  default ="scca"
+}
 # bigip network
+variable "subnetMgmt" {
+  
+}
+variable "subnetExternal" {
+  
+}
+variable "subnetInternal" {
+  
+}
+variable "backendPool" {
+  description = "azureLB resouce pool"
+}
+
+
 variable f5vm01mgmt { default = "10.90.1.4" }
 variable f5vm01ext { default = "10.90.2.4" }
 variable f5vm01ext_sec { default = "10.90.2.11" }
@@ -35,3 +65,11 @@ variable dns_server { default = "8.8.8.8" }
 variable ntp_server { default = "0.us.pool.ntp.org" }
 variable timezone { default = "UTC" }
 variable onboard_log { default = "/var/log/startup-script.log" }
+
+# TAGS
+variable purpose { default = "public" }
+variable environment { default = "f5env" } #ex. dev/staging/prod
+variable owner { default = "f5owner" }
+variable group { default = "f5group" }
+variable costcenter { default = "f5costcenter" }
+variable application { default = "f5app" }

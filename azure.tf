@@ -25,17 +25,17 @@ resource "azurerm_subnet" "mgmt" {
   address_prefix       = "${var.subnets["subnet1"]}"
 }
 
-# Create the External Subnet within the Virtual Network
-resource "azurerm_subnet" "External" {
-  name                 = "External"
+# Create the external Subnet within the Virtual Network
+resource "azurerm_subnet" "external" {
+  name                 = "external"
   virtual_network_name = "${azurerm_virtual_network.main.name}"
   resource_group_name  = "${azurerm_resource_group.main.name}"
   address_prefix       = "${var.subnets["subnet2"]}"
 }
 
-# Create the Internal Subnet within the Virtual Network
-resource "azurerm_subnet" "Internal" {
-  name                 = "Internal"
+# Create the internal Subnet within the Virtual Network
+resource "azurerm_subnet" "internal" {
+  name                 = "internal"
   virtual_network_name = "${azurerm_virtual_network.main.name}"
   resource_group_name  = "${azurerm_resource_group.main.name}"
   address_prefix       = "${var.subnets["subnet3"]}"
@@ -43,10 +43,10 @@ resource "azurerm_subnet" "Internal" {
 
 # Obtain Gateway IP for each Subnet
 locals {
-  depends_on = ["azurerm_subnet.mgmt", "azurerm_subnet.External"]
+  depends_on = ["azurerm_subnet.mgmt", "azurerm_subnet.external"]
   mgmt_gw    = "${cidrhost(azurerm_subnet.mgmt.address_prefix, 1)}"
-  ext_gw     = "${cidrhost(azurerm_subnet.External.address_prefix, 1)}"
-  int_gw     = "${cidrhost(azurerm_subnet.Internal.address_prefix, 1)}"
+  ext_gw     = "${cidrhost(azurerm_subnet.external.address_prefix, 1)}"
+  int_gw     = "${cidrhost(azurerm_subnet.internal.address_prefix, 1)}"
 }
 
 # Create a Public IP for the Virtual Machines
@@ -207,34 +207,11 @@ resource "azurerm_network_security_group" "main" {
   }
 }
 
-# Create a Public IP for the Virtual Machines
-resource "azurerm_public_ip" "f5vmpip01" {
-  name                = "${var.projectPrefix}-vm01-mgmt-pip01"
-  location            = "${azurerm_resource_group.main.location}"
-  resource_group_name = "${azurerm_resource_group.main.name}"
-  allocation_method   = "Dynamic"
-
-  tags = {
-    Name = "${var.projectPrefix}-f5vm-public-ip"
-  }
-}
-resource "azurerm_public_ip" "f5vmpip02" {
-  name                = "${var.projectPrefix}-vm02-mgmt-pip02"
-  location            = "${azurerm_resource_group.main.location}"
-  resource_group_name = "${azurerm_resource_group.main.name}"
-  allocation_method   = "Dynamic"
-
-  tags = {
-    Name = "${var.projectPrefix}-f5vm-public-ip"
-  }
-}
-
-
-# templates
-resource "template_dir" "templates" {
-  source_dir      = "${path.module}/templates"
-  destination_dir = "${path.cwd}/templates"
-}
+# # templates
+# resource "template_dir" "templates" {
+#   source_dir      = "${path.module}/templates"
+#   destination_dir = "${path.cwd}/templates"
+# }
 #
 # Single Tier
 #
@@ -243,12 +220,20 @@ module "firewall" {
 #   source   = "./${var.deploymentType}/firewall"
   source   = "./single_tier/firewall"
   resourceGroup = "${azurerm_resource_group.main}"
-  f5_ssh_publickey = "${var.key_path}"
-  AllowedIPs = "${var.AllowedIPs}"
-  azure_region ="${var.azure_region}"
-  subnet1_public_id = "${azurerm_subnet.azurerm_publicsubnet1.id}"
+  sshPublicKey = "${var.sshPublicKeyPath}"
+  region = "${var.region}"
+  subnetMgmt = "${azurerm_subnet.mgmt}"
+  subnetExternal = "${azurerm_subnet.external}"
+  subnetInternal = "${azurerm_subnet.internal}"
+  securityGroup = "${azurerm_network_security_group.main}"
   owner = "${var.owner}"
-  templates = "${template_dir.templates.source_dir}"
+#   templates = "${template_dir.templates.destination_dir}"
+  templates = "/workspace/templates"
+  adminUserName = "${var.adminUserName}"
+  adminPassword = "${var.adminPassword}"
+  prefix = "${var.projectPrefix}"
+  backendPool = "${azurerm_lb_backend_address_pool.backend_pool}"
+  availabilitySet = "${azurerm_availability_set.avset}"
 }
 
 # deploy demo app
@@ -256,11 +241,12 @@ module "app" {
   #source   = "./${var.deploymentType}/app"
   source   = "./single_tier/app"
   resourceGroup = "${azurerm_resource_group.main}"
-#   ssh_publickey = "${var.key_path}"
+#   ssh_publickey = "${var.sshPublicKeyPath}"
   prefix = "${var.projectPrefix}"
   securityGroup = "${azurerm_network_security_group.main}"
-  subnetExternal = "${azurerm_subnet.External}"
-  templates = "${template_dir.templates.source_dir}"
+  subnetExternal = "${azurerm_subnet.external}"
+#   templates = "${template_dir.templates.destination_dir}"
+  templates = "/workspace/templates"
   adminUserName = "${var.adminUserName}"
   adminPassword = "${var.adminPassword}"
 }
@@ -272,9 +258,9 @@ module "app" {
 # #   source   = "./${var.deploymentType}/firewall"
 #   source   = "./three_tier/firewall"
 #   resourceGroup = "${azurerm_resource_group.main}"
-#   f5_ssh_publickey = "${var.key_path}"
+#   f5_ssh_publickey = "${var.sshPublicKeyPath}"
 #   AllowedIPs = "${var.AllowedIPs}"
-#   azure_region ="${var.azure_region}"
+#   azure_region ="${var.region}"
 #   subnet1_public_id = "${azurerm_subnet.azurerm_publicsubnet1.id}"
 #   owner = "${var.owner}"
 #   templates = "${template_dir.templates.source_dir}"
@@ -291,9 +277,9 @@ module "app" {
 # #   source   = "./${var.deploymentType}/waf"
 #   source   = "./three_tier/waf"
 #    resourceGroup = "${azurerm_resource_group.main}"
-#   f5_ssh_publickey = "${var.key_path}"
+#   f5_ssh_publickey = "${var.sshPublicKeyPath}"
 #   AllowedIPs = "${var.AllowedIPs}"
-#   azure_region ="${var.azure_region}"
+#   azure_region ="${var.region}"
 #   subnet1_public_id = "${azurerm_subnet.azurerm_publicsubnet1.id}"
 #   owner = "${var.owner}"
 #   templates = "${template_dir.templates.source_dir}"
@@ -304,6 +290,6 @@ module "app" {
 #   #source   = "./${var.deploymentType}/app"
 #   source   = "./single_tier/app"
 #    resourceGroup = "${azurerm_resource_group.main}"
-# #   ssh_publickey = "${var.key_path}"
+# #   ssh_publickey = "${var.sshPublicKeyPath}"
 #   templates = "${template_dir.templates.source_dir}"
 # }

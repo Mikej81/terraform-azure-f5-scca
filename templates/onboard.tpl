@@ -8,10 +8,6 @@ deviceId=$1
 admin_username='${uname}'
 admin_password='${upassword}'
 CREDS="$admin_username:$admin_password"
-DO_URL='${DO_onboard_URL}'
-DO_FN=$(basename "$DO_URL")
-AS3_URL='${AS3_URL}'
-AS3_FN=$(basename "$AS3_URL")
 LOG_FILE=${onboard_log}
 #atc="f5-declarative-onboarding f5-appsvcs-extension f5-telemetry-streaming"
 atc="f5-declarative-onboarding f5-appsvcs-extension f5-telemetry-streaming f5-cloud-failover-extension"
@@ -571,6 +567,10 @@ echo  -e "create cli transaction;
 modify sys global-settings mgmt-dhcp disabled;
 submit cli transaction" | tmsh -q
 tmsh save /sys config
+# get as3 values
+externalVip=$(curl -sf --retry 20 -H Metadata:true "http://169.254.169.254/metadata/instance/network/interface?api-version=2017-08-01" | jq -r '.[1].ipv4.ipAddress[1].privateIpAddress')
+
+# end get values
 
 # run DO
 count=0
@@ -713,7 +713,19 @@ submit cli transaction' | tmsh -q
 echo  -e 'create cli transaction;
 create security log profile local_sec_log application replace-all-with { local_sec_log { filter replace-all-with { log-challenge-failure-requests { values replace-all-with { enabled } } request-type { values replace-all-with { all } } } response-logging illegal } } bot-defense replace-all-with { local_sec_log { filter { log-alarm enabled log-block enabled log-browser enabled log-browser-verification-action enabled log-captcha enabled log-challenge-failure-request enabled log-device-id-collection-request enabled log-honey-pot-page enabled log-malicious-bot enabled log-mobile-application enabled log-none enabled log-rate-limit enabled log-redirect-to-pool enabled log-suspicious-browser enabled log-tcp-reset enabled log-trusted-bot enabled log-unknown enabled log-untrusted-bot enabled } local-publisher /Common/local-db-publisher } };
 submit cli transaction' | tmsh -q
+# end asm profile
+# modify as3
+#sdToken=$(echo "$token" | base64)
+sed -i "s/-external-virtual-address-/$externalVip/g" /config/as3.json
+#sed -i "s/-sd-sa-token-b64-/$token/g" /config/as3.json
 
+# end modify as3
+# metadata route
+echo  -e 'create cli transaction;
+modify sys db config.allow.rfc3927 value enable;
+create sys management-route metadata-route network 169.254.169.254/32 gateway ${mgmtGateway};
+submit cli transaction' | tmsh -q
+tmsh save /sys config
 #  run as3
 count=0
 while [ $count -le 4 ]
