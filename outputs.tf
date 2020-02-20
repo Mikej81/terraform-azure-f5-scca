@@ -2,6 +2,7 @@
 # data "azurerm_public_ip" "lbpip" {
 #   name                = "${azurerm_public_ip.lbpip.name}"
 #   resource_group_name = "${azurerm_resource_group.main.name}"
+#   depends_on          = ["module.firewall.azurerm_virtual_machine_extension.f5vm02-run-startup-cmd"]
 # }
 
 output "sg_id" { value = "${azurerm_network_security_group.main.id}" }

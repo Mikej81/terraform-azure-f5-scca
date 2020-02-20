@@ -125,6 +125,20 @@ resource "azurerm_lb_rule" "ssh_rule" {
   probe_id                       = "${azurerm_lb_probe.lb_probe.id}"
   depends_on                     = ["azurerm_lb_probe.lb_probe"]
 }
+resource "azurerm_lb_rule" "rdp_rule" {
+  name                           = "RDPRule"
+  resource_group_name            = "${azurerm_resource_group.main.name}"
+  loadbalancer_id                = "${azurerm_lb.lb.id}"
+  protocol                       = "tcp"
+  frontend_port                  = 3389
+  backend_port                   = 3389
+  frontend_ip_configuration_name = "LoadBalancerFrontEnd"
+  enable_floating_ip             = false
+  backend_address_pool_id        = "${azurerm_lb_backend_address_pool.backend_pool.id}"
+  idle_timeout_in_minutes        = 5
+  probe_id                       = "${azurerm_lb_probe.lb_probe.id}"
+  depends_on                     = ["azurerm_lb_probe.lb_probe"]
+}
 
 # Create a Network Security Group with some rules
 resource "azurerm_network_security_group" "main" {
@@ -207,12 +221,6 @@ resource "azurerm_network_security_group" "main" {
   }
 }
 
-# # templates
-# resource "template_dir" "templates" {
-#   source_dir      = "${path.module}/templates"
-#   destination_dir = "${path.cwd}/templates"
-# }
-#
 # Single Tier
 #
 # Deploy firewall HA cluster
@@ -227,7 +235,6 @@ module "firewall" {
   subnetInternal = "${azurerm_subnet.internal}"
   securityGroup = "${azurerm_network_security_group.main}"
   owner = "${var.owner}"
-#   templates = "${template_dir.templates.destination_dir}"
   templates = "/workspace/templates"
   adminUserName = "${var.adminUserName}"
   adminPassword = "${var.adminPassword}"
@@ -245,11 +252,26 @@ module "app" {
   prefix = "${var.projectPrefix}"
   securityGroup = "${azurerm_network_security_group.main}"
   subnetExternal = "${azurerm_subnet.external}"
-#   templates = "${template_dir.templates.destination_dir}"
   templates = "/workspace/templates"
   adminUserName = "${var.adminUserName}"
   adminPassword = "${var.adminPassword}"
 }
+# deploy jumpboxes
+module "jump" {
+#   source   = "./${var.deploymentType}/firewall"
+  source   = "./single_tier/jumpboxes"
+  resourceGroup = "${azurerm_resource_group.main}"
+  sshPublicKey = "${var.sshPublicKeyPath}"
+  region = "${var.region}"
+  subnetExternal = "${azurerm_subnet.external}"
+  securityGroup = "${azurerm_network_security_group.main}"
+  owner = "${var.owner}"
+  templates = "/workspace/templates"
+  adminUserName = "${var.adminUserName}"
+  adminPassword = "${var.adminPassword}"
+  prefix = "${var.projectPrefix}"
+}
+
 # #
 # # Three Tier
 # #

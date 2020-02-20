@@ -1,14 +1,37 @@
 # linuxJump
+resource "azurerm_network_interface" "linuxJump-ext-nic" {
+  name                = "${var.prefix}-linuxJump-ext-nic"
+  location            = "${var.resourceGroup.location}"
+  resource_group_name = "${var.resourceGroup.name}"
+  network_security_group_id = "${var.securityGroup.id}"
+
+  ip_configuration {
+    name                          = "primary"
+    subnet_id                     = "${var.subnetExternal.id}"
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "${var.linuxJumpIp}"
+    primary			  = true
+  }
+
+  tags = {
+    Name           = "${var.environment}-linuxJump-ext-int"
+    environment    = "${var.environment}"
+    owner          = "${var.owner}"
+    group          = "${var.group}"
+    costcenter     = "${var.costcenter}"
+    application    = "linuxJump"
+  }
+}
 resource "azurerm_virtual_machine" "linuxJump" {
     name                  = "linuxJump"
     location                     = "${var.resourceGroup.location}"
     resource_group_name          = "${var.resourceGroup.name}"
 
-    network_interface_ids = ["${azurerm_network_interface.backend01-ext-nic.id}"]
+    network_interface_ids = ["${azurerm_network_interface.linuxJump-ext-nic.id}"]
     vm_size               = "Standard_DS1_v2"
 
     storage_os_disk {
-        name              = "backendOsDisk"
+        name              = "linuxJumpOsDisk"
         caching           = "ReadWrite"
         create_option     = "FromImage"
         managed_disk_type = "Premium_LRS"

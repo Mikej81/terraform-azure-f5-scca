@@ -99,7 +99,7 @@
                             "addressDiscovery": "static",
                             "servicePort": 3389,
                             "serverAddresses": [
-                                "10.90.2.100"
+                                "10.90.2.98"
                             ]
                         }
                     ],
@@ -116,7 +116,7 @@
                             "addressDiscovery": "static",
                             "servicePort": 22,
                             "serverAddresses": [
-                                "10.90.2.100"
+                                "10.90.2.99"
                             ]
                         }
                     ],
@@ -133,9 +133,6 @@
                 },
                 "mgmt_http": {
                     "policyFirewallEnforced": {
-                        "use": "/Common/Shared/sccaBaselineAFMPolicy"
-                    },
-                    "policyFirewallStaged": {
                         "use": "/Common/Shared/sccaBaselineAFMPolicy"
                     },
                     "layer4": "tcp",
@@ -175,9 +172,6 @@
                     "policyFirewallEnforced": {
                         "use": "/Common/Shared/sccaBaselineAFMPolicy"
                     },
-                    "policyFirewallStaged": {
-                        "use": "/Common/Shared/sccaBaselineAFMPolicy"
-                    },
                     "layer4": "tcp",
                     "pool": "rdp_pool",
                     "securityLogProfiles": [
@@ -205,9 +199,6 @@
                 },
                 "mgmt_ssh": {
                     "policyFirewallEnforced": {
-                        "use": "/Common/Shared/sccaBaselineAFMPolicy"
-                    },
-                    "policyFirewallStaged": {
                         "use": "/Common/Shared/sccaBaselineAFMPolicy"
                     },
                     "layer4": "tcp",
@@ -249,9 +240,6 @@
                     "policyFirewallEnforced": {
                         "use": "/Common/Shared/sccaBaselineAFMPolicy"
                     },
-                    "policyFirewallStaged": {
-                        "use": "/Common/Shared/sccaBaselineAFMPolicy"
-                    },
                     "layer4": "tcp",
                     "securityLogProfiles": [
                         {
@@ -286,9 +274,6 @@
                 },
                 "sccaBaselineExampleHTTPS": {
                     "policyFirewallEnforced": {
-                        "use": "/Common/Shared/sccaBaselineAFMPolicyHTTP"
-                    },
-                    "policyFirewallStaged": {
                         "use": "/Common/Shared/sccaBaselineAFMPolicyHTTP"
                     },
                     "layer4": "tcp",
@@ -355,10 +340,27 @@
                     ],
                     "class": "Pool"
                 },
-                "sccaBaselineDemoApp": {
+                "sccaBaselineDemoAppHttps": {
                     "monitors": [
                         {
                             "bigip": "/Common/https"
+                        }
+                    ],
+                    "members": [
+                        {
+                            "addressDiscovery": "static",
+                            "servicePort":443,
+                            "serverAddresses": [
+                                "10.90.2.101"
+                            ]
+                        }
+                    ],
+                    "class": "Pool"
+                },
+                "sccaBaselineDemoAppHttp": {
+                    "monitors": [
+                        {
+                            "bigip": "/Common/http"
                         }
                     ],
                     "members": [
