@@ -302,7 +302,7 @@
                         "bigip": "/Common/tcp"
                     },
                     "virtualAddresses": [
-                        "-external-virtual-address-"
+                        "10.90.2.0/24"
                     ],
                     "virtualPort": 443,
                     "snat": "auto",
