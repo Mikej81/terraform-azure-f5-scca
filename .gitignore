@@ -3,6 +3,7 @@
 vm_as3_data.json
 vm01_do_data.json
 vm02_do_data.json
+onboard.sh
 # Local .terraform directories
 **/.terraform/*
 

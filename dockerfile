@@ -1,5 +1,5 @@
 # Setup build arguments with default versions
-ARG TERRAFORM_VERSION=0.12.12
+ARG TERRAFORM_VERSION=0.12.20
 
 # Download Terraform binary
 FROM debian:stretch-20190506-slim as terraform
