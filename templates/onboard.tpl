@@ -248,6 +248,11 @@ toolsList=$(cat -<<EOF
         "name": "f5-cloud-failover-extension",
         "version": "${cfVersion}",
         "url": "${cfExternalDeclarationUrl}"
+      },
+      {
+        "name": "f5-appsvcs-templates",
+        "version": "${fastVersion}",
+        "url": "${cfExternalDeclarationUrl}"
       }
   ]
 }
@@ -264,7 +269,7 @@ do
         path='tags/v'
     fi
     echo "downloading $tool, $version"
-    if [ $tool == "f5-cloud-failover-extension" ]; then
+    if [ $tool == "f5-appsvcs-templates" ]; then
         files=$(/usr/bin/curl -sk --interface mgmt https://api.github.com/repos/f5devcentral/$tool/releases/$path$version | jq -r '.assets[] | select(.name | contains (".rpm")) | .browser_download_url')
     else
         files=$(/usr/bin/curl -sk --interface mgmt https://api.github.com/repos/F5Networks/$tool/releases/$path$version | jq -r '.assets[] | select(.name | contains (".rpm")) | .browser_download_url')
