@@ -33,11 +33,13 @@ elif [ $machine == "Linux" ]; then
   fi
 fi
 
+#Map Subscription
+export ARM_SUBSCRIPTION_ID=`az account show | jq -r '.id'`
+
 #Create ServicePrincipal for ClientID and Secret
-spn=`az ad sp create-for-rbac --name scaServicePrincipalName`
+spn=`az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/$ARM_SUBSCRIPTION_ID" --name http://sccaServicePrincipalName`
 
 echo "Setting environment variables for Terraform"
-export ARM_SUBSCRIPTION_ID=`az account show | jq -r '.id'`
 export ARM_CLIENT_ID=`echo $spn | jq -r '.appId'`
 export ARM_CLIENT_SECRET=`echo $spn | jq -r '.password'`
 export ARM_TENANT_ID=`az account show | jq -r '.tenantId'`
