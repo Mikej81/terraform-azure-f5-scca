@@ -9,26 +9,20 @@ variable linuxJumpIp { default = "10.90.2.99" }
 
 variable timezone { default = "UTC" }
 # cloud
-variable "region" { default = "none" }
-variable "prefix" { default ="scca" }
-variable "resourceGroup" { default= "scca-tf-rg" }
-variable "securityGroup" { default = "none" }
+variable region { default = "none" }
+variable prefix { default ="scca" }
+variable resourceGroup { default= "scca-tf-rg" }
+variable securityGroup { default = "none" }
 
 # network
-variable "subnetExternal" { default = "none"}
-
-
-# templates directory
-variable "templates" {
-  default = "/workspace/templates"
-}
+variable subnetExternal { default = "none"}
 
 
 # creds
 
 variable adminUserName { default = "admin" }
 variable adminPassword { default = "2017F5Networks!!" }
-variable "sshPublicKey" { default = "/mykey.pub" }
+variable sshPublicKey { default = "/mykey.pub" }
 
 
 # TAGS
