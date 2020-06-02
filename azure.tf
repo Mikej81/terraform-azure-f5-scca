@@ -1,6 +1,6 @@
 # Configure the Microsoft Azure Provider, replace Service Principal and Subscription with your own
 provider azurerm {
-  version = "=1.38.0"
+  version = "=1.44.0"
 }
 
 # Create a Resource Group for the new Virtual Machines
