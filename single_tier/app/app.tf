@@ -1,37 +1,37 @@
 # network interface for app vm
-resource azurerm_network_interface app01-ext-nic {
+resource "azurerm_network_interface" "app01-ext-nic" {
   name                = "${var.prefix}-app01-ext-nic"
-  location            = var.resourceGroup.location
-  resource_group_name = var.resourceGroup.name
-  network_security_group_id = var.securityGroup.id
+  location            = "${var.resourceGroup.location}"
+  resource_group_name = "${var.resourceGroup.name}"
+  network_security_group_id = "${var.securityGroup.id}"
 
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = var.subnetExternal.id
+    subnet_id                     = "${var.subnetExternal.id}"
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.app01ext
+    private_ip_address            = "${var.app01ext}"
     primary			  = true
   }
 
   tags = {
     Name           = "${var.environment}-app01-ext-int"
-    environment    = var.environment
-    owner          = var.owner
-    group          = var.group
-    costcenter     = var.costcenter
+    environment    = "${var.environment}"
+    owner          = "${var.owner}"
+    group          = "${var.group}"
+    costcenter     = "${var.costcenter}"
     application    = "app1"
   }
 }
 
 
 # app01-VM
-resource azurerm_virtual_machine app01-vm {
+resource "azurerm_virtual_machine" "app01-vm" {
     count                 = 1
     name                  = "app01-vm"
-    location                     = var.resourceGroup.location
-    resource_group_name          = var.resourceGroup.name
+    location                     = "${var.resourceGroup.location}"
+    resource_group_name          = "${var.resourceGroup.name}"
 
-    network_interface_ids = [azurerm_network_interface.app01-ext-nic.id]
+    network_interface_ids = ["${azurerm_network_interface.app01-ext-nic.id}"]
     vm_size               = "Standard_DS1_v2"
 
     storage_os_disk {
@@ -50,8 +50,8 @@ resource azurerm_virtual_machine app01-vm {
 
     os_profile {
         computer_name  = "app01"
-        admin_username = var.adminUserName
-        admin_password = var.adminPassword
+        admin_username = "${var.adminUserName}"
+        admin_password = "${var.adminPassword}"
         custom_data = <<-EOF
               #!/bin/bash
               apt-get update -y;
@@ -69,10 +69,10 @@ resource azurerm_virtual_machine app01-vm {
 
   tags = {
     Name           = "${var.environment}-app01"
-    environment    = var.environment
-    owner          = var.owner
-    group          = var.group
-    costcenter     = var.costcenter
-    application    = var.application
+    environment    = "${var.environment}"
+    owner          = "${var.owner}"
+    group          = "${var.group}"
+    costcenter     = "${var.costcenter}"
+    application    = "${var.application}"
   }
 }

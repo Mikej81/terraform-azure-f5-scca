@@ -277,7 +277,7 @@
                         "bigip": "/Common/tcp"
                     },
                     "virtualAddresses": [
-                        "10.90.2.0"
+                        "10.90.2.4"
                     ],
                     "virtualPort": 0,
                     "snat": "auto",
