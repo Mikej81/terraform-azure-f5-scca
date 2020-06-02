@@ -1,6 +1,6 @@
 # Configure the Microsoft Azure Provider, replace Service Principal and Subscription with your own
 provider "azurerm" {
-  version = "=1.38.0"
+  version = "=1.44.0"
 }
 
 # Create a Resource Group for the new Virtual Machines
@@ -108,7 +108,7 @@ resource "azurerm_lb_rule" "https_rule" {
   backend_address_pool_id        = "${azurerm_lb_backend_address_pool.backend_pool.id}"
   idle_timeout_in_minutes        = 5
   probe_id                       = "${azurerm_lb_probe.lb_probe.id}"
-  depends_on                     = ["azurerm_lb_probe.lb_probe"]
+  depends_on                     = [azurerm_lb_probe.lb_probe]
 }
 
 resource "azurerm_lb_rule" "ssh_rule" {
@@ -123,7 +123,7 @@ resource "azurerm_lb_rule" "ssh_rule" {
   backend_address_pool_id        = "${azurerm_lb_backend_address_pool.backend_pool.id}"
   idle_timeout_in_minutes        = 5
   probe_id                       = "${azurerm_lb_probe.lb_probe.id}"
-  depends_on                     = ["azurerm_lb_probe.lb_probe"]
+  depends_on                     = [azurerm_lb_probe.lb_probe]
 }
 resource "azurerm_lb_rule" "rdp_rule" {
   name                           = "RDPRule"
@@ -137,7 +137,7 @@ resource "azurerm_lb_rule" "rdp_rule" {
   backend_address_pool_id        = "${azurerm_lb_backend_address_pool.backend_pool.id}"
   idle_timeout_in_minutes        = 5
   probe_id                       = "${azurerm_lb_probe.lb_probe.id}"
-  depends_on                     = ["azurerm_lb_probe.lb_probe"]
+  depends_on                     = [azurerm_lb_probe.lb_probe]
 }
 
 # Create a Network Security Group with some rules
