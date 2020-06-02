@@ -1,34 +1,41 @@
 
-variable resourceGroup {
+
+# templates directory
+variable "templates" {
+  default = "/workspace/templates"
+}
+
+
+variable "resourceGroup" {
     default= "scca-tf-rg"
 }
 # admin credentials
 variable adminUserName { default = "admin" }
 variable adminPassword { default = "2017F5Networks!!" }
-variable sshPublicKey { default = "/mykey.pub" }
+variable "sshPublicKey" { default = "/mykey.pub" }
 # cloud info
-variable region { default = "east-us1" }
-variable securityGroup {
+variable "region" { default = "east-us1" }
+variable "securityGroup" {
   default = "none"
 }
-variable availabilitySet {
+variable "availabilitySet" {
   
 }
 
-variable prefix {
+variable "prefix" {
   default ="scca"
 }
 # bigip network
-variable subnetMgmt {
+variable "subnetMgmt" {
   
 }
-variable subnetExternal {
+variable "subnetExternal" {
   
 }
-variable subnetInternal {
+variable "subnetInternal" {
   
 }
-variable backendPool {
+variable "backendPool" {
   description = "azureLB resouce pool"
 }
 
@@ -44,7 +51,7 @@ variable f5vm02int { default = "10.90.3.5"}
 
 
 # BIGIP Image
-variable instanceType { default = "Standard_DS5_v2" }
+variable instance_type { default = "Standard_DS4_v2" }
 variable image_name { default = "f5-bigip-virtual-edition-25m-best-hourly" }
 variable product { default = "f5-big-ip-best" }
 variable bigip_version { default = "latest" }

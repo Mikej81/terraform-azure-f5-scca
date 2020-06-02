@@ -1,15 +1,19 @@
+# templates directory
+variable "templates" {
+  default = "/workspace/templates"
+}
 
-variable prefix {
+variable "prefix" {
   default ="scca"
 }
-variable resourceGroup {
+variable "resourceGroup" {
     default= "scca-tf-rg"
 }
-variable securityGroup {
+variable "securityGroup" {
   default = "none"
 }
 
-variable subnetExternal {
+variable "subnetExternal" {
   default= "none"
 }
 
