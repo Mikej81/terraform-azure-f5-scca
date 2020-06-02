@@ -7,6 +7,9 @@ variable region { default = "USGov Virginia" }
 variable "deploymentType" { default = "single_tier" }
 variable sshPublicKeyPath { default = "/mykey.pub"}
 
+# device
+variable instanceType { default = "Standard_DS5_v2" }
+
 # NETWORK
 variable cidr { default = "10.90.0.0/16" }
 variable "subnets" {
