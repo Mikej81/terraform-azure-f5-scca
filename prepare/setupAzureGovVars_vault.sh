@@ -25,10 +25,6 @@ export ARM_SUBSCRIPTION_ID=`az account show | jq -r '.id'`
 # Create blob container
     az storage container create --name $CONTAINER_NAME --account-name $STORAGE_ACCOUNT_NAME --account-key $ACCOUNT_KEY
 
-    #echo "storage_account_name: $STORAGE_ACCOUNT_NAME"
-    #echo "container_name: $CONTAINER_NAME"
-    #echo "access_key: $ACCOUNT_KEY"
-
 # Create Azure KeyVault
     az keyvault create -g $RESOURCE_GROUP_NAME --name $VAULT_NAME 
 
@@ -43,6 +39,5 @@ export ARM_TENANT_ID=`az account show | jq -r '.tenantId'`
 export ARM_ACCESS_KEY=$(az keyvault secret show --name $SECRET_NAME --vault-name $VAULT_NAME --query value -o tsv)
 
 # Not needed for public, required for usgovernment, german, china
-export ARM_ENVIRONMENT=`az account show | jq -r '.environmentName'`
-
-#echo $ARM_CLIENT_ID $ARM_CLIENT_SECRET $ARM_TENANT_ID $ARM_ENVIRONMENT
+#export ARM_ENVIRONMENT=`az account show | jq -r '.environmentName'`
+export ARM_ENVIRONMENT="usgovernment"

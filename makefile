@@ -33,6 +33,19 @@ azure:
 	${CONTAINER_IMAGE} \
 	sh -c "terraform init; terraform plan; terraform apply --auto-approve"
 
+gov:
+	@#terraform init, plan, apply
+	@echo "init, plan, apply"
+	@docker run --rm -it \
+	--volume ${DIR}:/workspace \
+	-e ARM_CLIENT_ID=${ARM_CLIENT_ID} \
+	-e ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET} \
+	-e ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID} \
+	-e ARM_TENANT_ID=${ARM_TENANT_ID} \
+	-e ARM_ENVIRONMENT=${ARM_ENVIRONMENT} \
+	${CONTAINER_IMAGE} \
+	sh -c "terraform init; terraform plan; terraform apply --auto-approve"
+
 plan:
 	@#terraform plan
 	@echo "plan"

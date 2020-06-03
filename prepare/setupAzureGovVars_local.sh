@@ -47,4 +47,5 @@ export ARM_CLIENT_SECRET=`echo $spn | jq -r '.password'`
 export ARM_TENANT_ID=`az account show | jq -r '.tenantId'`
 
 # Not needed for public, required for usgovernment, german, china
-export ARM_ENVIRONMENT=`az account show | jq -r '.environmentName'`
+#export ARM_ENVIRONMENT=`az account show | jq -r '.environmentName'`
+export ARM_ENVIRONMENT="usgovernment"
