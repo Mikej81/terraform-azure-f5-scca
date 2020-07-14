@@ -3,7 +3,6 @@ resource azurerm_network_interface app01-ext-nic {
   name                = "${var.prefix}-app01-ext-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  network_security_group_id = var.securityGroup.id
 
   ip_configuration {
     name                          = "primary"
@@ -23,6 +22,10 @@ resource azurerm_network_interface app01-ext-nic {
   }
 }
 
+resource "azurerm_network_interface_security_group_association" "app-nsg" {
+  network_interface_id      = azurerm_network_interface.app01-ext-nic.id
+  network_security_group_id = var.securityGroup.id
+}
 
 # app01-VM
 resource azurerm_virtual_machine app01-vm {
