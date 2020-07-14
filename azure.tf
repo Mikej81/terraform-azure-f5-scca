@@ -4,6 +4,9 @@ provider "azurerm" {
     features{}
 }
 
+provider "http" {
+}
+
 # Create a Resource Group for the new Virtual Machines
 resource azurerm_resource_group main {
   name     = "${var.projectPrefix}_rg"

@@ -7,9 +7,6 @@ variable region { default = "USGov Virginia" }
 variable deploymentType { default = "single_tier" }
 variable sshPublicKeyPath { default = "/mykey.pub"}
 
-# device
-variable instanceType { default = "Standard_DS5_v2" }
-
 # NETWORK
 variable cidr { default = "10.90.0.0/16" }
 variable subnets {
@@ -21,8 +18,12 @@ variable subnets {
   }
 }
 
-# BIGIP Image
+# device
 variable instanceType { default = "Standard_DS5_v2" }
+
+# BIGIP Image
+# check available image names with az cli:
+#    az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all 
 variable image_name { default = "f5-bigip-virtual-edition-25m-best-hourly" }
 variable product { default = "f5-big-ip-best" }
 variable bigip_version { default = "latest" }

@@ -53,7 +53,6 @@ resource azurerm_network_interface vm02-mgmt-nic {
   name                      = "${var.prefix}-vm02-mgmt-nic"
   location                  = var.resourceGroup.location
   resource_group_name       = var.resourceGroup.name
-  #network_security_group_id = var.securityGroup.id
 
   ip_configuration {
     name                          = "primary"
@@ -83,8 +82,6 @@ resource azurerm_network_interface vm01-ext-nic {
   name                = "${var.prefix}-vm01-ext-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  #network_security_group_id = var.securityGroup.id
-#   depends_on          = [azurerm_lb_backend_address_pool.backend_pool]
   enable_accelerated_networking = true
 
   ip_configuration {
@@ -123,8 +120,6 @@ resource azurerm_network_interface vm02-ext-nic {
   name                = "${var.prefix}-vm02-ext-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  #network_security_group_id = var.securityGroup.id
-#   depends_on          = [azurerm_lb_backend_address_pool.backend_pool]
   enable_accelerated_networking = true
 
   ip_configuration {
@@ -164,8 +159,6 @@ resource azurerm_network_interface vm01-int-nic {
   name                = "${var.prefix}-vm01-int-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  #network_security_group_id = var.securityGroup.id
-  #depends_on          = [azurerm_lb_backend_address_pool.backend_pool]
   enable_accelerated_networking = true
 
   ip_configuration {
@@ -195,8 +188,6 @@ resource azurerm_network_interface vm02-int-nic {
   name                = "${var.prefix}-vm02-int-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  #network_security_group_id = var.securityGroup.id
-  #depends_on          = [azurerm_lb_backend_address_pool.backend_pool]
   enable_accelerated_networking = true
 
   ip_configuration {
@@ -224,14 +215,12 @@ resource azurerm_network_interface_security_group_association bigip02-int-nsg {
 
 # Associate the Network Interface to the BackendPool
 resource azurerm_network_interface_backend_address_pool_association bpool_assc_vm01 {
-#   depends_on          = [azurerm_lb_backend_address_pool.backend_pool, azurerm_network_interface.vm01-ext-nic]
   network_interface_id    = azurerm_network_interface.vm01-ext-nic.id
   ip_configuration_name   = "secondary"
   backend_address_pool_id = var.backendPool.id
 }
 
 resource azurerm_network_interface_backend_address_pool_association bpool_assc_vm02 {
-#   depends_on          = [azurerm_lb_backend_address_pool.backend_pool, azurerm_network_interface.vm02-ext-nic]
   network_interface_id    = azurerm_network_interface.vm02-ext-nic.id
   ip_configuration_name   = "secondary"
   backend_address_pool_id = var.backendPool.id
@@ -387,12 +376,16 @@ data template_file vm_onboard {
 
 # template ATC json
 
-
 # as3 uuid generation
 resource random_uuid as3_uuid { }
 
+data http template {
+  url = "https://raw.githubusercontent.com/Mikej81/f5-securecloud-DO/master/dist/terraform/latest/cluster.json"
+}
+
 data template_file vm01_do_json {
-    template = "${file("./templates/cluster.json")}"
+  #template = "${file("./templates/cluster.json")}"
+  template = "${data.http.template.body}"
   vars = {
     #Uncomment the following line for BYOL
     #local_sku	    = var.license1
@@ -414,7 +407,8 @@ data template_file vm01_do_json {
 }
 
 data template_file vm02_do_json {
-    template = "${file("./templates/cluster.json")}"
+    #template = "${file("./templates/cluster.json")}"
+    template = "${data.http.template.body}"
   vars = {
     #Uncomment the following line for BYOL
     #local_sku      = var.license2
@@ -446,10 +440,7 @@ data template_file as3_json {
 # Run Startup Script
 resource azurerm_virtual_machine_extension f5vm01-run-startup-cmd {
   name                 = "${var.environment}-f5vm01-run-startup-cmd"
-#   depends_on           = [azurerm_virtual_machine.f5vm01, azurerm_virtual_machine.backendvm]
   depends_on           = [azurerm_virtual_machine.f5vm01]
-#  location             = var.region
-  #resource_group_name  = var.resourceGroup.name
   virtual_machine_id   = azurerm_virtual_machine.f5vm01.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
@@ -473,10 +464,7 @@ resource azurerm_virtual_machine_extension f5vm01-run-startup-cmd {
 
 resource azurerm_virtual_machine_extension f5vm02-run-startup-cmd {
   name                 = "${var.environment}-f5vm02-run-startup-cmd"
-#   depends_on           = [azurerm_virtual_machine.f5vm02, azurerm_virtual_machine.backendvm]
   depends_on           = [azurerm_virtual_machine.f5vm02]
-#  location             = var.region
-  #resource_group_name  = var.resourceGroup.name
   virtual_machine_id = azurerm_virtual_machine.f5vm02.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
