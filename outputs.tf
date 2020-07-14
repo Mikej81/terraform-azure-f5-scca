@@ -1,5 +1,5 @@
 ## OUTPUTS ###
-data "azurerm_public_ip" "lbpip" {
+data azurerm_public_ip lbpip {
   name                = azurerm_public_ip.lbpip.name
   resource_group_name = azurerm_resource_group.main.name
 }

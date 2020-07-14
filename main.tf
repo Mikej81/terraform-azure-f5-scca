@@ -80,8 +80,6 @@ resource azurerm_lb_rule rdp_rule {
   depends_on                     = [azurerm_lb_probe.lb_probe]
 }
 
-
-
 # Single Tier
 #
 # Deploy firewall HA cluster
