@@ -419,7 +419,7 @@ resource azurerm_virtual_machine_extension f5vm01-run-startup-cmd {
   depends_on           = [azurerm_virtual_machine.f5vm01]
 #  location             = var.region
   resource_group_name  = var.resourceGroup.name
-  virtual_machine_name = azurerm_virtual_machine.f5vm01.name
+  virtual_machine_id   = "azurerm_virtual_machine.f5vm01.name"
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
   type_handler_version = "2.0"

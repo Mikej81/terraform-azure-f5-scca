@@ -1,6 +1,7 @@
 # Configure the Microsoft Azure Provider, replace Service Principal and Subscription with your own
 provider "azurerm" {
     version = "~> 2.1.0"
+    features{}
 }
 
 # Create a Resource Group for the new Virtual Machines
