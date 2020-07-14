@@ -1,4 +1,3 @@
-
 variable resourceGroup {
     default= "scca-tf-rg"
 }
@@ -32,19 +31,34 @@ variable backendPool {
   description = "azureLB resource pool"
 }
 
-
+# bigip mgmt private ips
 variable f5vm01mgmt { default = "10.90.1.4" }
+variable f5vm02mgmt { default = "10.90.1.5" }
+
+# bigip external private ips
 variable f5vm01ext { default = "10.90.2.4" }
 variable f5vm01ext_sec { default = "10.90.2.11" }
-variable f5vm01int { default = "10.90.3.4"}
-variable f5vm02mgmt { default = "10.90.1.5" }
 variable f5vm02ext { default = "10.90.2.5" }
 variable f5vm02ext_sec { default = "10.90.2.12" }
-variable f5vm02int { default = "10.90.3.5"}
+
+# Example application private ips
+variable app01ext { default = "10.90.2.101" }
+
+# bigip internal private ips 
+variable f5vm01int { default = "10.90.3.4" }
+variable f5vm02int { default = "10.90.3.5" }
+
+# winjump
+variable winjumpip { default = "10.90.2.98" }
+
+# linuxjump
+variable linuxjumpip { default = "10.90.2.99" }
+
+# device
+variable instanceType { default = "Standard_DS5_v2" }
 
 
 # BIGIP Image
-variable instanceType { default = "Standard_DS5_v2" }
 variable image_name { default = "f5-bigip-virtual-edition-25m-best-hourly" }
 variable product { default = "f5-big-ip-best" }
 variable bigip_version { default = "latest" }

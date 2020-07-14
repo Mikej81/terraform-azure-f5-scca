@@ -9,7 +9,7 @@ resource azurerm_network_interface linuxJump-ext-nic {
     name                          = "primary"
     subnet_id                     = var.subnetExternal.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.linuxJumpIp
+    private_ip_address            = var.linuxjumpip
     primary			  = true
   }
 

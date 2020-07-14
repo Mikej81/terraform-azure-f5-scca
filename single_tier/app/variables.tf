@@ -1,16 +1,16 @@
 
 variable prefix {
-  default ="scca"
+  default = "scca"
 }
 variable resourceGroup {
-    default= "scca-tf-rg"
+    default = "scca-tf-rg"
 }
 variable securityGroup {
   default = "none"
 }
 
 variable subnetExternal {
-  default= "none"
+  default = "none"
 }
 
 variable app01ext { default = "10.90.2.101" }

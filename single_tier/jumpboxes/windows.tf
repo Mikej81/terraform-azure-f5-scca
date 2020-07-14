@@ -18,7 +18,7 @@ resource azurerm_network_interface winjump-ext-nic {
     name                          = "primary"
     subnet_id                     = var.subnetExternal.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.winJumpIp
+    private_ip_address            = var.winjumpip
     primary			  = true
   }
 
