@@ -16,7 +16,7 @@ variable availabilitySet {
 }
 
 variable prefix {
-  default ="scca"
+  default = "scca"
 }
 # bigip network
 variable subnetMgmt {
@@ -29,7 +29,7 @@ variable subnetInternal {
   
 }
 variable backendPool {
-  description = "azureLB resouce pool"
+  description = "azureLB resource pool"
 }
 
 

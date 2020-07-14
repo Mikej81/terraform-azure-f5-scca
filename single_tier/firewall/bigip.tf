@@ -44,7 +44,7 @@ resource azurerm_network_interface vm01-mgmt-nic {
   }
 }
 
-resource "azurerm_network_interface_security_group_association" "bigip01-mgmt-nsg" {
+resource azurerm_network_interface_security_group_association bigip01-mgmt-nsg {
   network_interface_id      = azurerm_network_interface.vm01-mgmt-nic.id
   network_security_group_id = var.securityGroup.id
 }
@@ -73,7 +73,7 @@ resource azurerm_network_interface vm02-mgmt-nic {
   }
 }
 
-resource "azurerm_network_interface_security_group_association" "bigip02-mgmt-nsg" {
+resource azurerm_network_interface_security_group_association bigip02-mgmt-nsg {
   network_interface_id      = azurerm_network_interface.vm02-mgmt-nic.id
   network_security_group_id = var.securityGroup.id
 }
@@ -114,7 +114,7 @@ resource azurerm_network_interface vm01-ext-nic {
   }
 }
 
-resource "azurerm_network_interface_security_group_association" "bigip01-ext-nsg" {
+resource azurerm_network_interface_security_group_association bigip01-ext-nsg {
   network_interface_id      = azurerm_network_interface.vm01-ext-nic.id
   network_security_group_id = var.securityGroup.id
 }
@@ -154,7 +154,7 @@ resource azurerm_network_interface vm02-ext-nic {
   }
 }
 
-resource "azurerm_network_interface_security_group_association" "bigip02-ext-nsg" {
+resource azurerm_network_interface_security_group_association bigip02-ext-nsg {
   network_interface_id      = azurerm_network_interface.vm02-ext-nic.id
   network_security_group_id = var.securityGroup.id
 }
@@ -186,7 +186,7 @@ resource azurerm_network_interface vm01-int-nic {
   }
 }
 
-resource "azurerm_network_interface_security_group_association" "bigip01-int-nsg" {
+resource azurerm_network_interface_security_group_association bigip01-int-nsg {
   network_interface_id      = azurerm_network_interface.vm01-int-nic.id
   network_security_group_id = var.securityGroup.id
 }
@@ -217,7 +217,7 @@ resource azurerm_network_interface vm02-int-nic {
   }
 }
 
-resource "azurerm_network_interface_security_group_association" "bigip02-int-nsg" {
+resource azurerm_network_interface_security_group_association bigip02-int-nsg {
   network_interface_id      = azurerm_network_interface.vm02-int-nic.id
   network_security_group_id = var.securityGroup.id
 }
