@@ -164,7 +164,7 @@ resource azurerm_network_interface vm01-int-nic {
   name                = "${var.prefix}-vm01-int-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  network_security_group_id = var.securityGroup.id
+  #network_security_group_id = var.securityGroup.id
   #depends_on          = [azurerm_lb_backend_address_pool.backend_pool]
   enable_accelerated_networking = true
 
@@ -186,11 +186,16 @@ resource azurerm_network_interface vm01-int-nic {
   }
 }
 
+resource "azurerm_network_interface_security_group_association" "bigip01-int-nsg" {
+  network_interface_id      = azurerm_network_interface.vm01-int-nic.id
+  network_security_group_id = var.securityGroup.id
+}
+
 resource azurerm_network_interface vm02-int-nic {
   name                = "${var.prefix}-vm02-int-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  network_security_group_id = var.securityGroup.id
+  #network_security_group_id = var.securityGroup.id
   #depends_on          = [azurerm_lb_backend_address_pool.backend_pool]
   enable_accelerated_networking = true
 
@@ -211,6 +216,12 @@ resource azurerm_network_interface vm02-int-nic {
     application    = var.application
   }
 }
+
+resource "azurerm_network_interface_security_group_association" "bigip02-int-nsg" {
+  network_interface_id      = azurerm_network_interface.vm02-int-nic.id
+  network_security_group_id = var.securityGroup.id
+}
+
 # Associate the Network Interface to the BackendPool
 resource azurerm_network_interface_backend_address_pool_association bpool_assc_vm01 {
 #   depends_on          = [azurerm_lb_backend_address_pool.backend_pool, azurerm_network_interface.vm01-ext-nic]
@@ -438,8 +449,8 @@ resource azurerm_virtual_machine_extension f5vm01-run-startup-cmd {
 #   depends_on           = [azurerm_virtual_machine.f5vm01, azurerm_virtual_machine.backendvm]
   depends_on           = [azurerm_virtual_machine.f5vm01]
 #  location             = var.region
-  resource_group_name  = var.resourceGroup.name
-  virtual_machine_id   = "azurerm_virtual_machine.f5vm01.name"
+  #resource_group_name  = var.resourceGroup.name
+  virtual_machine_id   = azurerm_virtual_machine.f5vm01.name
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
   type_handler_version = "2.0"
@@ -465,8 +476,8 @@ resource azurerm_virtual_machine_extension f5vm02-run-startup-cmd {
 #   depends_on           = [azurerm_virtual_machine.f5vm02, azurerm_virtual_machine.backendvm]
   depends_on           = [azurerm_virtual_machine.f5vm02]
 #  location             = var.region
-  resource_group_name  = var.resourceGroup.name
-  virtual_machine_name = azurerm_virtual_machine.f5vm02.name
+  #resource_group_name  = var.resourceGroup.name
+  virtual_machine_id = azurerm_virtual_machine.f5vm02.name
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
   type_handler_version = "2.0"

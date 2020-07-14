@@ -3,7 +3,7 @@ resource azurerm_network_interface linuxJump-ext-nic {
   name                = "${var.prefix}-linuxJump-ext-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  network_security_group_id = var.securityGroup.id
+  #network_security_group_id = var.securityGroup.id
 
   ip_configuration {
     name                          = "primary"
@@ -22,6 +22,12 @@ resource azurerm_network_interface linuxJump-ext-nic {
     application    = "linuxJump"
   }
 }
+
+resource "azurerm_network_interface_security_group_association" "linuxJump-ext-nsg" {
+  network_interface_id      = azurerm_network_interface.linuxJump-ext-nic.id
+  network_security_group_id = var.securityGroup.id
+}
+
 resource azurerm_virtual_machine linuxJump {
     name                  = "linuxJump"
     location                     = var.resourceGroup.location

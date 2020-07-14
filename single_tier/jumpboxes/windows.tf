@@ -12,7 +12,7 @@ resource azurerm_network_interface winjump-ext-nic {
   name                = "${var.prefix}-winjump-ext-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  network_security_group_id = var.securityGroup.id
+  #network_security_group_id = var.securityGroup.id
 
   ip_configuration {
     name                          = "primary"
@@ -32,7 +32,10 @@ resource azurerm_network_interface winjump-ext-nic {
   }
 }
 
-
+resource "azurerm_network_interface_security_group_association" "winjump-ext-nsg" {
+  network_interface_id      = azurerm_network_interface.winjump-ext-nic.id
+  network_security_group_id = var.securityGroup.id
+}
 
 #https://www.terraform.io/docs/providers/azurerm/r/virtual_machine.html 
 resource azurerm_virtual_machine winJump {
