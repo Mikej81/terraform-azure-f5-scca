@@ -417,7 +417,7 @@ resource azurerm_virtual_machine_extension f5vm01-run-startup-cmd {
   name                 = "${var.environment}-f5vm01-run-startup-cmd"
 #   depends_on           = [azurerm_virtual_machine.f5vm01, azurerm_virtual_machine.backendvm]
   depends_on           = [azurerm_virtual_machine.f5vm01]
-  location             = var.region
+#  location             = var.region
   resource_group_name  = var.resourceGroup.name
   virtual_machine_name = azurerm_virtual_machine.f5vm01.name
   publisher            = "Microsoft.Azure.Extensions"
@@ -444,7 +444,7 @@ resource azurerm_virtual_machine_extension f5vm02-run-startup-cmd {
   name                 = "${var.environment}-f5vm02-run-startup-cmd"
 #   depends_on           = [azurerm_virtual_machine.f5vm02, azurerm_virtual_machine.backendvm]
   depends_on           = [azurerm_virtual_machine.f5vm02]
-  location             = var.region
+#  location             = var.region
   resource_group_name  = var.resourceGroup.name
   virtual_machine_name = azurerm_virtual_machine.f5vm02.name
   publisher            = "Microsoft.Azure.Extensions"
