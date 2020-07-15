@@ -39,8 +39,8 @@ resource "azurerm_network_interface_security_group_association" "winjump-ext-nsg
 
 #https://www.terraform.io/docs/providers/azurerm/r/virtual_machine.html 
 resource azurerm_virtual_machine winJump {
-    name="winJump"
-    resource_group_name =   var.resourceGroup.name
+    name = "winJump"
+    resource_group_name = var.resourceGroup.name
     location    =   var.resourceGroup.location
     vm_size = "Standard_B2s" #Information about the Virtual Machines Sizes: https://docs.microsoft.com/nl-be/azure/virtual-machines/windows/sizes-general
     network_interface_ids=[azurerm_network_interface.winjump-ext-nic.id] #Front-End Network
@@ -51,10 +51,10 @@ resource azurerm_virtual_machine winJump {
     }
     #OS Image selection: https://docs.microsoft.com/en-us/azure/virtual-machines/windows/cli-ps-findimage
     storage_image_reference  {
-        publisher="MicrosoftWindowsServer"
-        offer="WindowsServer"
-        sku="2016-Datacenter"
-        version="latest"
+        publisher = "MicrosoftWindowsServer"
+        offer = "WindowsServer"
+        sku = "2016-Datacenter"
+        version = "latest"
     }
  
     storage_os_disk {
@@ -79,4 +79,21 @@ resource azurerm_virtual_machine winJump {
     costcenter     = var.costcenter
     application    = var.application
   }
+}
+
+resource azurerm_virtual_machine_extension winJump-run-startup-cmd {
+  name                 = "${var.environment}-winJump-run-startup-cmd"
+  depends_on           = [azurerm_virtual_machine.winJump]
+  virtual_machine_id = azurerm_virtual_machine.winJump.id
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.1.3"
+
+  settings = <<SETTINGS
+    {
+        "fileUris": ["https://gist.githubusercontent.com/Mikej81/74d9640f41b6a126cd599808cca4a325/raw/06b2071a1a34e7a9f570f4ee780a4acbdaab238a/DisableInternetExplorer-ESC.ps1"],
+        "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File DisableInternetExplorer-ESC.ps1"
+    }
+SETTINGS
+
 }
