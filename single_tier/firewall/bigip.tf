@@ -380,7 +380,7 @@ data template_file vm_onboard {
 resource random_uuid as3_uuid { }
 
 data http template {
-  url = "https://raw.githubusercontent.com/Mikej81/f5-securecloud-DO/master/dist/terraform/latest/payg_cluster.json"
+  url = "https://raw.githubusercontent.com/Mikej81/f5-securecloud-DO/master/dist/terraform/latest/${var.license1 != "" ? "byol" : "payg"}_cluster.json"
 }
 
 data template_file vm01_do_json {
