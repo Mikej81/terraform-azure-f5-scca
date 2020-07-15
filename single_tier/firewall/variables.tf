@@ -64,6 +64,15 @@ variable product { default = "f5-big-ip-best" }
 variable bigip_version { default = "latest" }
 
 # BIGIP Setup
+variable licenses {
+  type = map(string)
+  default = {
+    license1 = ""
+    "license2" = ""
+    "license3" = ""
+    "license4" = ""
+  }
+}
 variable license1 { default = "" }
 variable license2 { default = "" }
 variable host1_name { default = "f5vm01" }

@@ -380,7 +380,7 @@ data template_file vm_onboard {
 resource random_uuid as3_uuid { }
 
 data http template {
-  url = "https://raw.githubusercontent.com/Mikej81/f5-securecloud-DO/master/dist/terraform/latest/${var.license1 != "" ? "byol" : "payg"}_cluster.json"
+  url = "https://raw.githubusercontent.com/Mikej81/f5-securecloud-DO/master/dist/terraform/latest/${var.licenses["license1"] != "" ? "byol" : "payg"}_cluster.json"
 }
 
 data template_file vm01_do_json {
@@ -390,8 +390,8 @@ data template_file vm01_do_json {
     #Uncomment the following line for BYOL
     #local_sku	    = var.license1
 
-    host1	    = var.host1_name
-    host2	    = var.host2_name
+    host1	          = var.host1_name
+    host2	          = var.host2_name
     local_host      = var.host1_name
     local_selfip    = var.f5vm01ext
     remote_host	    = var.host2_name
@@ -400,9 +400,10 @@ data template_file vm01_do_json {
     mgmtGateway	    = local.mgmt_gw
     dns_server	    = var.dns_server
     ntp_server	    = var.ntp_server
-    timezone	    = var.timezone
+    timezone	      = var.timezone
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
+    license         = var.licenses["license1"] != "" ? var.licenses["license1"] : ""
   }
 }
 
@@ -426,6 +427,7 @@ data template_file vm02_do_json {
     timezone        = var.timezone
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
+    license         = var.licenses["license1"] != "" ? var.licenses["license2"] : ""
   }
 }
 
