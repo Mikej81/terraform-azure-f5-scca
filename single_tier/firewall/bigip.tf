@@ -82,7 +82,7 @@ resource azurerm_network_interface vm01-ext-nic {
   name                = "${var.prefix}-vm01-ext-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  enable_accelerated_networking = var.bigip_version ? "latest" : false
+  enable_accelerated_networking = "${var.bigip_version == "latest" ? true : false}"
 
   ip_configuration {
     name                          = "primary"
@@ -120,7 +120,7 @@ resource azurerm_network_interface vm02-ext-nic {
   name                = "${var.prefix}-vm02-ext-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  enable_accelerated_networking = var.bigip_version ? "latest" : false
+  enable_accelerated_networking = "${var.bigip_version == "latest" ? true : false}"
 
   ip_configuration {
     name                          = "primary"
@@ -159,7 +159,7 @@ resource azurerm_network_interface vm01-int-nic {
   name                = "${var.prefix}-vm01-int-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  enable_accelerated_networking = var.bigip_version ? "latest" : false
+  enable_accelerated_networking = "${var.bigip_version == "latest" ? true : false}"
 
   ip_configuration {
     name                          = "primary"
@@ -188,7 +188,7 @@ resource azurerm_network_interface vm02-int-nic {
   name                = "${var.prefix}-vm02-int-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  enable_accelerated_networking = var.bigip_version ? "latest" : false
+  enable_accelerated_networking = "${var.bigip_version == "latest" ? true : false}"
 
   ip_configuration {
     name                          = "primary"
