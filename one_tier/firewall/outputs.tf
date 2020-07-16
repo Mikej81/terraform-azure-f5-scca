@@ -1,9 +1,9 @@
-data "azurerm_public_ip" "f5vmpip01" {
+data azurerm_public_ip f5vmpip01 {
   name                = azurerm_public_ip.f5vmpip01.name
   resource_group_name = var.resourceGroup.name
   depends_on          = [azurerm_public_ip.f5vmpip01, azurerm_virtual_machine.f5vm01]
 }
-data "azurerm_public_ip" "f5vmpip02" {
+data azurerm_public_ip f5vmpip02 {
   name                = azurerm_public_ip.f5vmpip02.name
   resource_group_name = var.resourceGroup.name
   depends_on          = [azurerm_public_ip.f5vmpip02, azurerm_virtual_machine.f5vm02]

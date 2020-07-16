@@ -83,9 +83,9 @@ resource azurerm_lb_rule rdp_rule {
 # Single Tier
 #
 # Deploy firewall HA cluster
-module firewall {
-#   source   = "./${var.deploymentType}/firewall"
-  source   = "./single_tier/firewall"
+module firewall_one {
+  count = var.deploymentType == "one_tier" ? 1 : 0
+  source   = "./one_tier/firewall"
   resourceGroup = azurerm_resource_group.main
   sshPublicKey = var.sshPublicKeyPath
   region = var.region
@@ -103,9 +103,9 @@ module firewall {
 }
 
 # deploy demo app
-module app {
-  #source   = "./${var.deploymentType}/app"
-  source   = "./single_tier/app"
+module app_one {
+  count = var.deploymentType == "one_tier" ? 1 : 0
+  source   = "./one_tier/app"
   resourceGroup = azurerm_resource_group.main
 #   ssh_publickey = var.sshPublicKeyPath}"
   prefix = var.projectPrefix
@@ -115,9 +115,9 @@ module app {
   adminPassword = var.adminPassword
 }
 # deploy jumpboxes
-module jump {
-#   source   = "./${var.deploymentType}/firewall"
-  source   = "./single_tier/jumpboxes"
+module jump_one {
+  count = var.deploymentType == "one_tier" ? 1 : 0
+  source   = "./one_tier/jumpboxes"
   resourceGroup = azurerm_resource_group.main
   sshPublicKey = var.sshPublicKeyPath
   region = var.region
@@ -129,46 +129,80 @@ module jump {
   prefix = var.projectPrefix
 }
 
-# #
-# # Three Tier
-# #
-# # Deploy firewall HA cluster
-# module "firewall" {
-# #   source   = "./${var.deploymentType}/firewall"
-#   source   = "./three_tier/firewall"
-#   resourceGroup = azurerm_resource_group.main
-#   f5_ssh_publickey = var.sshPublicKeyPath
-#   AllowedIPs = var.AllowedIPs
-#   azure_region =var.region
-#   subnet1_public_id = azurerm_subnet.azurerm_publicsubnet1.id
-#   owner = var.owner
-#   templates = template_dir.templates.source_dir
-# }
-# # Deploy example ips
-# module "ips" {
-# #   source   = "./${var.deploymentType}/ips"
-#   source   = "./three_tier/ips"
-#    resourceGroup = azurerm_resource_group.main
-#   templates = template_dir.templates.source_dir
-# }
-# # Deploy waf HA cluster
-# module "waf" {
-# #   source   = "./${var.deploymentType}/waf"
-#   source   = "./three_tier/waf"
-#    resourceGroup = azurerm_resource_group.main
-#   f5_ssh_publickey = var.sshPublicKeyPath
-#   AllowedIPs = var.AllowedIPs
-#   azure_region =var.region
-#   subnet1_public_id = azurerm_subnet.azurerm_publicsubnet1.id
-#   owner = var.owner
-#   templates = template_dir.templates.source_dir
-# }
-# # deploy demo app
+#
+# Three Tier
+#
+# Deploy firewall HA cluster
+module firewall_three {
+  count = var.deploymentType == "three_tier" ? 1 : 0
+  source   = "./three_tier/firewall"
+  resourceGroup = azurerm_resource_group.main
+  sshPublicKey = var.sshPublicKeyPath
+  region = var.region
+  subnetMgmt = azurerm_subnet.mgmt
+  subnetExternal = azurerm_subnet.external
+  subnetInternal = azurerm_subnet.internal
+  securityGroup = azurerm_network_security_group.main
+  owner = var.owner
+  adminUserName = var.adminUserName
+  adminPassword = var.adminPassword
+  prefix = var.projectPrefix
+  backendPool = azurerm_lb_backend_address_pool.backend_pool
+  availabilitySet = azurerm_availability_set.avset
+  instanceType = var.instanceType
+}
+# Deploy example ips
+module ips_three {
+  count = var.deploymentType == "three_tier" ? 1 : 0
+  source   = "./three_tier/ips"
+  resourceGroup = azurerm_resource_group.main
+  securityGroup = azurerm_network_security_group.main
+  subnetExternal = azurerm_subnet.external
+  adminUserName = var.adminUserName
+  adminPassword = var.adminPassword
+}
+# Deploy waf HA cluster
+module waf_three {
+  count = var.deploymentType == "three_tier" ? 1 : 0
+  source   = "./three_tier/waf"
+  resourceGroup = azurerm_resource_group.main
+  sshPublicKey = var.sshPublicKeyPath
+  region = var.region
+  subnetMgmt = azurerm_subnet.mgmt
+  subnetExternal = azurerm_subnet.external
+  subnetInternal = azurerm_subnet.internal
+  securityGroup = azurerm_network_security_group.main
+  owner = var.owner
+  adminUserName = var.adminUserName
+  adminPassword = var.adminPassword
+  prefix = var.projectPrefix
+  backendPool = azurerm_lb_backend_address_pool.backend_pool
+  availabilitySet = azurerm_availability_set.avset
+  instanceType = var.instanceType
+}
+# deploy demo app
 
-# module "app" {
-#   #source   = "./${var.deploymentType}/app"
-#   source   = "./single_tier/app"
-#    resourceGroup = azurerm_resource_group.main
-# #   ssh_publickey = var.sshPublicKeyPath
-#   templates = template_dir.templates.source_dir
-# }
+module app_three {
+  count = var.deploymentType == "three_tier" ? 1 : 0
+  source   = "./three_tier/app"
+  resourceGroup = azurerm_resource_group.main
+#   ssh_publickey = var.sshPublicKeyPath
+  securityGroup = azurerm_network_security_group.main
+  subnetExternal = azurerm_subnet.external
+  adminUserName = var.adminUserName
+  adminPassword = var.adminPassword
+}
+# deploy jumpboxes
+module jump_three {
+  count = var.deploymentType == "three_tier" ? 1 : 0
+  source   = "./three_tier/jumpboxes"
+  resourceGroup = azurerm_resource_group.main
+  sshPublicKey = var.sshPublicKeyPath
+  region = var.region
+  subnetExternal = azurerm_subnet.external
+  securityGroup = azurerm_network_security_group.main
+  owner = var.owner
+  adminUserName = var.adminUserName
+  adminPassword = var.adminPassword
+  prefix = var.projectPrefix
+}
