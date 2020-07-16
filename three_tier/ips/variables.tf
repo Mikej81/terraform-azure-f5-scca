@@ -1,23 +1,23 @@
 # templates directory
-variable "templates" {
+variable templates {
   default = "/workspace/templates"
 }
 
-variable "prefix" {
+variable prefix {
   default ="scca"
 }
-variable "resourceGroup" {
+variable resourceGroup {
     default= "scca-tf-rg"
 }
-variable "securityGroup" {
+variable securityGroup {
   default = "none"
 }
 
-variable "subnetExternal" {
+variable subnetExternal {
   default= "none"
 }
 
-variable app01ext { default = "10.90.2.101" }
+variable ips01ext { default = "10.90.2.102" }
 variable adminUserName { default = "admin" }
 variable adminPassword { default = "2017F5Networks!!" }
 
