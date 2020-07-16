@@ -4,7 +4,7 @@ variable adminUserName { default = "xadmin" }
 variable adminPassword { default = "2018F5Networks!!" }
 variable location { default = "usgovvirginia" }
 variable region { default = "USGov Virginia" }
-variable deploymentType { default = "single_tier" }
+variable deploymentType { default = "three_tier" }
 variable sshPublicKeyPath { default = "/mykey.pub"}
 
 # NETWORK

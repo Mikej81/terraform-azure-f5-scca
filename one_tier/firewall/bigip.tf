@@ -402,7 +402,6 @@ data template_file vm01_do_json {
     license         = var.licenses["license1"] != "" ? var.licenses["license1"] : ""
   }
 }
-
 data template_file vm02_do_json {
     template = "${data.http.onboard.body}"
   vars = {
@@ -422,7 +421,6 @@ data template_file vm02_do_json {
     license         = var.licenses["license1"] != "" ? var.licenses["license2"] : ""
   }
 }
-
 data http appservice {
   url = "https://raw.githubusercontent.com/Mikej81/f5-securecloud-AS3/master/dist/terraform/latest/sccaSingleTier.json"
 }
