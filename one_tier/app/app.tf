@@ -63,6 +63,8 @@ resource azurerm_virtual_machine app01-vm {
               docker run -d -p 443:443 -p 80:80 --restart unless-stopped -e F5DEMO_APP=website -e F5DEMO_NODENAME='F5 Azure' -e F5DEMO_COLOR=ffd734 -e F5DEMO_NODENAME_SSL='F5 Azure (SSL)' -e F5DEMO_COLOR_SSL=a0bf37 chen23/f5-demo-app:ssl;
               # juice shop
               docker run -d --restart always -p 3000:3000 bkimminich/juice-shop 
+              # rsyslogd with PimpMyLogs
+              docker run -it -e SYSLOG_USERNAME=xadmin -e SYSLOG_PASSWORD=password123 -p 8080:80 -p 514:514/udp pbertera/syslogserver
               EOF
     }
 
