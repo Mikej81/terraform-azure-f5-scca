@@ -431,10 +431,15 @@ data template_file vm02_do_json {
   }
 }
 
+data http appservice {
+  url = "https://raw.githubusercontent.com/Mikej81/f5-securecloud-AS3/master/dist/terraform/latest/sccaSingleTier.json"
+}
+
 data template_file as3_json {
-  template = "${file("./templates/scca.json")}"
+  template = "${data.http.appservice.body}"
   vars = {
     uuid                = random_uuid.as3_uuid.result
+    baseline_waf_policy = var.asm_policy
     exampleVipAddress   = var.f5vm01ext
     rdp_pool_addresses    = var.winjumpip
     ssh_pool_addresses    = var.linuxjumpip

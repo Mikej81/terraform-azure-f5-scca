@@ -22,7 +22,7 @@ resource azurerm_network_interface app01-ext-nic {
   }
 }
 
-resource "azurerm_network_interface_security_group_association" "app-nsg" {
+resource azurerm_network_interface_security_group_association app-nsg {
   network_interface_id      = azurerm_network_interface.app01-ext-nic.id
   network_security_group_id = var.securityGroup.id
 }

@@ -81,6 +81,11 @@ variable dns_server { default = "8.8.8.8" }
 variable ntp_server { default = "0.us.pool.ntp.org" }
 variable timezone { default = "UTC" }
 variable onboard_log { default = "/var/log/startup-script.log" }
+## ASM Policy
+##  -Examples:  https://github.com/f5devcentral/f5-asm-policy-templates
+##  -Default is using OWASP Ready Autotuning
+variable asm_policy { default = "https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml" }
+
 
 # TAGS
 variable purpose { default = "public" }
