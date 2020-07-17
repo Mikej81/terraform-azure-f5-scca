@@ -14,6 +14,19 @@ variable availabilitySet {
   
 }
 
+variable subnets {
+  type = map(string)
+  default = {
+    "management" = "10.90.1.0/24"
+    "external" = "10.90.2.0/24"
+    "internal" = "10.90.3.0/24"
+    "inspect_ext" = "10.90.4.0/24"
+    "inspect_int" = "10.90.5.0/24"
+    "waf_ext" = "10.90.6.0/24"
+    "waf_int" = "10.90.7.0/24"
+  }
+}
+
 variable prefix {
   default = "scca"
 }
