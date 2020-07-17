@@ -26,18 +26,48 @@ resource azurerm_lb_backend_address_pool backend_pool {
   loadbalancer_id     = azurerm_lb.lb.id
 }
 
-resource azurerm_lb_probe lb_probe {
+resource azurerm_lb_probe https_probe {
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.lb.id
-  name                = "tcpProbe"
+  name                = "443Probe"
   protocol            = "tcp"
   port                = 443
   interval_in_seconds = 5
   number_of_probes    = 2
 }
 
+resource azurerm_lb_probe http_probe {
+  resource_group_name = azurerm_resource_group.main.name
+  loadbalancer_id     = azurerm_lb.lb.id
+  name                = "8080Probe"
+  protocol            = "tcp"
+  port                = 8080
+  interval_in_seconds = 5
+  number_of_probes    = 2
+}
+
+resource azurerm_lb_probe ssh_probe {
+  resource_group_name = azurerm_resource_group.main.name
+  loadbalancer_id     = azurerm_lb.lb.id
+  name                = "sshProbe"
+  protocol            = "tcp"
+  port                = 22
+  interval_in_seconds = 5
+  number_of_probes    = 2
+}
+
+resource azurerm_lb_probe rdp_probe {
+  resource_group_name = azurerm_resource_group.main.name
+  loadbalancer_id     = azurerm_lb.lb.id
+  name                = "rdpProbe"
+  protocol            = "tcp"
+  port                = 3389
+  interval_in_seconds = 5
+  number_of_probes    = 2
+}
+
 resource azurerm_lb_rule https_rule {
-  name                           = "HTTPRule"
+  name                           = "HTTPS_Rule"
   resource_group_name            = azurerm_resource_group.main.name
   loadbalancer_id                = azurerm_lb.lb.id
   protocol                       = "tcp"
@@ -47,12 +77,27 @@ resource azurerm_lb_rule https_rule {
   enable_floating_ip             = false
   backend_address_pool_id        = azurerm_lb_backend_address_pool.backend_pool.id
   idle_timeout_in_minutes        = 5
-  probe_id                       = azurerm_lb_probe.lb_probe.id
-  depends_on                     = [azurerm_lb_probe.lb_probe]
+  probe_id                       = azurerm_lb_probe.https_probe.id
+  depends_on                     = [azurerm_lb_probe.https_probe]
+}
+
+resource azurerm_lb_rule http_rule {
+  name                           = "HTTPRule"
+  resource_group_name            = azurerm_resource_group.main.name
+  loadbalancer_id                = azurerm_lb.lb.id
+  protocol                       = "tcp"
+  frontend_port                  = 8080
+  backend_port                   = 8080
+  frontend_ip_configuration_name = "LoadBalancerFrontEnd"
+  enable_floating_ip             = false
+  backend_address_pool_id        = azurerm_lb_backend_address_pool.backend_pool.id
+  idle_timeout_in_minutes        = 5
+  probe_id                       = azurerm_lb_probe.http_probe.id
+  depends_on                     = [azurerm_lb_probe.http_probe]
 }
 
 resource azurerm_lb_rule ssh_rule {
-  name                           = "SSHRule"
+  name                           = "SSH_Rule"
   resource_group_name            = azurerm_resource_group.main.name
   loadbalancer_id                = azurerm_lb.lb.id
   protocol                       = "tcp"
@@ -62,11 +107,11 @@ resource azurerm_lb_rule ssh_rule {
   enable_floating_ip             = false
   backend_address_pool_id        = azurerm_lb_backend_address_pool.backend_pool.id
   idle_timeout_in_minutes        = 5
-  probe_id                       = azurerm_lb_probe.lb_probe.id
-  depends_on                     = [azurerm_lb_probe.lb_probe]
+  probe_id                       = azurerm_lb_probe.ssh_probe.id
+  depends_on                     = [azurerm_lb_probe.ssh_probe]
 }
 resource azurerm_lb_rule rdp_rule {
-  name                           = "RDPRule"
+  name                           = "RDP_Rule"
   resource_group_name            = azurerm_resource_group.main.name
   loadbalancer_id                = azurerm_lb.lb.id
   protocol                       = "tcp"
@@ -76,8 +121,8 @@ resource azurerm_lb_rule rdp_rule {
   enable_floating_ip             = false
   backend_address_pool_id        = azurerm_lb_backend_address_pool.backend_pool.id
   idle_timeout_in_minutes        = 5
-  probe_id                       = azurerm_lb_probe.lb_probe.id
-  depends_on                     = [azurerm_lb_probe.lb_probe]
+  probe_id                       = azurerm_lb_probe.rdp_probe.id
+  depends_on                     = [azurerm_lb_probe.rdp_probe]
 }
 
 # Single Tier
