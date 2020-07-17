@@ -435,6 +435,7 @@ data template_file as3_json {
     rdp_pool_addresses    = var.winjumpip
     ssh_pool_addresses    = var.linuxjumpip
     app_pool_addresses    = var.app01ext
+    example_vs_address    = var.Subnet["external"]
   }
 }
 
