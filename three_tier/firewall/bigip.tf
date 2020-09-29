@@ -380,7 +380,7 @@ data template_file vm_onboard {
 resource random_uuid as3_uuid { }
 
 data http template {
-  url = "https://raw.githubusercontent.com/Mikej81/f5-securecloud-DO/master/dist/terraform/latest/${var.licenses["license1"] != "" ? "byol" : "payg"}_cluster.json"
+  url = "https://raw.githubusercontent.com/Mikej81/f5-bigip-hardening-DO/master/dist/terraform/latest/${var.licenses["license1"] != "" ? "byol" : "payg"}_cluster.json"
 }
 
 data template_file vm01_do_json {
@@ -432,7 +432,7 @@ data template_file vm02_do_json {
 }
 
 data http appservice {
-  url = "https://raw.githubusercontent.com/Mikej81/f5-securecloud-AS3/master/dist/terraform/latest/sccaSingleTier.json"
+  url = "https://raw.githubusercontent.com/Mikej81/f5-bigip-hardening-AS3/master/dist/terraform/latest/sccaSingleTier.json"
 }
 
 data template_file as3_json {

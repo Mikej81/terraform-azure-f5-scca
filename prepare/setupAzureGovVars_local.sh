@@ -43,8 +43,11 @@ spn=`az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/$ARM
 
 echo "Setting environment variables for Terraform"
 export ARM_CLIENT_ID=`echo $spn | jq -r '.appId'`
+echo $spn | jq -r '.appId'
 export ARM_CLIENT_SECRET=`echo $spn | jq -r '.password'`
+echo $spn | jq -r '.password'
 export ARM_TENANT_ID=`az account show | jq -r '.tenantId'`
+az account show | jq -r '.tenantId'
 
 # Not needed for public, required for usgovernment, german, china
 #export ARM_ENVIRONMENT=`az account show | jq -r '.environmentName'`
