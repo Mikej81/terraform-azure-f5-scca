@@ -1,3 +1,7 @@
+# Instance Type
+
+variable instanceType {}
+
 # winjump
 variable winjumpip { default = "10.90.2.98" }
 

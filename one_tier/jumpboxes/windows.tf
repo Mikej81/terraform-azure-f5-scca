@@ -42,7 +42,8 @@ resource azurerm_virtual_machine winJump {
     name = "winJump"
     resource_group_name = var.resourceGroup.name
     location    =   var.resourceGroup.location
-    vm_size = "Standard_B2s" #Information about the Virtual Machines Sizes: https://docs.microsoft.com/nl-be/azure/virtual-machines/windows/sizes-general
+    #vm_size = "Standard_B2s" #Information about the Virtual Machines Sizes: https://docs.microsoft.com/nl-be/azure/virtual-machines/windows/sizes-general
+    vm_size = var.instanceType
     network_interface_ids=[azurerm_network_interface.winjump-ext-nic.id] #Front-End Network
  
     os_profile_windows_config {

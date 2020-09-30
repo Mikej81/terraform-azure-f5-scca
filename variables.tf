@@ -49,6 +49,9 @@ variable linuxjumpip { default = "10.90.2.99" }
 # device
 variable instanceType { default = "Standard_DS5_v2" }
 
+# Be careful which instance type selected, jump boxes currently use Premium_LRS managed disks
+variable jumpinstanceType { default = "Standard_B2s"}
+
 # BIGIP Image
 # check available image names with az cli:
 #    az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all 

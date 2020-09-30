@@ -172,6 +172,7 @@ module jump_one {
   adminUserName = var.adminUserName
   adminPassword = var.adminPassword
   prefix = var.projectPrefix
+  instanceType = var.jumpinstanceType
 }
 
 #
@@ -250,4 +251,5 @@ module jump_three {
   adminUserName = var.adminUserName
   adminPassword = var.adminPassword
   prefix = var.projectPrefix
+  instanceType = var.jumpinstanceType
 }

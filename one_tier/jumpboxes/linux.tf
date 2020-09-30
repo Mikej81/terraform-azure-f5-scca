@@ -34,7 +34,8 @@ resource azurerm_virtual_machine linuxJump {
     resource_group_name          = var.resourceGroup.name
 
     network_interface_ids = [azurerm_network_interface.linuxJump-ext-nic.id]
-    vm_size               = "Standard_DS1_v2"
+    #vm_size               = "Standard_DS1_v2"
+    vm_size               = var.instanceType
 
     storage_os_disk {
         name              = "linuxJumpOsDisk"
