@@ -188,6 +188,8 @@ module jump_one {
   adminPassword = var.adminPassword
   prefix = var.projectPrefix
   instanceType = var.jumpinstanceType
+  linuxjumpip = var.linuxjumpip
+  winjumpip = var.winjumpip
 }
 
 #

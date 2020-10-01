@@ -3,17 +3,17 @@
 variable instanceType {}
 
 # winjump
-variable winjumpip { default = "10.90.2.98" }
+variable winjumpip { }
 
 # linuxjump
-variable linuxjumpip { default = "10.90.2.99" }
+variable linuxjumpip { }
 
 variable timezone { default = "UTC" }
 
 # cloud
 variable region { default = "none" }
-variable prefix { default = "scca" }
-variable resourceGroup { default= "scca-tf-rg" }
+variable prefix {  }
+variable resourceGroup {  }
 variable securityGroup { default = "none" }
 
 # network
