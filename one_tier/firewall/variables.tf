@@ -14,9 +14,7 @@ variable availabilitySet {
 
 variable subnets { }
 
-variable prefix {
-  default = "scca"
-}
+variable prefix { }
 # bigip network
 variable subnetMgmt { }
 variable subnetExternal { }
