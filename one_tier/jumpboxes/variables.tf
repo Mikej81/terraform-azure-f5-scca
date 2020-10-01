@@ -3,21 +3,21 @@
 variable instanceType {}
 
 # winjump
-variable winjumpip { }
+variable winjumpip {}
 
 # linuxjump
-variable linuxjumpip { }
+variable linuxjumpip {}
 
 variable timezone { default = "UTC" }
 
 # cloud
 variable region { default = "none" }
-variable prefix {  }
-variable resourceGroup {  }
+variable prefix {}
+variable resourceGroup {}
 variable securityGroup { default = "none" }
 
 # network
-variable subnetExternal { default = "none"}
+variable subnetExternal { default = "none" }
 
 # creds
 variable adminUserName { default = "admin" }

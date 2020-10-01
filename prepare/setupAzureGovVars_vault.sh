@@ -26,7 +26,7 @@ export ARM_SUBSCRIPTION_ID=`az account show | jq -r '.id'`
     az storage container create --name $CONTAINER_NAME --account-name $STORAGE_ACCOUNT_NAME --account-key $ACCOUNT_KEY
 
 # Create Azure KeyVault
-    az keyvault create -g $RESOURCE_GROUP_NAME --name $VAULT_NAME 
+    az keyvault create -g $RESOURCE_GROUP_NAME --name $VAULT_NAME
 
 # Set Azure KeyVault Secret value to storage account key
     az keyvault secret set --vault-name $VAULT_NAME --name $SECRET_NAME --value $ACCOUNT_KEY

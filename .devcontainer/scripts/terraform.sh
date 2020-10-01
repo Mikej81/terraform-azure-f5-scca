@@ -1,4 +1,4 @@
-  
+
 #!/bin/bash
 echo "---installing terraform---"
 terraformVersion="0.13.4"

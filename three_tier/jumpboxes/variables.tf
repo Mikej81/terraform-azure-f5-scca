@@ -13,11 +13,11 @@ variable timezone { default = "UTC" }
 # cloud
 variable region { default = "none" }
 variable prefix { default = "scca" }
-variable resourceGroup { default= "scca-tf-rg" }
+variable resourceGroup { default = "scca-tf-rg" }
 variable securityGroup { default = "none" }
 
 # network
-variable subnetExternal { default = "none"}
+variable subnetExternal { default = "none" }
 
 # creds
 variable adminUserName { default = "admin" }

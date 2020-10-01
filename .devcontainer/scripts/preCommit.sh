@@ -1,4 +1,4 @@
-  
+
 #!/bin/bash
 echo "---installing pre-commit---"
 # pre commit

@@ -1,6 +1,6 @@
 
-variable prefix { }
-variable resourceGroup { }
+variable prefix {}
+variable resourceGroup {}
 variable securityGroup {
   default = "none"
 }
@@ -9,9 +9,9 @@ variable subnetExternal {
   default = "none"
 }
 
-variable app01ext { }
-variable adminUserName { }
-variable adminPassword { }
+variable app01ext {}
+variable adminUserName {}
+variable adminPassword {}
 
 # TAGS
 variable purpose { default = "public" }

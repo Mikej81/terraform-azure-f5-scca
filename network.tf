@@ -8,11 +8,11 @@ resource azurerm_virtual_network main {
 
 # Create a Public IP for the Virtual Machines
 resource azurerm_public_ip lbpip {
-  name                         = "${var.projectPrefix}-lb-pip"
-  location                     = azurerm_resource_group.main.location
-  resource_group_name          = azurerm_resource_group.main.name
-  allocation_method = "Dynamic"
-  domain_name_label            = "${var.projectPrefix}lbpip"
+  name                = "${var.projectPrefix}-lb-pip"
+  location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  allocation_method   = "Dynamic"
+  domain_name_label   = "${var.projectPrefix}lbpip"
 }
 
 # Create the Management Subnet within the Virtual Network
@@ -20,7 +20,7 @@ resource azurerm_subnet mgmt {
   name                 = "mgmt"
   virtual_network_name = azurerm_virtual_network.main.name
   resource_group_name  = azurerm_resource_group.main.name
-  address_prefixes       = [var.subnets["management"]]
+  address_prefixes     = [var.subnets["management"]]
 }
 
 # Create the external Subnet within the Virtual Network
@@ -28,7 +28,7 @@ resource azurerm_subnet external {
   name                 = "external"
   virtual_network_name = azurerm_virtual_network.main.name
   resource_group_name  = azurerm_resource_group.main.name
-  address_prefixes       = [var.subnets["external"]]
+  address_prefixes     = [var.subnets["external"]]
 }
 
 # Create the internal Subnet within the Virtual Network
@@ -36,7 +36,7 @@ resource azurerm_subnet internal {
   name                 = "internal"
   virtual_network_name = azurerm_virtual_network.main.name
   resource_group_name  = azurerm_resource_group.main.name
-  address_prefixes       = [var.subnets["internal"]]
+  address_prefixes     = [var.subnets["internal"]]
 }
 
 # Obtain Gateway IP for each Subnet

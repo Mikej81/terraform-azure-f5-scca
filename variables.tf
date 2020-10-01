@@ -6,23 +6,21 @@ variable location { default = "usgovvirginia" }
 variable region { default = "USGov Virginia" }
 # one_tier or three_tier
 variable deploymentType { default = "one_tier" }
-variable sshPublicKeyPath { default = "/mykey.pub"}
-
+variable sshPublicKeyPath { default = "/mykey.pub" }
 # NETWORK
 variable cidr { default = "10.90.0.0/16" }
 variable subnets {
   type = map(string)
   default = {
-    "management" = "10.90.1.0/24"
-    "external" = "10.90.2.0/24"
-    "internal" = "10.90.3.0/24"
+    "management"  = "10.90.1.0/24"
+    "external"    = "10.90.2.0/24"
+    "internal"    = "10.90.3.0/24"
     "inspect_ext" = "10.90.4.0/24"
     "inspect_int" = "10.90.5.0/24"
-    "waf_ext" = "10.90.6.0/24"
-    "waf_int" = "10.90.7.0/24"
+    "waf_ext"     = "10.90.6.0/24"
+    "waf_int"     = "10.90.7.0/24"
   }
 }
-
 # bigip mgmt private ips
 variable f5vm01mgmt { default = "10.90.1.4" }
 variable f5vm02mgmt { default = "10.90.1.5" }
@@ -36,7 +34,7 @@ variable f5vm02ext_sec { default = "10.90.2.12" }
 # Example application private ips
 variable app01ext { default = "10.90.2.101" }
 
-# bigip internal private ips 
+# bigip internal private ips
 variable f5vm01int { default = "10.90.3.4" }
 variable f5vm02int { default = "10.90.3.5" }
 
@@ -50,11 +48,11 @@ variable linuxjumpip { default = "10.90.2.99" }
 variable instanceType { default = "Standard_DS5_v2" }
 
 # Be careful which instance type selected, jump boxes currently use Premium_LRS managed disks
-variable jumpinstanceType { default = "Standard_B2s"}
+variable jumpinstanceType { default = "Standard_B2s" }
 
 # BIGIP Image
 # check available image names with az cli:
-#    az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all 
+#    az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all
 variable image_name { default = "f5-bigip-virtual-edition-25m-best-hourly" }
 variable product { default = "f5-big-ip-best" }
 variable bigip_version { default = "latest" }
@@ -63,7 +61,7 @@ variable bigip_version { default = "latest" }
 variable licenses {
   type = map(string)
   default = {
-    license1 = ""
+    license1   = ""
     "license2" = ""
     "license3" = ""
     "license4" = ""

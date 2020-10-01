@@ -3,7 +3,7 @@ variable prefix {
   default = "scca"
 }
 variable resourceGroup {
-    default = "scca-tf-rg"
+  default = "scca-tf-rg"
 }
 variable securityGroup {
   default = "none"
