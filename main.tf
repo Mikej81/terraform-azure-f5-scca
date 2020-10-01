@@ -159,6 +159,7 @@ module app_one {
   subnetExternal = azurerm_subnet.external
   adminUserName = var.adminUserName
   adminPassword = var.adminPassword
+  app01ext = var.app01ext
 }
 # deploy jumpboxes
 module jump_one {

@@ -1,10 +1,6 @@
 
-variable prefix {
-  default = "scca"
-}
-variable resourceGroup {
-    default = "scca-tf-rg"
-}
+variable prefix { }
+variable resourceGroup { }
 variable securityGroup {
   default = "none"
 }
@@ -13,9 +9,9 @@ variable subnetExternal {
   default = "none"
 }
 
-variable app01ext { default = "10.90.2.101" }
-variable adminUserName { default = "admin" }
-variable adminPassword { default = "2017F5Networks!!" }
+variable app01ext { }
+variable adminUserName { }
+variable adminPassword { }
 
 # TAGS
 variable purpose { default = "public" }
