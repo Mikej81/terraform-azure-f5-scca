@@ -42,46 +42,4 @@ Ex.
 
 ## Important configuration notes
 
-- All variables are configured in variables.tf 
-- Azure Subscription and Service Principal are configured in provider.tf
-- This template would require Declarative Onboarding and AS3 packages for the initial configuration. As part of the onboarding script, it will download the RPMs respectively. So please see the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3.5.1/) and [DO documentation](https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/prereqs.html) for details on how to use AS3 and Declarative Onboarding on your BIG-IP VE(s).
-- onboard.tpl is the onboarding script, which is run by commandToExecute, and it will be copy to /var/lib/waagent/CustomData upon bootup. This script is basically responsible for downloading the neccessary DO and AS3 RPM files, installing them, and then executing the onboarding REST calls.
-- This template uses PayGo BIGIP image for the deployment (as default). If you would like to use BYOL, then these following steps are needed:
-1. In the "variables.tf", specify the BYOL image and licenses regkeys.
-2. In the "main.tf", uncomment the "local_sku" lines.
-3. Add the following lines to the "cluster.json" file just under the "Common" declaration:
-  ```
-          "myLicense": {
-            "class": "License",
-            "licenseType": "regKey",
-            "regKey": "${local_sku}"
-          },
-  ```
-- In order to pass traffic from your clients to the servers, after launching the template, you must create virtual server(s) on the BIG-IP VE.  See [Creating a virtual server](#creating-virtual-servers-on-the-big-ip-ve).
-- See the **[Configuration Example](#configuration-example)** section for a configuration diagram and description for this solution.
-
-* Location and Region are currently hard coded, make sure to fix those..
- 
-cleaning up PIP mappings for DO / AS3 since no PIPs...
-
-## docker
-
-1. requires docker on host
-2. create or populate and run .envarshelper.sh
-```bash
-. .envVarsHelper.sh
-```
-3. use make to test
-```bash
-make test
-```
-4. make shell for interactive mode
-```bash
-make shell
-```
-5. make azure to init/plan/apply
-```bash
-make azure
-```
-### requirements
-make sure you have popluated and run the env helper
+- All variables are configured in variables.tf
