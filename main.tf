@@ -146,6 +146,19 @@ module firewall_one {
   availabilitySet = azurerm_availability_set.avset
   instanceType = var.instanceType
   subnets = var.subnets
+  app01ext = var.app01ext
+  host1_name = var.host1_name
+  host2_name = var.host2_name
+  f5vm01mgmt = var.f5vm01mgmt
+  f5vm02mgmt = var.f5vm02mgmt
+  f5vm01ext = var.f5vm01ext
+  f5vm02ext = var.f5vm02ext
+  f5vm01ext_sec = var.f5vm01ext_sec
+  f5vm02ext_sec = var.f5vm02ext_sec
+  f5vm01int = var.f5vm01int
+  f5vm02int = var.f5vm02int
+  winjumpip = var.winjumpip
+  linuxjumpip = var.linuxjumpip
 }
 
 # deploy demo app

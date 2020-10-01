@@ -28,30 +28,30 @@ variable backendPool {
 }
 
 # bigip mgmt private ips
-variable f5vm01mgmt { default = "10.90.1.4" }
-variable f5vm02mgmt { default = "10.90.1.5" }
+variable f5vm01mgmt { }
+variable f5vm02mgmt {  }
 
 # bigip external private ips
-variable f5vm01ext { default = "10.90.2.4" }
-variable f5vm01ext_sec { default = "10.90.2.11" }
-variable f5vm02ext { default = "10.90.2.5" }
-variable f5vm02ext_sec { default = "10.90.2.12" }
+variable f5vm01ext {  }
+variable f5vm01ext_sec {  }
+variable f5vm02ext {  }
+variable f5vm02ext_sec {  }
 
 # Example application private ips
-variable app01ext { default = "10.90.2.101" }
+variable app01ext {  }
 
 # bigip internal private ips 
-variable f5vm01int { default = "10.90.3.4" }
-variable f5vm02int { default = "10.90.3.5" }
+variable f5vm01int {  }
+variable f5vm02int {  }
 
 # winjump
-variable winjumpip { default = "10.90.2.98" }
+variable winjumpip {  }
 
 # linuxjump
-variable linuxjumpip { default = "10.90.2.99" }
+variable linuxjumpip {  }
 
 # device
-variable instanceType { default = "Standard_DS5_v2" }
+variable instanceType {  }
 
 
 # BIGIP Image
@@ -71,8 +71,8 @@ variable licenses {
 }
 variable license1 { default = "" }
 variable license2 { default = "" }
-variable host1_name { default = "f5vm01" }
-variable host2_name { default = "f5vm02" }
+variable host1_name {  }
+variable host2_name {  }
 variable dns_server { default = "8.8.8.8" }
 variable ntp_server { default = "0.us.pool.ntp.org" }
 variable timezone { default = "UTC" }
