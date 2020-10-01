@@ -1,0 +1,56 @@
+# azure
+# gov
+location = "usgovvirginia"
+region = "USGov Virginia"
+# commercial
+# location = "eastus"
+# region   = "East US"
+# project
+projectPrefix = "scca"
+# deploymentType = "three_tier"
+deploymentType = "one_tier"
+# networks
+subnets = {
+  "management"  = "10.90.1.0/24"
+  "external"    = "10.90.2.0/24"
+  "internal"    = "10.90.3.0/24"
+  "inspect_ext" = "10.90.4.0/24"
+  "inspect_int" = "10.90.5.0/24"
+  "waf_ext"     = "10.90.6.0/24"
+  "waf_int"     = "10.90.7.0/24"
+}
+# bigips
+# check available image names with az cli:
+#    az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all
+instanceType = "Standard_DS5_v2"
+image_name = "f5-bigip-virtual-edition-25m-best-hourly"
+product = "f5-big-ip-best"
+bigip_version = "latest"
+# single tier
+# 01
+f5vm01mgmt    = "10.90.1.4"
+f5vm01ext     = "10.90.2.4"
+f5vm01ext_sec = "10.90.2.11"
+f5vm01int     = "10.90.3.4"
+# 02
+f5vm02mgmt    = "10.90.1.5"
+f5vm02ext     = "10.90.2.5"
+f5vm02ext_sec = "10.90.2.12"
+f5vm02int     = "10.90.3.5"
+# three tier
+# 03
+f5vm03mgmt    = "10.90.1.6"
+f5vm03ext     = "10.90.6.4"
+f5vm03ext_sec = "10.90.6.11"
+f5vm03int     = "10.90.7.4"
+# 04
+f5vm04mgmt    = "10.90.1.7"
+f5vm04ext     = "10.90.6.5"
+f5vm04ext_sec = "10.90.6.12"
+f5vm04int     = "10.90.7.5"
+# jump boxes
+jumpinstanceType = "Standard_B2s"
+# win jump
+winjumpip = "10.90.2.98"
+# linux jump
+linuxjumpip = "10.90.2.99"
