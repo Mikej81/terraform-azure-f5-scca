@@ -7,6 +7,7 @@ variable region { default = "USGov Virginia" }
 # one_tier or three_tier
 variable deploymentType { default = "one_tier" }
 variable sshPublicKeyPath { default = "/mykey.pub" }
+
 # NETWORK
 variable cidr { default = "10.90.0.0/16" }
 variable subnets {
