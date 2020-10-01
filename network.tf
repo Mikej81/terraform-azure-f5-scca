@@ -42,7 +42,7 @@ resource azurerm_subnet internal {
 # Obtain Gateway IP for each Subnet
 locals {
   depends_on = [azurerm_subnet.mgmt, azurerm_subnet.external]
-  mgmt_gw    = "${cidrhost(azurerm_subnet.mgmt.address_prefix, 1)}"
-  ext_gw     = "${cidrhost(azurerm_subnet.external.address_prefix, 1)}"
-  int_gw     = "${cidrhost(azurerm_subnet.internal.address_prefix, 1)}"
+  mgmt_gw    = cidrhost(azurerm_subnet.mgmt.address_prefix, 1)
+  ext_gw     = cidrhost(azurerm_subnet.external.address_prefix, 1)
+  int_gw     = cidrhost(azurerm_subnet.internal.address_prefix, 1)
 }

@@ -145,6 +145,7 @@ module firewall_one {
   backendPool = azurerm_lb_backend_address_pool.backend_pool
   availabilitySet = azurerm_availability_set.avset
   instanceType = var.instanceType
+  subnets = var.subnets
 }
 
 # deploy demo app
