@@ -17,12 +17,12 @@ variable resourceGroup {}
 variable securityGroup { default = "none" }
 
 # network
-variable subnetExternal { default = "none" }
+variable subnet { default = "none" }
 
 # creds
-variable adminUserName { default = "admin" }
-variable adminPassword { default = "2017F5Networks!!" }
-variable sshPublicKey { default = "/mykey.pub" }
+variable adminUserName { default = "" }
+variable adminPassword { default = "" }
+variable sshPublicKey { default = "" }
 
 # TAGS
 variable purpose { default = "public" }

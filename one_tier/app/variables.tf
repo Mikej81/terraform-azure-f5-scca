@@ -5,11 +5,11 @@ variable securityGroup {
   default = "none"
 }
 
-variable subnetExternal {
+variable subnet {
   default = "none"
 }
 
-variable app01ext {}
+variable app01ip {}
 variable adminUserName {}
 variable adminPassword {}
 

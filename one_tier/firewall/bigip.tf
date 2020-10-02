@@ -229,9 +229,9 @@ resource azurerm_network_interface_backend_address_pool_association bpool_assc_v
 # Obtain Gateway IP for each Subnet
 locals {
   depends_on = [var.subnetMgmt.id, var.subnetExternal.id]
-  mgmt_gw    = "${cidrhost(var.subnetMgmt.address_prefix, 1)}"
-  ext_gw     = "${cidrhost(var.subnetExternal.address_prefix, 1)}"
-  int_gw     = "${cidrhost(var.subnetInternal.address_prefix, 1)}"
+  mgmt_gw    = cidrhost(var.subnetMgmt.address_prefix, 1)
+  ext_gw     = cidrhost(var.subnetExternal.address_prefix, 1)
+  int_gw     = cidrhost(var.subnetInternal.address_prefix, 1)
 }
 
 # Create F5 BIGIP VMs
@@ -350,7 +350,7 @@ resource azurerm_virtual_machine f5vm02 {
 
 # Setup Onboarding scripts
 data template_file vm_onboard {
-  template = "${file("./templates/onboard.tpl")}"
+  template = file("./templates/onboard.tpl")
   vars = {
     uname     = var.adminUserName
     upassword = var.adminPassword
@@ -383,14 +383,14 @@ data http onboard {
 }
 
 data template_file vm01_do_json {
-  template = "${data.http.onboard.body}"
+  template = data.http.onboard.body
   vars = {
     host1           = var.host1_name
     host2           = var.host2_name
     local_host      = var.host1_name
     local_selfip    = var.f5vm01ext
     log_localip     = var.f5vm01ext
-    log_destination = var.app01ext
+    log_destination = var.app01ip
     remote_host     = var.host2_name
     remote_selfip   = var.f5vm02ext
     externalGateway = local.ext_gw
@@ -404,14 +404,14 @@ data template_file vm01_do_json {
   }
 }
 data template_file vm02_do_json {
-  template = "${data.http.onboard.body}"
+  template = data.http.onboard.body
   vars = {
     host1           = var.host1_name
     host2           = var.host2_name
     local_host      = var.host2_name
     local_selfip    = var.f5vm02ext
     log_localip     = var.f5vm02ext
-    log_destination = var.app01ext
+    log_destination = var.app01ip
     remote_host     = var.host1_name
     remote_selfip   = var.f5vm01ext
     externalGateway = local.ext_gw
@@ -430,7 +430,7 @@ data http appservice {
 }
 
 data template_file as3_json {
-  template = "${data.http.appservice.body}"
+  template = data.http.appservice.body
   vars = {
     uuid                = random_uuid.as3_uuid.result
     baseline_waf_policy = var.asm_policy
@@ -438,9 +438,9 @@ data template_file as3_json {
     exampleVipSubnet    = var.subnets["external"]
     rdp_pool_addresses  = var.winjumpip
     ssh_pool_addresses  = var.linuxjumpip
-    app_pool_addresses  = var.app01ext
-    ips_pool_addresses  = var.app01ext
-    log_destination     = var.app01ext
+    app_pool_addresses  = var.app01ip
+    ips_pool_addresses  = var.app01ip
+    log_destination     = var.app01ip
     example_vs_address  = var.subnets["external"]
   }
 }

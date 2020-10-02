@@ -229,9 +229,9 @@ resource azurerm_network_interface_backend_address_pool_association bpool_assc_v
 # Obtain Gateway IP for each Subnet
 locals {
   depends_on = [var.subnetMgmt.id, var.subnetExternal.id]
-  mgmt_gw    = "${cidrhost(var.subnetMgmt.address_prefix, 1)}"
-  ext_gw     = "${cidrhost(var.subnetExternal.address_prefix, 1)}"
-  int_gw     = "${cidrhost(var.subnetInternal.address_prefix, 1)}"
+  mgmt_gw    = cidrhost(var.subnetMgmt.address_prefix, 1)
+  ext_gw     = cidrhost(var.subnetExternal.address_prefix, 1)
+  int_gw     = cidrhost(var.subnetInternal.address_prefix, 1)
 }
 
 # Create F5 BIGIP VMs
@@ -351,7 +351,7 @@ resource azurerm_virtual_machine f5vm04 {
 
 # Setup Onboarding scripts
 data template_file vm_onboard {
-  template = "${file("./templates/onboard.tpl")}"
+  template = file("./templates/onboard.tpl")
   vars = {
     uname     = var.adminUserName
     upassword = var.adminPassword
@@ -385,7 +385,7 @@ data http template {
 
 data template_file vm03_do_json {
   #template = "${file("./templates/cluster.json")}"
-  template = "${data.http.template.body}"
+  template = data.http.template.body
   vars = {
     #Uncomment the following line for BYOL
     #local_sku	    = var.license1
@@ -409,7 +409,7 @@ data template_file vm03_do_json {
 
 data template_file vm04_do_json {
   #template = "${file("./templates/cluster.json")}"
-  template = "${data.http.template.body}"
+  template = data.http.template.body
   vars = {
     #Uncomment the following line for BYOL
     #local_sku      = var.license2
@@ -436,7 +436,7 @@ data http appservice {
 }
 
 data template_file as3_json {
-  template = "${data.http.appservice.body}"
+  template = data.http.appservice.body
   vars = {
     uuid                = random_uuid.as3_uuid.result
     baseline_waf_policy = var.asm_policy

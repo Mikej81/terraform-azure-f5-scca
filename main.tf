@@ -146,7 +146,7 @@ module firewall_one {
   availabilitySet = azurerm_availability_set.avset
   instanceType    = var.instanceType
   subnets         = var.subnets
-  app01ext        = var.app01ext
+  app01ip         = var.app01ip
   host1_name      = var.host1_name
   host2_name      = var.host2_name
   f5vm01mgmt      = var.f5vm01mgmt
@@ -167,29 +167,29 @@ module app_one {
   source        = "./one_tier/app"
   resourceGroup = azurerm_resource_group.main
   #   ssh_publickey = var.sshPublicKeyPath}"
-  prefix         = var.projectPrefix
-  securityGroup  = azurerm_network_security_group.main
-  subnetExternal = azurerm_subnet.external
-  adminUserName  = var.adminUserName
-  adminPassword  = var.adminPassword
-  app01ext       = var.app01ext
+  prefix        = var.projectPrefix
+  securityGroup = azurerm_network_security_group.main
+  subnet        = azurerm_subnet.internal
+  adminUserName = var.adminUserName
+  adminPassword = var.adminPassword
+  app01ip       = var.app01ip
 }
 # deploy jumpboxes
 module jump_one {
-  count          = var.deploymentType == "one_tier" ? 1 : 0
-  source         = "./one_tier/jumpboxes"
-  resourceGroup  = azurerm_resource_group.main
-  sshPublicKey   = var.sshPublicKeyPath
-  region         = var.region
-  subnetExternal = azurerm_subnet.external
-  securityGroup  = azurerm_network_security_group.main
-  owner          = var.owner
-  adminUserName  = var.adminUserName
-  adminPassword  = var.adminPassword
-  prefix         = var.projectPrefix
-  instanceType   = var.jumpinstanceType
-  linuxjumpip    = var.linuxjumpip
-  winjumpip      = var.winjumpip
+  count         = var.deploymentType == "one_tier" ? 1 : 0
+  source        = "./one_tier/jumpboxes"
+  resourceGroup = azurerm_resource_group.main
+  sshPublicKey  = var.sshPublicKeyPath
+  region        = var.region
+  subnet        = azurerm_subnet.mgmt
+  securityGroup = azurerm_network_security_group.main
+  owner         = var.owner
+  adminUserName = var.adminUserName
+  adminPassword = var.adminPassword
+  prefix        = var.projectPrefix
+  instanceType  = var.jumpinstanceType
+  linuxjumpip   = var.linuxjumpip
+  winjumpip     = var.winjumpip
 }
 
 #

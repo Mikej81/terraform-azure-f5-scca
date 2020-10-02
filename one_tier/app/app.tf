@@ -6,9 +6,9 @@ resource azurerm_network_interface app01-ext-nic {
 
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = var.subnetExternal.id
+    subnet_id                     = var.subnet.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.app01ext
+    private_ip_address            = var.app01ip
     primary                       = true
   }
 

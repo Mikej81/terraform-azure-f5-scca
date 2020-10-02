@@ -63,7 +63,7 @@ Ex.
 |------|-------------|------|---------|:--------:|
 | adminPassword | n/a | `string` | `"2018F5Networks!!"` | no |
 | adminUserName | n/a | `string` | `"xadmin"` | no |
-| app01ext | Example application private ips | `string` | `"10.90.2.101"` | no |
+| app01ip | Example application private ips | `string` | `"10.90.2.101"` | no |
 | application | n/a | `string` | `"f5app"` | no |
 | asm\_policy | # ASM Policy #  -Examples:  https://github.com/f5devcentral/f5-asm-policy-templates #  -Default is using OWASP Ready Autotuning | `string` | `"https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml"` | no |
 | bigip\_version | n/a | `string` | `"latest"` | no |
@@ -80,6 +80,14 @@ Ex.
 | f5vm02ext\_sec | n/a | `string` | `"10.90.2.12"` | no |
 | f5vm02int | n/a | `string` | `"10.90.3.5"` | no |
 | f5vm02mgmt | n/a | `string` | `"10.90.1.5"` | no |
+| f5vm03ext | n/a | `string` | `"10.90.6.4"` | no |
+| f5vm03ext\_sec | n/a | `string` | `"10.90.6.11"` | no |
+| f5vm03int | n/a | `string` | `"10.90.7.4"` | no |
+| f5vm03mgmt | n/a | `string` | `"10.90.1.6"` | no |
+| f5vm04ext | n/a | `string` | `"10.90.6.5"` | no |
+| f5vm04ext\_sec | n/a | `string` | `"10.90.6.12"` | no |
+| f5vm04int | n/a | `string` | `"10.90.7.5"` | no |
+| f5vm04mgmt | n/a | `string` | `"10.90.1.7"` | no |
 | group | n/a | `string` | `"f5group"` | no |
 | host1\_name | n/a | `string` | `"f5vm01"` | no |
 | host2\_name | n/a | `string` | `"f5vm02"` | no |
@@ -102,6 +110,7 @@ Ex.
 | projectPrefix | Azure Environment | `string` | `"scca"` | no |
 | purpose | TAGS | `string` | `"public"` | no |
 | region | n/a | `string` | `"USGov Virginia"` | no |
+| sshPublicKey | ssh public key for instances | `string` | `""` | no |
 | sshPublicKeyPath | n/a | `string` | `"/mykey.pub"` | no |
 | subnets | n/a | `map(string)` | <pre>{<br>  "external": "10.90.2.0/24",<br>  "inspect_ext": "10.90.4.0/24",<br>  "inspect_int": "10.90.5.0/24",<br>  "internal": "10.90.3.0/24",<br>  "management": "10.90.1.0/24",<br>  "waf_ext": "10.90.6.0/24",<br>  "waf_int": "10.90.7.0/24"<br>}</pre> | no |
 | timezone | n/a | `string` | `"UTC"` | no |

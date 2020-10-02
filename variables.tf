@@ -6,6 +6,11 @@ variable location { default = "usgovvirginia" }
 variable region { default = "USGov Virginia" }
 # one_tier or three_tier
 variable deploymentType { default = "one_tier" }
+variable sshPublicKey {
+  type        = string
+  description = "ssh public key for instances"
+  default     = ""
+}
 variable sshPublicKeyPath { default = "/mykey.pub" }
 
 # NETWORK
@@ -25,19 +30,27 @@ variable subnets {
 # bigip mgmt private ips
 variable f5vm01mgmt { default = "10.90.1.4" }
 variable f5vm02mgmt { default = "10.90.1.5" }
+variable f5vm03mgmt { default = "10.90.1.6" }
+variable f5vm04mgmt { default = "10.90.1.7" }
 
 # bigip external private ips
 variable f5vm01ext { default = "10.90.2.4" }
 variable f5vm01ext_sec { default = "10.90.2.11" }
 variable f5vm02ext { default = "10.90.2.5" }
 variable f5vm02ext_sec { default = "10.90.2.12" }
-
-# Example application private ips
-variable app01ext { default = "10.90.2.101" }
-
+variable f5vm03ext { default = "10.90.6.4" }
+variable f5vm03ext_sec { default = "10.90.6.11" }
+variable f5vm04ext { default = "10.90.6.5" }
+variable f5vm04ext_sec { default = "10.90.6.12" }
 # bigip internal private ips
 variable f5vm01int { default = "10.90.3.4" }
 variable f5vm02int { default = "10.90.3.5" }
+variable f5vm03int { default = "10.90.7.4" }
+variable f5vm04int { default = "10.90.7.5" }
+# Example application private ips
+variable app01ip { default = "10.90.2.101" }
+
+
 
 # winjump
 variable winjumpip { default = "10.90.2.98" }

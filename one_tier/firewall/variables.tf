@@ -1,8 +1,8 @@
 variable resourceGroup {}
 # admin credentials
-variable adminUserName { default = "admin" }
-variable adminPassword { default = "2017F5Networks!!" }
-variable sshPublicKey { default = "/mykey.pub" }
+variable adminUserName { default = "" }
+variable adminPassword { default = "" }
+variable sshPublicKey { default = "" }
 # cloud info
 variable region {}
 variable securityGroup {
@@ -36,7 +36,7 @@ variable f5vm02ext {}
 variable f5vm02ext_sec {}
 
 # Example application private ips
-variable app01ext {}
+variable app01ip {}
 
 # bigip internal private ips
 variable f5vm01int {}
