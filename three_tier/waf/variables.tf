@@ -1,12 +1,13 @@
 variable resourceGroup {
-  default = "scca-tf-rg"
+  default = ""
 }
 # admin credentials
-variable adminUserName { default = "admin" }
-variable adminPassword { default = "2037F5Networks!!" }
-variable sshPublicKey { default = "/mykey.pub" }
+variable adminUserName { default = "" }
+variable adminPassword { default = "" }
+variable sshPublicKey { default = "" }
 # cloud info
-variable region { default = "east-us1" }
+variable location {}
+variable region {}
 variable securityGroup {
   default = "none"
 }

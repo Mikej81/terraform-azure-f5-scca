@@ -4,6 +4,7 @@ variable adminUserName { default = "" }
 variable adminPassword { default = "" }
 variable sshPublicKey { default = "" }
 # cloud info
+variable location {}
 variable region {}
 variable securityGroup {
   default = "none"

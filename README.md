@@ -63,7 +63,7 @@ Ex.
 |------|-------------|------|---------|:--------:|
 | adminPassword | n/a | `string` | `"2018F5Networks!!"` | no |
 | adminUserName | n/a | `string` | `"xadmin"` | no |
-| app01ip | Example application private ips | `string` | `"10.90.2.101"` | no |
+| app01ip | Example application private ips | `string` | `"10.90.7.101"` | no |
 | application | n/a | `string` | `"f5app"` | no |
 | asm\_policy | # ASM Policy #  -Examples:  https://github.com/f5devcentral/f5-asm-policy-templates #  -Default is using OWASP Ready Autotuning | `string` | `"https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml"` | no |
 | bigip\_version | n/a | `string` | `"latest"` | no |

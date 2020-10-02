@@ -3,8 +3,8 @@
 location = "usgovvirginia"
 region = "USGov Virginia"
 # commercial
-#location = "eastus"
-#region   = "East US"
+#location = "eastus2"
+#region   = "East US 2"
 # project
 projectPrefix = "scca"
 # deploymentType = "three_tier"
@@ -44,10 +44,10 @@ f5vm04ext     = "10.90.6.5"
 f5vm04ext_sec = "10.90.6.12"
 f5vm04int     = "10.90.7.5"
 ## app
-app01ip   = ""
+app01ip = "10.90.3.101"
 ## jump boxes
 jumpinstanceType = "Standard_B2s"
 # win jump
-winjumpip = "10.90.2.98"
+winjumpip = "10.90.1.98"
 # linux jump
-linuxjumpip = "10.90.2.99"
+linuxjumpip = "10.90.1.99"

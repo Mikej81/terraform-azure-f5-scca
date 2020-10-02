@@ -11,7 +11,8 @@ variable linuxjumpip { default = "10.90.2.99" }
 variable timezone { default = "UTC" }
 
 # cloud
-variable region { default = "none" }
+variable location {}
+variable region {}
 variable prefix { default = "scca" }
 variable resourceGroup { default = "scca-tf-rg" }
 variable securityGroup { default = "none" }

@@ -2,7 +2,8 @@
 variable templates {
   default = "/workspace/templates"
 }
-
+variable location {}
+variable region {}
 variable prefix {
   default = "scca"
 }

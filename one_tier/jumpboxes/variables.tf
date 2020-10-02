@@ -11,13 +11,14 @@ variable linuxjumpip {}
 variable timezone { default = "UTC" }
 
 # cloud
-variable region { default = "none" }
+variable location {}
+variable region {}
 variable prefix {}
 variable resourceGroup {}
 variable securityGroup { default = "none" }
 
 # network
-variable subnet { default = "none" }
+variable subnet {}
 
 # creds
 variable adminUserName { default = "" }

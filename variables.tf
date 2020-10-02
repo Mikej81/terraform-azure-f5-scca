@@ -48,7 +48,7 @@ variable f5vm02int { default = "10.90.3.5" }
 variable f5vm03int { default = "10.90.7.4" }
 variable f5vm04int { default = "10.90.7.5" }
 # Example application private ips
-variable app01ip { default = "10.90.2.101" }
+variable app01ip { default = "10.90.7.101" }
 
 
 

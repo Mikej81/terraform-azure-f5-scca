@@ -133,6 +133,7 @@ module firewall_one {
   source          = "./one_tier/firewall"
   resourceGroup   = azurerm_resource_group.main
   sshPublicKey    = var.sshPublicKeyPath
+  location        = var.location
   region          = var.region
   subnetMgmt      = azurerm_subnet.mgmt
   subnetExternal  = azurerm_subnet.external
@@ -165,6 +166,8 @@ module firewall_one {
 module app_one {
   count         = var.deploymentType == "one_tier" ? 1 : 0
   source        = "./one_tier/app"
+  location      = var.location
+  region        = var.region
   resourceGroup = azurerm_resource_group.main
   #   ssh_publickey = var.sshPublicKeyPath}"
   prefix        = var.projectPrefix
@@ -180,6 +183,7 @@ module jump_one {
   source        = "./one_tier/jumpboxes"
   resourceGroup = azurerm_resource_group.main
   sshPublicKey  = var.sshPublicKeyPath
+  location      = var.location
   region        = var.region
   subnet        = azurerm_subnet.mgmt
   securityGroup = azurerm_network_security_group.main
@@ -201,6 +205,7 @@ module firewall_three {
   source          = "./three_tier/firewall"
   resourceGroup   = azurerm_resource_group.main
   sshPublicKey    = var.sshPublicKeyPath
+  location        = var.location
   region          = var.region
   subnetMgmt      = azurerm_subnet.mgmt
   subnetExternal  = azurerm_subnet.external
@@ -218,6 +223,8 @@ module firewall_three {
 module ips_three {
   count          = var.deploymentType == "three_tier" ? 1 : 0
   source         = "./three_tier/ips"
+  location       = var.location
+  region         = var.region
   resourceGroup  = azurerm_resource_group.main
   securityGroup  = azurerm_network_security_group.main
   subnetExternal = azurerm_subnet.external
@@ -230,6 +237,7 @@ module waf_three {
   source          = "./three_tier/waf"
   resourceGroup   = azurerm_resource_group.main
   sshPublicKey    = var.sshPublicKeyPath
+  location        = var.location
   region          = var.region
   subnetMgmt      = azurerm_subnet.mgmt
   subnetExternal  = azurerm_subnet.external
@@ -249,6 +257,8 @@ module app_three {
   count         = var.deploymentType == "three_tier" ? 1 : 0
   source        = "./three_tier/app"
   resourceGroup = azurerm_resource_group.main
+  location      = var.location
+  region        = var.region
   #   ssh_publickey = var.sshPublicKeyPath
   securityGroup  = azurerm_network_security_group.main
   subnetExternal = azurerm_subnet.external
@@ -261,6 +271,7 @@ module jump_three {
   source         = "./three_tier/jumpboxes"
   resourceGroup  = azurerm_resource_group.main
   sshPublicKey   = var.sshPublicKeyPath
+  location       = var.location
   region         = var.region
   subnetExternal = azurerm_subnet.external
   securityGroup  = azurerm_network_security_group.main

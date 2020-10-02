@@ -1,6 +1,8 @@
 
 variable prefix {}
 variable resourceGroup {}
+variable location {}
+variable region {}
 variable securityGroup {
   default = "none"
 }
