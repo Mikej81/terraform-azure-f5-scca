@@ -31,5 +31,7 @@ fileignoreconfig:
   checksum: 383a72522e1b4df332058e99e24f0904d4615928af937ccee70d21e5f6afe6dc
 - filename: three_tier/waf/bigip.tf
   checksum: cea878ccffb9047427d93b93c0e88eb7e2d632f19660c41abec36d0a722021ff
+- filename: admin.auto.tfvars.example
+  checksum: a87ddc39a3ff63889026917ce85d5fff8a0a2beef4450b4cef111d3ebc79146a
 - filename: variables.tf
-  checksum: 18ba4afd2f96b34f5a1ec9f72feaf61174d93530ca20af167fb6f3b0a53b7fec
+  checksum: 6a3ec95aa9baedf962f9ce6af45027bd10ffc63ed5cbc34a73dfa9d88cbd3cc7

@@ -38,7 +38,13 @@ resource azurerm_subnet internal {
   resource_group_name  = azurerm_resource_group.main.name
   address_prefixes     = [var.subnets["internal"]]
 }
-
+# Create the VDMS Subnet within the Virtual Network
+# resource azurerm_subnet vdms {
+#  name = "vdms"
+#  virtual_network_name = azurerm_virtual_network.main.name
+#  resource_group_name = azurerm_resource_group.main.name
+#  address_prefixes = [var.subnets["vdms"]]
+# }
 # Obtain Gateway IP for each Subnet
 locals {
   depends_on = [azurerm_subnet.mgmt, azurerm_subnet.external]
@@ -46,3 +52,22 @@ locals {
   ext_gw     = cidrhost(azurerm_subnet.external.address_prefix, 1)
   int_gw     = cidrhost(azurerm_subnet.internal.address_prefix, 1)
 }
+# # VDMS UDR
+# resource azurerm_route_table vdms_udr {
+#  name = "${var.projectPrefix}_vdms_user_defined_route_table"
+#  resource_group_name = azurerm_resource_group.main.name
+#  location = azurerm_resource_group.main.location
+#  disable_bgp_route_propagation = false
+
+#  route {
+#  name = "vdms_default_route"
+#  address_prefix = "0.0.0.0/0"
+#  next_hop_type = "VirtualAppliance"
+#  next_hop_in_ip_address = var.f5vm01int
+#  }
+# }
+
+# resource azurerm_subnet_route_table_association vdms_udr_associate {
+#  subnet_id = azurerm_subnet.vdms.id
+#  route_table_id = azurerm_route_table.vdms_udr.id
+# }

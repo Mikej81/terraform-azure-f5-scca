@@ -49,6 +49,7 @@ Ex.
 
 | Name | Version |
 |------|---------|
+| terraform | ~> 0.13 |
 | azurerm | ~> 2.15.0 |
 
 ## Providers
@@ -61,9 +62,9 @@ Ex.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| adminPassword | n/a | `string` | `"2018F5Networks!!"` | no |
+| adminPassword | n/a | `string` | `"pleaseUseVault123!!"` | no |
 | adminUserName | n/a | `string` | `"xadmin"` | no |
-| app01ip | Example application private ips | `string` | `"10.90.7.101"` | no |
+| app01ip | Example application private ips | `string` | `"10.90.2.101"` | no |
 | application | n/a | `string` | `"f5app"` | no |
 | asm\_policy | # ASM Policy #  -Examples:  https://github.com/f5devcentral/f5-asm-policy-templates #  -Default is using OWASP Ready Autotuning | `string` | `"https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml"` | no |
 | bigip\_version | n/a | `string` | `"latest"` | no |
@@ -72,22 +73,22 @@ Ex.
 | deploymentType | one\_tier or three\_tier | `string` | `"one_tier"` | no |
 | dns\_server | n/a | `string` | `"8.8.8.8,8.8.4.4"` | no |
 | environment | n/a | `string` | `"f5env"` | no |
-| f5vm01ext | bigip external private ips | `string` | `"10.90.2.4"` | no |
-| f5vm01ext\_sec | n/a | `string` | `"10.90.2.11"` | no |
-| f5vm01int | bigip internal private ips | `string` | `"10.90.3.4"` | no |
-| f5vm01mgmt | bigip mgmt private ips | `string` | `"10.90.1.4"` | no |
-| f5vm02ext | n/a | `string` | `"10.90.2.5"` | no |
-| f5vm02ext\_sec | n/a | `string` | `"10.90.2.12"` | no |
-| f5vm02int | n/a | `string` | `"10.90.3.5"` | no |
-| f5vm02mgmt | n/a | `string` | `"10.90.1.5"` | no |
+| f5vm01ext | bigip external private ips | `string` | `"10.90.1.4"` | no |
+| f5vm01ext\_sec | n/a | `string` | `"10.90.1.11"` | no |
+| f5vm01int | bigip internal private ips | `string` | `"10.90.2.4"` | no |
+| f5vm01mgmt | bigip mgmt private ips | `string` | `"10.90.0.4"` | no |
+| f5vm02ext | n/a | `string` | `"10.90.1.5"` | no |
+| f5vm02ext\_sec | n/a | `string` | `"10.90.1.12"` | no |
+| f5vm02int | n/a | `string` | `"10.90.2.5"` | no |
+| f5vm02mgmt | n/a | `string` | `"10.90.0.5"` | no |
 | f5vm03ext | n/a | `string` | `"10.90.6.4"` | no |
 | f5vm03ext\_sec | n/a | `string` | `"10.90.6.11"` | no |
 | f5vm03int | n/a | `string` | `"10.90.7.4"` | no |
-| f5vm03mgmt | n/a | `string` | `"10.90.1.6"` | no |
+| f5vm03mgmt | n/a | `string` | `"10.90.0.6"` | no |
 | f5vm04ext | n/a | `string` | `"10.90.6.5"` | no |
 | f5vm04ext\_sec | n/a | `string` | `"10.90.6.12"` | no |
 | f5vm04int | n/a | `string` | `"10.90.7.5"` | no |
-| f5vm04mgmt | n/a | `string` | `"10.90.1.7"` | no |
+| f5vm04mgmt | n/a | `string` | `"10.90.0.7"` | no |
 | group | n/a | `string` | `"f5group"` | no |
 | host1\_name | n/a | `string` | `"f5vm01"` | no |
 | host2\_name | n/a | `string` | `"f5vm02"` | no |
@@ -101,7 +102,7 @@ Ex.
 | license3 | n/a | `string` | `""` | no |
 | license4 | n/a | `string` | `""` | no |
 | licenses | BIGIP Setup | `map(string)` | <pre>{<br>  "license1": "",<br>  "license2": "",<br>  "license3": "",<br>  "license4": ""<br>}</pre> | no |
-| linuxjumpip | linuxjump | `string` | `"10.90.2.99"` | no |
+| linuxjumpip | linuxjump | `string` | `"10.90.0.99"` | no |
 | location | n/a | `string` | `"usgovvirginia"` | no |
 | ntp\_server | n/a | `string` | `"time.nist.gov,0.us.pool.ntp.org"` | no |
 | onboard\_log | n/a | `string` | `"/var/log/startup-script.log"` | no |
@@ -112,9 +113,9 @@ Ex.
 | region | n/a | `string` | `"USGov Virginia"` | no |
 | sshPublicKey | ssh public key for instances | `string` | `""` | no |
 | sshPublicKeyPath | n/a | `string` | `"/mykey.pub"` | no |
-| subnets | n/a | `map(string)` | <pre>{<br>  "external": "10.90.2.0/24",<br>  "inspect_ext": "10.90.4.0/24",<br>  "inspect_int": "10.90.5.0/24",<br>  "internal": "10.90.3.0/24",<br>  "management": "10.90.1.0/24",<br>  "waf_ext": "10.90.6.0/24",<br>  "waf_int": "10.90.7.0/24"<br>}</pre> | no |
+| subnets | n/a | `map(string)` | <pre>{<br>  "external": "10.90.1.0/24",<br>  "inspect_ext": "10.90.4.0/24",<br>  "inspect_int": "10.90.5.0/24",<br>  "internal": "10.90.2.0/24",<br>  "management": "10.90.0.0/24",<br>  "vdms": "10.90.3.0/24",<br>  "waf_ext": "10.90.6.0/24",<br>  "waf_int": "10.90.7.0/24"<br>}</pre> | no |
 | timezone | n/a | `string` | `"UTC"` | no |
-| winjumpip | winjump | `string` | `"10.90.2.98"` | no |
+| winjumpip | winjump | `string` | `"10.90.0.98"` | no |
 
 ## Outputs
 

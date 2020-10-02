@@ -1,7 +1,7 @@
 # Azure Environment
 variable projectPrefix { default = "scca" }
 variable adminUserName { default = "xadmin" }
-variable adminPassword { default = "2018F5Networks!!" }
+variable adminPassword { default = "pleaseUseVault123!!" }
 variable location { default = "usgovvirginia" }
 variable region { default = "USGov Virginia" }
 # one_tier or three_tier
@@ -18,9 +18,10 @@ variable cidr { default = "10.90.0.0/16" }
 variable subnets {
   type = map(string)
   default = {
-    "management"  = "10.90.1.0/24"
-    "external"    = "10.90.2.0/24"
-    "internal"    = "10.90.3.0/24"
+    "management"  = "10.90.0.0/24"
+    "external"    = "10.90.1.0/24"
+    "internal"    = "10.90.2.0/24"
+    "vdms"        = "10.90.3.0/24"
     "inspect_ext" = "10.90.4.0/24"
     "inspect_int" = "10.90.5.0/24"
     "waf_ext"     = "10.90.6.0/24"
@@ -28,35 +29,35 @@ variable subnets {
   }
 }
 # bigip mgmt private ips
-variable f5vm01mgmt { default = "10.90.1.4" }
-variable f5vm02mgmt { default = "10.90.1.5" }
-variable f5vm03mgmt { default = "10.90.1.6" }
-variable f5vm04mgmt { default = "10.90.1.7" }
+variable f5vm01mgmt { default = "10.90.0.4" }
+variable f5vm02mgmt { default = "10.90.0.5" }
+variable f5vm03mgmt { default = "10.90.0.6" }
+variable f5vm04mgmt { default = "10.90.0.7" }
 
 # bigip external private ips
-variable f5vm01ext { default = "10.90.2.4" }
-variable f5vm01ext_sec { default = "10.90.2.11" }
-variable f5vm02ext { default = "10.90.2.5" }
-variable f5vm02ext_sec { default = "10.90.2.12" }
+variable f5vm01ext { default = "10.90.1.4" }
+variable f5vm01ext_sec { default = "10.90.1.11" }
+variable f5vm02ext { default = "10.90.1.5" }
+variable f5vm02ext_sec { default = "10.90.1.12" }
 variable f5vm03ext { default = "10.90.6.4" }
 variable f5vm03ext_sec { default = "10.90.6.11" }
 variable f5vm04ext { default = "10.90.6.5" }
 variable f5vm04ext_sec { default = "10.90.6.12" }
 # bigip internal private ips
-variable f5vm01int { default = "10.90.3.4" }
-variable f5vm02int { default = "10.90.3.5" }
+variable f5vm01int { default = "10.90.2.4" }
+variable f5vm02int { default = "10.90.2.5" }
 variable f5vm03int { default = "10.90.7.4" }
 variable f5vm04int { default = "10.90.7.5" }
 # Example application private ips
-variable app01ip { default = "10.90.7.101" }
+variable app01ip { default = "10.90.2.101" }
 
 
 
 # winjump
-variable winjumpip { default = "10.90.2.98" }
+variable winjumpip { default = "10.90.0.98" }
 
 # linuxjump
-variable linuxjumpip { default = "10.90.2.99" }
+variable linuxjumpip { default = "10.90.0.99" }
 
 # device
 variable instanceType { default = "Standard_DS5_v2" }

@@ -1,3 +1,6 @@
+terraform {
+  required_version = "~> 0.13"
+}
 # Create Availability Set
 resource azurerm_availability_set avset {
   name                         = "${var.projectPrefix}avset"
