@@ -1,3 +1,6 @@
+terraform {
+  required_version = "~> 0.13"
+}
 # Create Availability Set
 resource azurerm_availability_set avset {
   name                         = "${var.projectPrefix}avset"
@@ -129,67 +132,71 @@ resource azurerm_lb_rule rdp_rule {
 #
 # Deploy firewall HA cluster
 module firewall_one {
-  count = var.deploymentType == "one_tier" ? 1 : 0
-  source   = "./one_tier/firewall"
-  resourceGroup = azurerm_resource_group.main
-  sshPublicKey = var.sshPublicKeyPath
-  region = var.region
-  subnetMgmt = azurerm_subnet.mgmt
-  subnetExternal = azurerm_subnet.external
-  subnetInternal = azurerm_subnet.internal
-  securityGroup = azurerm_network_security_group.main
-  owner = var.owner
-  adminUserName = var.adminUserName
-  adminPassword = var.adminPassword
-  prefix = var.projectPrefix
-  backendPool = azurerm_lb_backend_address_pool.backend_pool
+  count           = var.deploymentType == "one_tier" ? 1 : 0
+  source          = "./one_tier/firewall"
+  resourceGroup   = azurerm_resource_group.main
+  sshPublicKey    = var.sshPublicKeyPath
+  location        = var.location
+  region          = var.region
+  subnetMgmt      = azurerm_subnet.mgmt
+  subnetExternal  = azurerm_subnet.external
+  subnetInternal  = azurerm_subnet.internal
+  securityGroup   = azurerm_network_security_group.main
+  owner           = var.owner
+  adminUserName   = var.adminUserName
+  adminPassword   = var.adminPassword
+  prefix          = var.projectPrefix
+  backendPool     = azurerm_lb_backend_address_pool.backend_pool
   availabilitySet = azurerm_availability_set.avset
-  instanceType = var.instanceType
-  subnets = var.subnets
-  app01ext = var.app01ext
-  host1_name = var.host1_name
-  host2_name = var.host2_name
-  f5vm01mgmt = var.f5vm01mgmt
-  f5vm02mgmt = var.f5vm02mgmt
-  f5vm01ext = var.f5vm01ext
-  f5vm02ext = var.f5vm02ext
-  f5vm01ext_sec = var.f5vm01ext_sec
-  f5vm02ext_sec = var.f5vm02ext_sec
-  f5vm01int = var.f5vm01int
-  f5vm02int = var.f5vm02int
-  winjumpip = var.winjumpip
-  linuxjumpip = var.linuxjumpip
+  instanceType    = var.instanceType
+  subnets         = var.subnets
+  app01ip         = var.app01ip
+  host1_name      = var.host1_name
+  host2_name      = var.host2_name
+  f5vm01mgmt      = var.f5vm01mgmt
+  f5vm02mgmt      = var.f5vm02mgmt
+  f5vm01ext       = var.f5vm01ext
+  f5vm02ext       = var.f5vm02ext
+  f5vm01ext_sec   = var.f5vm01ext_sec
+  f5vm02ext_sec   = var.f5vm02ext_sec
+  f5vm01int       = var.f5vm01int
+  f5vm02int       = var.f5vm02int
+  winjumpip       = var.winjumpip
+  linuxjumpip     = var.linuxjumpip
 }
 
 # deploy demo app
 module app_one {
-  count = var.deploymentType == "one_tier" ? 1 : 0
-  source   = "./one_tier/app"
+  count         = var.deploymentType == "one_tier" ? 1 : 0
+  source        = "./one_tier/app"
+  location      = var.location
+  region        = var.region
   resourceGroup = azurerm_resource_group.main
-#   ssh_publickey = var.sshPublicKeyPath}"
-  prefix = var.projectPrefix
+  #   ssh_publickey = var.sshPublicKeyPath}"
+  prefix        = var.projectPrefix
   securityGroup = azurerm_network_security_group.main
-  subnetExternal = azurerm_subnet.external
+  subnet        = azurerm_subnet.internal
   adminUserName = var.adminUserName
   adminPassword = var.adminPassword
-  app01ext = var.app01ext
+  app01ip       = var.app01ip
 }
 # deploy jumpboxes
 module jump_one {
-  count = var.deploymentType == "one_tier" ? 1 : 0
-  source   = "./one_tier/jumpboxes"
+  count         = var.deploymentType == "one_tier" ? 1 : 0
+  source        = "./one_tier/jumpboxes"
   resourceGroup = azurerm_resource_group.main
-  sshPublicKey = var.sshPublicKeyPath
-  region = var.region
-  subnetExternal = azurerm_subnet.external
+  sshPublicKey  = var.sshPublicKeyPath
+  location      = var.location
+  region        = var.region
+  subnet        = azurerm_subnet.mgmt
   securityGroup = azurerm_network_security_group.main
-  owner = var.owner
+  owner         = var.owner
   adminUserName = var.adminUserName
   adminPassword = var.adminPassword
-  prefix = var.projectPrefix
-  instanceType = var.jumpinstanceType
-  linuxjumpip = var.linuxjumpip
-  winjumpip = var.winjumpip
+  prefix        = var.projectPrefix
+  instanceType  = var.jumpinstanceType
+  linuxjumpip   = var.linuxjumpip
+  winjumpip     = var.winjumpip
 }
 
 #
@@ -197,76 +204,83 @@ module jump_one {
 #
 # Deploy firewall HA cluster
 module firewall_three {
-  count = var.deploymentType == "three_tier" ? 1 : 0
-  source   = "./three_tier/firewall"
-  resourceGroup = azurerm_resource_group.main
-  sshPublicKey = var.sshPublicKeyPath
-  region = var.region
-  subnetMgmt = azurerm_subnet.mgmt
-  subnetExternal = azurerm_subnet.external
-  subnetInternal = azurerm_subnet.internal
-  securityGroup = azurerm_network_security_group.main
-  owner = var.owner
-  adminUserName = var.adminUserName
-  adminPassword = var.adminPassword
-  prefix = var.projectPrefix
-  backendPool = azurerm_lb_backend_address_pool.backend_pool
+  count           = var.deploymentType == "three_tier" ? 1 : 0
+  source          = "./three_tier/firewall"
+  resourceGroup   = azurerm_resource_group.main
+  sshPublicKey    = var.sshPublicKeyPath
+  location        = var.location
+  region          = var.region
+  subnetMgmt      = azurerm_subnet.mgmt
+  subnetExternal  = azurerm_subnet.external
+  subnetInternal  = azurerm_subnet.internal
+  securityGroup   = azurerm_network_security_group.main
+  owner           = var.owner
+  adminUserName   = var.adminUserName
+  adminPassword   = var.adminPassword
+  prefix          = var.projectPrefix
+  backendPool     = azurerm_lb_backend_address_pool.backend_pool
   availabilitySet = azurerm_availability_set.avset
-  instanceType = var.instanceType
+  instanceType    = var.instanceType
 }
 # Deploy example ips
 module ips_three {
-  count = var.deploymentType == "three_tier" ? 1 : 0
-  source   = "./three_tier/ips"
-  resourceGroup = azurerm_resource_group.main
-  securityGroup = azurerm_network_security_group.main
+  count          = var.deploymentType == "three_tier" ? 1 : 0
+  source         = "./three_tier/ips"
+  location       = var.location
+  region         = var.region
+  resourceGroup  = azurerm_resource_group.main
+  securityGroup  = azurerm_network_security_group.main
   subnetExternal = azurerm_subnet.external
-  adminUserName = var.adminUserName
-  adminPassword = var.adminPassword
+  adminUserName  = var.adminUserName
+  adminPassword  = var.adminPassword
 }
 # Deploy waf HA cluster
 module waf_three {
-  count = var.deploymentType == "three_tier" ? 1 : 0
-  source   = "./three_tier/waf"
-  resourceGroup = azurerm_resource_group.main
-  sshPublicKey = var.sshPublicKeyPath
-  region = var.region
-  subnetMgmt = azurerm_subnet.mgmt
-  subnetExternal = azurerm_subnet.external
-  subnetInternal = azurerm_subnet.internal
-  securityGroup = azurerm_network_security_group.main
-  owner = var.owner
-  adminUserName = var.adminUserName
-  adminPassword = var.adminPassword
-  prefix = var.projectPrefix
-  backendPool = azurerm_lb_backend_address_pool.backend_pool
+  count           = var.deploymentType == "three_tier" ? 1 : 0
+  source          = "./three_tier/waf"
+  resourceGroup   = azurerm_resource_group.main
+  sshPublicKey    = var.sshPublicKeyPath
+  location        = var.location
+  region          = var.region
+  subnetMgmt      = azurerm_subnet.mgmt
+  subnetExternal  = azurerm_subnet.external
+  subnetInternal  = azurerm_subnet.internal
+  securityGroup   = azurerm_network_security_group.main
+  owner           = var.owner
+  adminUserName   = var.adminUserName
+  adminPassword   = var.adminPassword
+  prefix          = var.projectPrefix
+  backendPool     = azurerm_lb_backend_address_pool.backend_pool
   availabilitySet = azurerm_availability_set.avset
-  instanceType = var.instanceType
+  instanceType    = var.instanceType
 }
 # deploy demo app
 
 module app_three {
-  count = var.deploymentType == "three_tier" ? 1 : 0
-  source   = "./three_tier/app"
+  count         = var.deploymentType == "three_tier" ? 1 : 0
+  source        = "./three_tier/app"
   resourceGroup = azurerm_resource_group.main
-#   ssh_publickey = var.sshPublicKeyPath
-  securityGroup = azurerm_network_security_group.main
+  location      = var.location
+  region        = var.region
+  #   ssh_publickey = var.sshPublicKeyPath
+  securityGroup  = azurerm_network_security_group.main
   subnetExternal = azurerm_subnet.external
-  adminUserName = var.adminUserName
-  adminPassword = var.adminPassword
+  adminUserName  = var.adminUserName
+  adminPassword  = var.adminPassword
 }
 # deploy jumpboxes
 module jump_three {
-  count = var.deploymentType == "three_tier" ? 1 : 0
-  source   = "./three_tier/jumpboxes"
-  resourceGroup = azurerm_resource_group.main
-  sshPublicKey = var.sshPublicKeyPath
-  region = var.region
+  count          = var.deploymentType == "three_tier" ? 1 : 0
+  source         = "./three_tier/jumpboxes"
+  resourceGroup  = azurerm_resource_group.main
+  sshPublicKey   = var.sshPublicKeyPath
+  location       = var.location
+  region         = var.region
   subnetExternal = azurerm_subnet.external
-  securityGroup = azurerm_network_security_group.main
-  owner = var.owner
-  adminUserName = var.adminUserName
-  adminPassword = var.adminPassword
-  prefix = var.projectPrefix
-  instanceType = var.jumpinstanceType
+  securityGroup  = azurerm_network_security_group.main
+  owner          = var.owner
+  adminUserName  = var.adminUserName
+  adminPassword  = var.adminPassword
+  prefix         = var.projectPrefix
+  instanceType   = var.jumpinstanceType
 }

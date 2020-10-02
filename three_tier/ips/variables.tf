@@ -2,19 +2,20 @@
 variable templates {
   default = "/workspace/templates"
 }
-
+variable location {}
+variable region {}
 variable prefix {
-  default ="scca"
+  default = "scca"
 }
 variable resourceGroup {
-    default= "scca-tf-rg"
+  default = "scca-tf-rg"
 }
 variable securityGroup {
   default = "none"
 }
 
 variable subnetExternal {
-  default= "none"
+  default = "none"
 }
 
 variable ips01ext { default = "10.90.2.102" }

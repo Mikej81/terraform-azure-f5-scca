@@ -1,53 +1,54 @@
-variable resourceGroup { }
+variable resourceGroup {}
 # admin credentials
-variable adminUserName { default = "admin" }
-variable adminPassword { default = "2017F5Networks!!" }
-variable sshPublicKey { default = "/mykey.pub" }
+variable adminUserName { default = "" }
+variable adminPassword { default = "" }
+variable sshPublicKey { default = "" }
 # cloud info
-variable region { }
+variable location {}
+variable region {}
 variable securityGroup {
   default = "none"
 }
 variable availabilitySet {
-  
+
 }
 
-variable subnets { }
+variable subnets {}
 
 variable prefix { }
 # bigip network
-variable subnetMgmt { }
-variable subnetExternal { }
-variable subnetInternal { }
-variable backendPool {  
+variable subnetMgmt {}
+variable subnetExternal {}
+variable subnetInternal {}
+variable backendPool {
   description = "azureLB resource pool"
 }
 
 # bigip mgmt private ips
-variable f5vm01mgmt { }
-variable f5vm02mgmt {  }
+variable f5vm01mgmt {}
+variable f5vm02mgmt {}
 
 # bigip external private ips
-variable f5vm01ext {  }
-variable f5vm01ext_sec {  }
-variable f5vm02ext {  }
-variable f5vm02ext_sec {  }
+variable f5vm01ext {}
+variable f5vm01ext_sec {}
+variable f5vm02ext {}
+variable f5vm02ext_sec {}
 
 # Example application private ips
-variable app01ext {  }
+variable app01ip {}
 
-# bigip internal private ips 
-variable f5vm01int {  }
-variable f5vm02int {  }
+# bigip internal private ips
+variable f5vm01int {}
+variable f5vm02int {}
 
 # winjump
-variable winjumpip {  }
+variable winjumpip {}
 
 # linuxjump
-variable linuxjumpip {  }
+variable linuxjumpip {}
 
 # device
-variable instanceType {  }
+variable instanceType {}
 
 
 # BIGIP Image
@@ -59,7 +60,7 @@ variable bigip_version { default = "latest" }
 variable licenses {
   type = map(string)
   default = {
-    license1 = ""
+    license1   = ""
     "license2" = ""
     "license3" = ""
     "license4" = ""
@@ -67,8 +68,8 @@ variable licenses {
 }
 variable license1 { default = "" }
 variable license2 { default = "" }
-variable host1_name {  }
-variable host2_name {  }
+variable host1_name {}
+variable host2_name {}
 variable dns_server { default = "8.8.8.8" }
 variable ntp_server { default = "0.us.pool.ntp.org" }
 variable timezone { default = "UTC" }

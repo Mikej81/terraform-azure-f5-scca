@@ -25,7 +25,7 @@ as3CheckUrl="/mgmt/shared/appsvcs/info"
 as3TaskUrl="/mgmt/shared/appsvcs/task/"
 # ts
 tsUrl="/mgmt/shared/telemetry/declare"
-tsCheckUrl="/mgmt/shared/telemetry/info" 
+tsCheckUrl="/mgmt/shared/telemetry/info"
 # cloud failover ext
 cfUrl="/mgmt/shared/cloud-failover/declare"
 cfCheckUrl="/mgmt/shared/cloud-failover/info"
@@ -69,7 +69,7 @@ function timer () {
 }
 waitMcpd () {
 checks=0
-while [[ "$checks" -lt 120 ]]; do 
+while [[ "$checks" -lt 120 ]]; do
     tmsh -a show sys mcp-state field-fmt | grep -q running
    if [ $? == 0 ]; then
        echo "mcpd ready"
@@ -82,7 +82,7 @@ done
 }
 waitActive () {
 checks=0
-while [[ "$checks" -lt 30 ]]; do 
+while [[ "$checks" -lt 30 ]]; do
     tmsh -a show sys ready | grep -q no
    if [ $? == 1 ]; then
        echo "system ready"
@@ -185,7 +185,7 @@ do
      while true
      do
         iappApiStatus=$(curl -s -i -u "$CREDS"  $local_host$rpmInstallUrl | grep HTTP | awk '{print $2}')
-        case $iappApiStatus in 
+        case $iappApiStatus in
             404)
                 echo "api not ready status: $iappApiStatus"
                 sleep 2
@@ -204,11 +204,11 @@ do
     done
   else
     echo " file: $filename not found"
-  fi 
+  fi
   while true
   do
     status=$(restcurl -u "$CREDS" $rpmInstallUrl/$install | jq -r .status)
-    case $status in 
+    case $status in
         FINISHED)
             # finished
             echo " rpm: $filename task: $install status: $status"
@@ -369,25 +369,25 @@ function checkFAST() {
     sleep 10
     done
 }
-### check for apis online 
+### check for apis online
 function checkATC() {
     doStatus=$(checkDO)
     as3Status=$(checkAS3)
     tsStatus=$(checkTS)
     cfStatus=$(checkCF)
     fastStatus=$(checkFAST)
-    if [[ $doStatus == *"online"* ]] && [[ "$as3Status" = *"online"* ]] && [[ $tsStatus == *"online"* ]] && [[ $cfStatus == *"online"* ]] && [[ $fastStatus == *"online"* ]] ; then 
+    if [[ $doStatus == *"online"* ]] && [[ "$as3Status" = *"online"* ]] && [[ $tsStatus == *"online"* ]] && [[ $cfStatus == *"online"* ]] && [[ $fastStatus == *"online"* ]] ; then
         echo "ATC is ready to accept API calls"
     else
         echo "ATC install failed or ATC is not ready to accept API calls"
-    fi   
+    fi
 }
 echo "----checking ATC install----"
 checkATC
 function runDO() {
 count=0
 while [ $count -le 4 ]
-    do 
+    do
     # make task
     task=$(curl -s -u $CREDS -H "Content-Type: Application/json" -H 'Expect:' -X POST $local_host$doUrl -d @/config/$1 | jq -r .id)
     echo "====== starting DO task: $task =========="
@@ -401,7 +401,7 @@ while [ $count -le 4 ]
         if [[ "$doCodeType" == "object" ]]; then
             code=$(curl -s -u $CREDS -X GET $local_host$doTaskUrl/$task | jq .result.code)
             echo "object: $code"
-        elif [ "$doCodeType" == "array" ]; then  
+        elif [ "$doCodeType" == "array" ]; then
             echo "array $code check task, breaking"
             break
         else
@@ -420,7 +420,7 @@ while [ $count -le 4 ]
             echo "DO: $task response:$code status:$status"
             sleep 1
             #FINISHED,STARTED,RUNNING,ROLLING_BACK,FAILED,ERROR,NULL
-            case $status in 
+            case $status in
             FINISHED)
                 # finished
                 echo " $task status: $status "
@@ -474,7 +474,7 @@ while [ $count -le 4 ]
                 echo "other task: $task count: $taskCount"
                 debug=$(curl -s -u $CREDS $local_host$doTaskUrl/$task)
                 echo "other debug: $debug"
-                case $debug in 
+                case $debug in
                 *not*registered*)
                     # restnoded response DO api is unresponsive
                     echo "DO endpoint not avaliable waiting..."
@@ -523,7 +523,7 @@ while [ $count -le 4 ]
     do
         doStatus=$(checkDO)
         echo "DO check status: $doStatus"
-    if [ $deviceId == 1 ] && [[ "$doStatus" = *"online"* ]]; then 
+    if [ $deviceId == 1 ] && [[ "$doStatus" = *"online"* ]]; then
         echo "running do for id:$deviceId"
         bigstart stop dhclient
         runDO do1.json
@@ -534,7 +534,7 @@ while [ $count -le 4 ]
             echo "do results: $results"
             break
         fi
-    elif [ $deviceId == 2 ] && [[ "$doStatus" = *"online"* ]]; then 
+    elif [ $deviceId == 2 ] && [[ "$doStatus" = *"online"* ]]; then
         echo "running do for id:$deviceId"
         bigstart stop dhclient
         runDO do2.json
@@ -574,7 +574,7 @@ function runAS3 () {
                 code=$(curl -s -u $CREDS -X GET $local_host$as3TaskUrl/$task | jq -r .)
                 tenants=$(curl -s -u $CREDS -X GET $local_host$as3TaskUrl/$task | jq -r .results[].tenant)
                 echo "object: $code"
-            elif [ "$as3CodeType" == "array" ]; then  
+            elif [ "$as3CodeType" == "array" ]; then
                 echo "array $code check task, breaking"
                 break
             else

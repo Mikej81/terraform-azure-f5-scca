@@ -2,8 +2,10 @@
 variable prefix {
   default = "scca"
 }
+variable location {}
+variable region {}
 variable resourceGroup {
-    default = "scca-tf-rg"
+  default = "scca-tf-rg"
 }
 variable securityGroup {
   default = "none"

@@ -17,49 +17,49 @@ resource azurerm_network_interface ips01-ext-nic {
     subnet_id                     = var.subnetExternal.id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.ips01ext
-    primary			  = true
+    primary                       = true
   }
 
   tags = {
-    Name           = "${var.environment}-ips01-ext-int"
-    environment    = var.environment
-    owner          = var.owner
-    group          = var.group
-    costcenter     = var.costcenter
-    ipslication    = "ips1"
+    Name        = "${var.environment}-ips01-ext-int"
+    environment = var.environment
+    owner       = var.owner
+    group       = var.group
+    costcenter  = var.costcenter
+    ipslication = "ips1"
   }
 }
 
 
 # ips01-VM
 resource azurerm_virtual_machine ips01-vm {
-    count                 = 1
-    name                  = "ips01-vm"
-    location                     = var.resourceGroup.location
-    resource_group_name          = var.resourceGroup.name
+  count               = 1
+  name                = "ips01-vm"
+  location            = var.resourceGroup.location
+  resource_group_name = var.resourceGroup.name
 
-    network_interface_ids = [azurerm_network_interface.ips01-ext-nic.id]
-    vm_size               = "Standard_DS1_v2"
+  network_interface_ids = [azurerm_network_interface.ips01-ext-nic.id]
+  vm_size               = "Standard_DS1_v2"
 
-    storage_os_disk {
-        name              = "ipsOsDisk"
-        caching           = "ReadWrite"
-        create_option     = "FromImage"
-        managed_disk_type = "Premium_LRS"
-    }
+  storage_os_disk {
+    name              = "ipsOsDisk"
+    caching           = "ReadWrite"
+    create_option     = "FromImage"
+    managed_disk_type = "Premium_LRS"
+  }
 
-    storage_image_reference {
-        publisher = "Canonical"
-        offer     = "UbuntuServer"
-        sku       = "16.04.0-LTS"
-        version   = "latest"
-    }
+  storage_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04.0-LTS"
+    version   = "latest"
+  }
 
-    os_profile {
-        computer_name  = "ips01"
-        admin_username = var.adminUserName
-        admin_password = var.adminPassword
-        custom_data = <<-EOF
+  os_profile {
+    computer_name  = "ips01"
+    admin_username = var.adminUserName
+    admin_password = var.adminPassword
+    custom_data    = <<-EOF
               #!/bin/bash
               apt-get update -y;
               apt-get install -y docker.io;
@@ -68,18 +68,18 @@ resource azurerm_virtual_machine ips01-vm {
               # snort run
               docker run -it --rm satchm0h/alpine-snort3 snort -i eth0
               EOF
-    }
+  }
 
-    os_profile_linux_config {
-        disable_password_authentication = false
-    }
+  os_profile_linux_config {
+    disable_password_authentication = false
+  }
 
   tags = {
-    Name           = "${var.environment}-ips01"
-    environment    = var.environment
-    owner          = var.owner
-    group          = var.group
-    costcenter     = var.costcenter
-    application    = var.application
-}
+    Name        = "${var.environment}-ips01"
+    environment = var.environment
+    owner       = var.owner
+    group       = var.group
+    costcenter  = var.costcenter
+    application = var.application
+  }
 }

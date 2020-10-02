@@ -1,17 +1,18 @@
 variable resourceGroup {
-    default= "scca-tf-rg"
+  default = "scca-tf-rg"
 }
 # admin credentials
 variable adminUserName { default = "admin" }
 variable adminPassword { default = "2017F5Networks!!" }
 variable sshPublicKey { default = "/mykey.pub" }
 # cloud info
-variable region { default = "east-us1" }
+variable location {}
+variable region {}
 variable securityGroup {
   default = "none"
 }
 variable availabilitySet {
-  
+
 }
 
 variable prefix {
@@ -19,13 +20,13 @@ variable prefix {
 }
 # bigip network
 variable subnetMgmt {
-  
+
 }
 variable subnetExternal {
-  
+
 }
 variable subnetInternal {
-  
+
 }
 variable backendPool {
   description = "azureLB resource pool"
@@ -44,7 +45,7 @@ variable f5vm02ext_sec { default = "10.90.2.12" }
 # Example application private ips
 variable app01ext { default = "10.90.2.101" }
 
-# bigip internal private ips 
+# bigip internal private ips
 variable f5vm01int { default = "10.90.3.4" }
 variable f5vm02int { default = "10.90.3.5" }
 
@@ -67,7 +68,7 @@ variable bigip_version { default = "latest" }
 variable licenses {
   type = map(string)
   default = {
-    license1 = ""
+    license1   = ""
     "license2" = ""
     "license3" = ""
     "license4" = ""

@@ -1,4 +1,5 @@
 # custom
+admin.auto.tfvars
 .envVarsHelper.sh
 vm_as3_data.json
 vm01_do_data.json

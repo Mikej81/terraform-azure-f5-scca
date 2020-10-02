@@ -114,4 +114,3 @@ test3:
 	-e ARM_TENANT_ID=${ARM_TENANT_ID} \
 	${CONTAINER_IMAGE} \
 	sh -c "terraform validate "
-
