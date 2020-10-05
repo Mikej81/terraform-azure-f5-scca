@@ -15,7 +15,7 @@ variable availabilitySet {
 
 variable subnets {}
 
-variable prefix { }
+variable prefix {}
 # bigip network
 variable subnetMgmt {}
 variable subnetExternal {}
