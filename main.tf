@@ -226,11 +226,15 @@ module firewall_three {
 module ips_three {
   count          = var.deploymentType == "three_tier" ? 1 : 0
   source         = "./three_tier/ips"
+  prefix          = var.projectPrefix
   location       = var.location
   region         = var.region
   resourceGroup  = azurerm_resource_group.main
   securityGroup  = azurerm_network_security_group.main
-  subnetExternal = azurerm_subnet.external
+  subnetInspectExt = azurerm_subnet.inspect_external
+  subnetInspectInt = azurerm_subnet.inspect_internal
+  ips01ext       = var.ips01ext
+  ips01int       = var.ips01int
   adminUserName  = var.adminUserName
   adminPassword  = var.adminPassword
 }
