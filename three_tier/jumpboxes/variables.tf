@@ -14,6 +14,7 @@ variable timezone { default = "UTC" }
 variable location {}
 variable region {}
 variable prefix { default = "scca" }
+variable subnets {}
 variable resourceGroup { default = "scca-tf-rg" }
 variable securityGroup { default = "none" }
 

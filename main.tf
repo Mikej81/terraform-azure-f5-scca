@@ -221,18 +221,24 @@ module firewall_three {
   backendPool     = azurerm_lb_backend_address_pool.backend_pool
   availabilitySet = azurerm_availability_set.avset
   instanceType    = var.instanceType
+  app01ip         = var.app01ip
+  subnets         = var.subnets
 }
 # Deploy example ips
 module ips_three {
   count          = var.deploymentType == "three_tier" ? 1 : 0
   source         = "./three_tier/ips"
+  prefix          = var.projectPrefix
   location       = var.location
   region         = var.region
   resourceGroup  = azurerm_resource_group.main
+  virtual_network_name = azurerm_virtual_network.main.name
   securityGroup  = azurerm_network_security_group.main
-  subnetExternal = azurerm_subnet.external
+  ips01ext       = var.ips01ext
+  ips01int       = var.ips01int
   adminUserName  = var.adminUserName
   adminPassword  = var.adminPassword
+  subnets         = var.subnets
 }
 # Deploy waf HA cluster
 module waf_three {
@@ -253,6 +259,7 @@ module waf_three {
   backendPool     = azurerm_lb_backend_address_pool.backend_pool
   availabilitySet = azurerm_availability_set.avset
   instanceType    = var.instanceType
+  subnets         = var.subnets
 }
 # deploy demo app
 
@@ -267,6 +274,7 @@ module app_three {
   subnetExternal = azurerm_subnet.external
   adminUserName  = var.adminUserName
   adminPassword  = var.adminPassword
+  subnets         = var.subnets
 }
 # deploy jumpboxes
 module jump_three {
@@ -283,4 +291,5 @@ module jump_three {
   adminPassword  = var.adminPassword
   prefix         = var.projectPrefix
   instanceType   = var.jumpinstanceType
+  subnets         = var.subnets
 }

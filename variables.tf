@@ -5,7 +5,7 @@ variable adminPassword { default = "pleaseUseVault123!!" }
 variable location { default = "usgovvirginia" }
 variable region { default = "USGov Virginia" }
 # one_tier or three_tier
-variable deploymentType { default = "one_tier" }
+variable deploymentType { default = "three_tier" }
 variable sshPublicKey {
   type        = string
   description = "ssh public key for instances"
@@ -51,7 +51,9 @@ variable f5vm04int { default = "10.90.7.5" }
 # Example application private ips
 variable app01ip { default = "10.90.2.101" }
 
-
+# Example IPS private ips
+variable ips01ext { default = "10.90.4.4" }
+variable ips01int { default = "10.90.5.4"}
 
 # winjump
 variable winjumpip { default = "10.90.0.98" }

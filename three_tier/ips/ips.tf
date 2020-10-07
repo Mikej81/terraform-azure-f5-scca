@@ -12,9 +12,12 @@ resource azurerm_network_interface ips01-ext-nic {
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
 
+  enable_accelerated_networking = true
+  enable_ip_forwarding          = true
+
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = var.subnetExternal.id
+    subnet_id                     = azurerm_subnet.inspect_external.id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.ips01ext
     primary                       = true
@@ -30,6 +33,32 @@ resource azurerm_network_interface ips01-ext-nic {
   }
 }
 
+# internal network interface for ips vm
+resource azurerm_network_interface ips01-int-nic {
+  name                          = "${var.prefix}-ips01-int-nic"
+  location            = var.resourceGroup.location
+  resource_group_name = var.resourceGroup.name
+
+  enable_accelerated_networking = true
+  enable_ip_forwarding          = true
+
+  ip_configuration {
+    name                          = "primary"
+    subnet_id                     = azurerm_subnet.inspect_internal.id
+    private_ip_address_allocation = "Static"
+    private_ip_address            = var.ips01int
+    primary                       = true
+  }
+
+  tags = {
+    Name        = "${var.environment}-ips01-int-int"
+    environment = var.environment
+    owner       = var.owner
+    group       = var.group
+    costcenter  = var.costcenter
+    application = "ips01"
+  }
+}
 
 # ips01-VM
 resource azurerm_virtual_machine ips01-vm {
@@ -38,7 +67,8 @@ resource azurerm_virtual_machine ips01-vm {
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
 
-  network_interface_ids = [azurerm_network_interface.ips01-ext-nic.id]
+  primary_network_interface_id = azurerm_network_interface.ips01-ext-nic.id
+  network_interface_ids = [azurerm_network_interface.ips01-ext-nic.id, azurerm_network_interface.ips01-int-nic.id]
   vm_size               = "Standard_DS1_v2"
 
   storage_os_disk {

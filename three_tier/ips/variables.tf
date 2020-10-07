@@ -14,11 +14,13 @@ variable securityGroup {
   default = "none"
 }
 
-variable subnetExternal {
-  default = "none"
-}
+#variable subnetInspectExt { }
+#variable subnetInspectInt { }
+variable subnets { }
+variable virtual_network_name { }
 
-variable ips01ext { default = "10.90.2.102" }
+variable ips01ext { }
+variable ips01int { }
 variable adminUserName { default = "admin" }
 variable adminPassword { default = "2017F5Networks!!" }
 
