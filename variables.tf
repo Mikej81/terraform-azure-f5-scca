@@ -5,7 +5,7 @@ variable adminPassword { default = "pleaseUseVault123!!" }
 variable location { default = "usgovvirginia" }
 variable region { default = "USGov Virginia" }
 # one_tier or three_tier
-variable deploymentType { default = "three_tier" }
+variable deploymentType { default = "one_tier" }
 variable sshPublicKey {
   type        = string
   description = "ssh public key for instances"
