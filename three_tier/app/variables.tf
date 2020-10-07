@@ -7,9 +7,12 @@ variable region {}
 variable resourceGroup {
   default = "scca-tf-rg"
 }
+
 variable securityGroup {
   default = "none"
 }
+
+variable subnets {}
 
 variable subnetExternal {
   default = "none"

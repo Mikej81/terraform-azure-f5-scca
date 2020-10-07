@@ -394,6 +394,7 @@ data template_file vm01_do_json {
     host2           = var.host2_name
     local_host      = var.host1_name
     local_selfip    = var.f5vm01ext
+    log_destination = var.app01ip
     remote_host     = var.host2_name
     remote_selfip   = var.f5vm02ext
     externalGateway = local.ext_gw
@@ -418,6 +419,7 @@ data template_file vm02_do_json {
     host2           = var.host2_name
     local_host      = var.host2_name
     local_selfip    = var.f5vm02ext
+    log_destination = var.app01ip
     remote_host     = var.host1_name
     remote_selfip   = var.f5vm01ext
     externalGateway = local.ext_gw
@@ -428,6 +430,7 @@ data template_file vm02_do_json {
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
     license         = var.licenses["license1"] != "" ? var.licenses["license2"] : ""
+    exampleVipSubnet    = var.subnets["external"]
   }
 }
 
@@ -441,9 +444,11 @@ data template_file as3_json {
     uuid                = random_uuid.as3_uuid.result
     baseline_waf_policy = var.asm_policy
     exampleVipAddress   = var.f5vm01ext
+    exampleVipSubnet    = var.subnets["external"]
     rdp_pool_addresses  = var.winjumpip
     ssh_pool_addresses  = var.linuxjumpip
     app_pool_addresses  = var.app01ext
+    log_destination     = var.app01ip
   }
 }
 

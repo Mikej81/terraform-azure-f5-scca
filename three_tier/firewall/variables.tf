@@ -19,15 +19,12 @@ variable prefix {
   default = "scca"
 }
 # bigip network
-variable subnetMgmt {
+variable subnets { }
+variable subnetMgmt { }
+variable subnetExternal { }
+variable subnetInternal { }
+variable app01ip { }
 
-}
-variable subnetExternal {
-
-}
-variable subnetInternal {
-
-}
 variable backendPool {
   description = "azureLB resource pool"
 }

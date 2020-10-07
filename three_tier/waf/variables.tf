@@ -19,6 +19,7 @@ variable prefix {
   default = "scca"
 }
 # bigip network
+variable subnets {}
 variable subnetMgmt {
 
 }
