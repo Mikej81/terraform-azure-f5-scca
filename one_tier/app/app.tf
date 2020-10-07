@@ -30,7 +30,7 @@ resource azurerm_network_interface_security_group_association app-nsg {
 # app01-VM
 resource azurerm_virtual_machine app01-vm {
   count               = 1
-  name                = "app01-vm"
+  name                = "${var.prefix}-app01-vm"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
 
@@ -38,7 +38,7 @@ resource azurerm_virtual_machine app01-vm {
   vm_size               = "Standard_DS1_v2"
 
   storage_os_disk {
-    name              = "appOsDisk"
+    name              = "${var.prefix}-appOsDisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Premium_LRS"

@@ -4,9 +4,7 @@ variable templates {
 }
 variable location {}
 variable region {}
-variable prefix {
-  default = "scca"
-}
+variable prefix { }
 variable resourceGroup {
   default = "scca-tf-rg"
 }

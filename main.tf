@@ -275,6 +275,7 @@ module app_three {
   adminUserName  = var.adminUserName
   adminPassword  = var.adminPassword
   subnets         = var.subnets
+  prefix          = var.projectPrefix
 }
 # deploy jumpboxes
 module jump_three {

@@ -1,7 +1,5 @@
 
-variable prefix {
-  default = "scca"
-}
+variable prefix { }
 variable location {}
 variable region {}
 variable resourceGroup {

@@ -1,5 +1,5 @@
 # Azure Environment
-variable projectPrefix { default = "scca" }
+variable projectPrefix { default = "mcscca" }
 variable adminUserName { default = "xadmin" }
 variable adminPassword { default = "pleaseUseVault123!!" }
 variable location { default = "usgovvirginia" }

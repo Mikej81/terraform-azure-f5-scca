@@ -29,7 +29,7 @@ resource "azurerm_network_interface_security_group_association" "linuxJump-ext-n
 }
 
 resource azurerm_virtual_machine linuxJump {
-  name                = "linuxJump"
+  name                = "${var.prefix}-linuxJump"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
 
@@ -38,7 +38,7 @@ resource azurerm_virtual_machine linuxJump {
   vm_size = var.instanceType
 
   storage_os_disk {
-    name              = "linuxJumpOsDisk"
+    name              = "${var.prefix}-linuxJumpOsDisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Premium_LRS"
