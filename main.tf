@@ -230,9 +230,11 @@ module ips_three {
   location       = var.location
   region         = var.region
   resourceGroup  = azurerm_resource_group.main
+  virtual_network_name = azurerm_virtual_network.main.name
   securityGroup  = azurerm_network_security_group.main
-  subnetInspectExt = azurerm_subnet.inspect_external
-  subnetInspectInt = azurerm_subnet.inspect_internal
+  subnets         = var.subnets
+  #subnetInspectExt = azurerm_subnet.inspect_external
+  #subnetInspectInt = azurerm_subnet.inspect_internal
   ips01ext       = var.ips01ext
   ips01int       = var.ips01int
   adminUserName  = var.adminUserName

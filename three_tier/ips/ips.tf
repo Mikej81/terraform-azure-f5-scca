@@ -12,14 +12,12 @@ resource azurerm_network_interface ips01-ext-nic {
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
 
-  depends_on          = [var.subnetInspectExt]
-
   enable_accelerated_networking = true
   enable_ip_forwarding          = true
 
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = var.subnetInspectExt.id
+    subnet_id                     = azurerm_subnet.inspect_external.id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.ips01ext
     primary                       = true
@@ -41,14 +39,12 @@ resource azurerm_network_interface ips01-int-nic {
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
 
-  depends_on          = [var.subnetInspectInt]
-
   enable_accelerated_networking = true
   enable_ip_forwarding          = true
 
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = var.subnetInspectInt.id
+    subnet_id                     = azurerm_subnet.inspect_internal.id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.ips01int
     primary                       = true

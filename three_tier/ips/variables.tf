@@ -14,8 +14,10 @@ variable securityGroup {
   default = "none"
 }
 
-variable subnetInspectExt {}
-variable subnetInspectInt {  }
+#variable subnetInspectExt { }
+#variable subnetInspectInt { }
+variable subnets { }
+variable virtual_network_name { }
 
 variable ips01ext { }
 variable ips01int { }
