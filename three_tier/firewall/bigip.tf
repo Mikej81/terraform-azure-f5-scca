@@ -405,6 +405,7 @@ data template_file vm01_do_json {
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
     license         = var.licenses["license1"] != "" ? var.licenses["license1"] : ""
+    log_localip     = "setme"
   }
 }
 
@@ -415,22 +416,23 @@ data template_file vm02_do_json {
     #Uncomment the following line for BYOL
     #local_sku      = var.license2
 
-    host1           = var.host1_name
-    host2           = var.host2_name
-    local_host      = var.host2_name
-    local_selfip    = var.f5vm02ext
-    log_destination = var.app01ip
-    remote_host     = var.host1_name
-    remote_selfip   = var.f5vm01ext
-    externalGateway = local.ext_gw
-    mgmtGateway     = local.mgmt_gw
-    dns_server      = var.dns_server
-    ntp_server      = var.ntp_server
-    timezone        = var.timezone
-    admin_user      = var.adminUserName
-    admin_password  = var.adminPassword
-    license         = var.licenses["license1"] != "" ? var.licenses["license2"] : ""
-    exampleVipSubnet    = var.subnets["external"]
+    host1            = var.host1_name
+    host2            = var.host2_name
+    local_host       = var.host2_name
+    local_selfip     = var.f5vm02ext
+    log_destination  = var.app01ip
+    remote_host      = var.host1_name
+    remote_selfip    = var.f5vm01ext
+    externalGateway  = local.ext_gw
+    mgmtGateway      = local.mgmt_gw
+    dns_server       = var.dns_server
+    ntp_server       = var.ntp_server
+    timezone         = var.timezone
+    admin_user       = var.adminUserName
+    admin_password   = var.adminPassword
+    license          = var.licenses["license1"] != "" ? var.licenses["license2"] : ""
+    exampleVipSubnet = var.subnets["external"]
+    log_localip      = "setme"
   }
 }
 
@@ -449,6 +451,7 @@ data template_file as3_json {
     ssh_pool_addresses  = var.linuxjumpip
     app_pool_addresses  = var.app01ext
     log_destination     = var.app01ip
+    ips_pool_addresses  = "setme"
   }
 }
 

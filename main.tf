@@ -188,7 +188,7 @@ module jump_one {
   sshPublicKey  = var.sshPublicKeyPath
   location      = var.location
   region        = var.region
-  subnet        = azurerm_subnet.mgmt
+  subnet        = azurerm_subnet.vdms
   securityGroup = azurerm_network_security_group.main
   owner         = var.owner
   adminUserName = var.adminUserName
@@ -226,19 +226,19 @@ module firewall_three {
 }
 # Deploy example ips
 module ips_three {
-  count          = var.deploymentType == "three_tier" ? 1 : 0
-  source         = "./three_tier/ips"
-  prefix          = var.projectPrefix
-  location       = var.location
-  region         = var.region
-  resourceGroup  = azurerm_resource_group.main
+  count                = var.deploymentType == "three_tier" ? 1 : 0
+  source               = "./three_tier/ips"
+  prefix               = var.projectPrefix
+  location             = var.location
+  region               = var.region
+  resourceGroup        = azurerm_resource_group.main
   virtual_network_name = azurerm_virtual_network.main.name
-  securityGroup  = azurerm_network_security_group.main
-  ips01ext       = var.ips01ext
-  ips01int       = var.ips01int
-  adminUserName  = var.adminUserName
-  adminPassword  = var.adminPassword
-  subnets         = var.subnets
+  securityGroup        = azurerm_network_security_group.main
+  ips01ext             = var.ips01ext
+  ips01int             = var.ips01int
+  adminUserName        = var.adminUserName
+  adminPassword        = var.adminPassword
+  subnets              = var.subnets
 }
 # Deploy waf HA cluster
 module waf_three {
@@ -274,8 +274,8 @@ module app_three {
   subnetExternal = azurerm_subnet.external
   adminUserName  = var.adminUserName
   adminPassword  = var.adminPassword
-  subnets         = var.subnets
-  prefix          = var.projectPrefix
+  subnets        = var.subnets
+  prefix         = var.projectPrefix
 }
 # deploy jumpboxes
 module jump_three {
@@ -292,5 +292,5 @@ module jump_three {
   adminPassword  = var.adminPassword
   prefix         = var.projectPrefix
   instanceType   = var.jumpinstanceType
-  subnets         = var.subnets
+  subnets        = var.subnets
 }

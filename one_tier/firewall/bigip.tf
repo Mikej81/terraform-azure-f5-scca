@@ -442,6 +442,7 @@ data template_file as3_json {
     ips_pool_addresses  = var.app01ip
     log_destination     = var.app01ip
     example_vs_address  = var.subnets["external"]
+    mgmtVipAddress      = var.f5vm01ext_sec
   }
 }
 

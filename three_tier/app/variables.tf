@@ -1,5 +1,5 @@
 
-variable prefix { }
+variable prefix {}
 variable location {}
 variable region {}
 variable resourceGroup {

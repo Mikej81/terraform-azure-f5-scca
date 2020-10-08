@@ -53,7 +53,7 @@ variable app01ip { default = "10.90.2.101" }
 
 # Example IPS private ips
 variable ips01ext { default = "10.90.4.4" }
-variable ips01int { default = "10.90.5.4"}
+variable ips01int { default = "10.90.5.4" }
 
 # winjump
 variable winjumpip { default = "10.90.0.98" }

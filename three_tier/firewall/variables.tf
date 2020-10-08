@@ -15,13 +15,13 @@ variable availabilitySet {
 
 }
 
-variable prefix { }
+variable prefix {}
 # bigip network
-variable subnets { }
-variable subnetMgmt { }
-variable subnetExternal { }
-variable subnetInternal { }
-variable app01ip { }
+variable subnets {}
+variable subnetMgmt {}
+variable subnetExternal {}
+variable subnetInternal {}
+variable app01ip {}
 
 variable backendPool {
   description = "azureLB resource pool"

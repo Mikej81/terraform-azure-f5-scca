@@ -404,6 +404,8 @@ data template_file vm03_do_json {
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
     license         = var.licenses["license1"] != "" ? var.licenses["license1"] : ""
+    log_destination = "setme"
+    log_localip     = "setme"
   }
 }
 
@@ -428,6 +430,8 @@ data template_file vm04_do_json {
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
     license         = var.licenses["license1"] != "" ? var.licenses["license2"] : ""
+    log_destination = "setme"
+    log_localip     = "setme"
   }
 }
 
@@ -444,6 +448,9 @@ data template_file as3_json {
     rdp_pool_addresses  = var.winjumpip
     ssh_pool_addresses  = var.linuxjumpip
     app_pool_addresses  = var.app03ext
+    log_destination     = "setme"
+    exampleVipSubnet    = "setme"
+    ips_pool_addresses  = "setme"
   }
 }
 

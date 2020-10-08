@@ -35,7 +35,7 @@ resource azurerm_network_interface ips01-ext-nic {
 
 # internal network interface for ips vm
 resource azurerm_network_interface ips01-int-nic {
-  name                          = "${var.prefix}-ips01-int-nic"
+  name                = "${var.prefix}-ips01-int-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
 
@@ -68,8 +68,8 @@ resource azurerm_virtual_machine ips01-vm {
   resource_group_name = var.resourceGroup.name
 
   primary_network_interface_id = azurerm_network_interface.ips01-ext-nic.id
-  network_interface_ids = [azurerm_network_interface.ips01-ext-nic.id, azurerm_network_interface.ips01-int-nic.id]
-  vm_size               = "Standard_DS1_v2"
+  network_interface_ids        = [azurerm_network_interface.ips01-ext-nic.id, azurerm_network_interface.ips01-int-nic.id]
+  vm_size                      = "Standard_DS1_v2"
 
   storage_os_disk {
     name              = "ipsOsDisk"
