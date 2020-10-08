@@ -387,9 +387,6 @@ data template_file vm03_do_json {
   #template = "${file("./templates/cluster.json")}"
   template = data.http.template.body
   vars = {
-    #Uncomment the following line for BYOL
-    #local_sku	    = var.license1
-
     host1           = var.host1_name
     host2           = var.host2_name
     local_host      = var.host1_name
@@ -413,9 +410,6 @@ data template_file vm04_do_json {
   #template = "${file("./templates/cluster.json")}"
   template = data.http.template.body
   vars = {
-    #Uncomment the following line for BYOL
-    #local_sku      = var.license2
-
     host1           = var.host1_name
     host2           = var.host2_name
     local_host      = var.host2_name

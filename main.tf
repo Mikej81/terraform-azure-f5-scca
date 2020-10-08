@@ -163,6 +163,7 @@ module firewall_one {
   f5vm02int       = var.f5vm02int
   winjumpip       = var.winjumpip
   linuxjumpip     = var.linuxjumpip
+  licenses        = var.licenses
 }
 
 # deploy demo app
@@ -223,6 +224,7 @@ module firewall_three {
   instanceType    = var.instanceType
   app01ip         = var.app01ip
   subnets         = var.subnets
+  licenses        = var.licenses
 }
 # Deploy example ips
 module ips_three {
@@ -260,6 +262,7 @@ module waf_three {
   availabilitySet = azurerm_availability_set.avset
   instanceType    = var.instanceType
   subnets         = var.subnets
+  licenses        = var.licenses
 }
 # deploy demo app
 
