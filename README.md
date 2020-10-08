@@ -96,6 +96,8 @@ Ex.
 | host4\_name | n/a | `string` | `"f5vm04"` | no |
 | image\_name | BIGIP Image check available image names with az cli: az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all | `string` | `"f5-bigip-virtual-edition-25m-best-hourly"` | no |
 | instanceType | device | `string` | `"Standard_DS5_v2"` | no |
+| ips01ext | Example IPS private ips | `string` | `"10.90.4.4"` | no |
+| ips01int | n/a | `string` | `"10.90.5.4"` | no |
 | jumpinstanceType | Be careful which instance type selected, jump boxes currently use Premium\_LRS managed disks | `string` | `"Standard_B2s"` | no |
 | license1 | n/a | `string` | `""` | no |
 | license2 | n/a | `string` | `""` | no |
@@ -108,7 +110,7 @@ Ex.
 | onboard\_log | n/a | `string` | `"/var/log/startup-script.log"` | no |
 | owner | n/a | `string` | `"f5owner"` | no |
 | product | n/a | `string` | `"f5-big-ip-best"` | no |
-| projectPrefix | Azure Environment | `string` | `"scca"` | no |
+| projectPrefix | Azure Environment | `string` | `"mcscca"` | no |
 | purpose | TAGS | `string` | `"public"` | no |
 | region | n/a | `string` | `"USGov Virginia"` | no |
 | sshPublicKey | ssh public key for instances | `string` | `""` | no |

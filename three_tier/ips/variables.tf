@@ -4,7 +4,7 @@ variable templates {
 }
 variable location {}
 variable region {}
-variable prefix { }
+variable prefix {}
 variable resourceGroup {
   default = "scca-tf-rg"
 }
@@ -14,11 +14,11 @@ variable securityGroup {
 
 #variable subnetInspectExt { }
 #variable subnetInspectInt { }
-variable subnets { }
-variable virtual_network_name { }
+variable subnets {}
+variable virtual_network_name {}
 
-variable ips01ext { }
-variable ips01int { }
+variable ips01ext {}
+variable ips01int {}
 variable adminUserName { default = "admin" }
 variable adminPassword { default = "2017F5Networks!!" }
 

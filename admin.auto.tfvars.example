@@ -53,6 +53,6 @@ app01ip = "10.90.2.101"
 ## jump boxes
 jumpinstanceType = "Standard_B2s"
 # win jump
-winjumpip = "10.90.0.98"
+winjumpip = "10.90.3.98"
 # linux jump
-linuxjumpip = "10.90.0.99"
+linuxjumpip = "10.90.3.99"
