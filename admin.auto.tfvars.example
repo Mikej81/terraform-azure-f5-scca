@@ -8,17 +8,17 @@ region = "USGov Virginia"
 # project
 projectPrefix = "scca"
 # deployment
-# deploymentType = "three_tier"
+#deploymentType = "three_tier"
 deploymentType = "one_tier"
 # admin
 adminUserName = "xadmin"
 adminPassword = "pleaseUseVault123!!"
 # networks
 subnets = {
-  "management"  = "10.90.0.0/24"
-  "external"    = "10.90.1.0/24"
-  "internal"    = "10.90.2.0/24"
-  "vdms"        = "10.90.3.0/24"
+  "management"  = "10.90.0.0/24" #f5 management mgmtip
+  "external"    = "10.90.1.0/24" #untrusted-virutal-network selip
+  "internal"    = "10.90.2.0/24" #trusted-egress-virtual-network
+  "vdms"        = "10.90.3.0/24" #management interfaces? or management devices that can access management interfaces?
   "inspect_ext" = "10.90.4.0/24"
   "inspect_int" = "10.90.5.0/24"
   "waf_ext"     = "10.90.6.0/24"
@@ -26,6 +26,13 @@ subnets = {
 }
 ## bigips
 instanceType = "Standard_DS5_v2"
+# big-ip BYOL licenses
+licenses = {
+  "license1" = ""
+  "license2" = ""
+  "license3" = ""
+  "license4" = ""
+}
 # single tier
 # 01
 f5vm01mgmt    = "10.90.0.4"
