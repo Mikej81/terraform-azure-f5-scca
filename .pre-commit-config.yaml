@@ -3,7 +3,7 @@ default_language_version:
   python: python3.8
 repos:
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.39.0
+    rev: v1.43.0
     hooks:
       - id: terraform_fmt
       - id: terraform_docs

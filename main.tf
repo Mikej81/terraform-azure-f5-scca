@@ -11,11 +11,22 @@ resource azurerm_availability_set avset {
   managed                      = true
 }
 
+# Create Availability Set 2 only for 3 tier tho
+resource azurerm_availability_set avset2 {
+  name                         = "${var.projectPrefix}avset2"
+  location                     = azurerm_resource_group.main.location
+  resource_group_name          = azurerm_resource_group.main.name
+  platform_fault_domain_count  = 2
+  platform_update_domain_count = 2
+  managed                      = true
+}
+
 # Create Azure LB
 resource azurerm_lb lb {
   name                = "${var.projectPrefix}lb"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
+  sku                 = "Standard"
 
   frontend_ip_configuration {
     name                 = "LoadBalancerFrontEnd"
@@ -25,6 +36,12 @@ resource azurerm_lb lb {
 
 resource azurerm_lb_backend_address_pool backend_pool {
   name                = "BackendPool1"
+  resource_group_name = azurerm_resource_group.main.name
+  loadbalancer_id     = azurerm_lb.lb.id
+}
+
+resource azurerm_lb_backend_address_pool management_pool {
+  name                = "ManagementPool1"
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.lb.id
 }
@@ -132,37 +149,43 @@ resource azurerm_lb_rule rdp_rule {
 #
 # Deploy firewall HA cluster
 module firewall_one {
-  count           = var.deploymentType == "one_tier" ? 1 : 0
-  source          = "./one_tier/firewall"
-  resourceGroup   = azurerm_resource_group.main
-  sshPublicKey    = var.sshPublicKeyPath
-  location        = var.location
-  region          = var.region
-  subnetMgmt      = azurerm_subnet.mgmt
-  subnetExternal  = azurerm_subnet.external
-  subnetInternal  = azurerm_subnet.internal
-  securityGroup   = azurerm_network_security_group.main
-  owner           = var.owner
-  adminUserName   = var.adminUserName
-  adminPassword   = var.adminPassword
-  prefix          = var.projectPrefix
-  backendPool     = azurerm_lb_backend_address_pool.backend_pool
-  availabilitySet = azurerm_availability_set.avset
-  instanceType    = var.instanceType
-  subnets         = var.subnets
-  app01ip         = var.app01ip
-  host1_name      = var.host1_name
-  host2_name      = var.host2_name
-  f5vm01mgmt      = var.f5vm01mgmt
-  f5vm02mgmt      = var.f5vm02mgmt
-  f5vm01ext       = var.f5vm01ext
-  f5vm02ext       = var.f5vm02ext
-  f5vm01ext_sec   = var.f5vm01ext_sec
-  f5vm02ext_sec   = var.f5vm02ext_sec
-  f5vm01int       = var.f5vm01int
-  f5vm02int       = var.f5vm02int
-  winjumpip       = var.winjumpip
-  linuxjumpip     = var.linuxjumpip
+  count            = var.deploymentType == "one_tier" ? 1 : 0
+  source           = "./one_tier/firewall"
+  resourceGroup    = azurerm_resource_group.main
+  sshPublicKey     = var.sshPublicKeyPath
+  location         = var.location
+  region           = var.region
+  subnetMgmt       = azurerm_subnet.mgmt
+  subnetExternal   = azurerm_subnet.external
+  subnetInternal   = azurerm_subnet.internal
+  securityGroup    = azurerm_network_security_group.main
+  owner            = var.owner
+  adminUserName    = var.adminUserName
+  adminPassword    = var.adminPassword
+  prefix           = var.projectPrefix
+  backendPool      = azurerm_lb_backend_address_pool.backend_pool
+  managementPool   = azurerm_lb_backend_address_pool.management_pool
+  availabilitySet  = azurerm_availability_set.avset
+  availabilitySet2 = azurerm_availability_set.avset2
+  instanceType     = var.instanceType
+  subnets          = var.subnets
+  app01ip          = var.app01ip
+  host1_name       = var.host1_name
+  host2_name       = var.host2_name
+  f5vm01mgmt       = var.f5vm01mgmt
+  f5vm02mgmt       = var.f5vm02mgmt
+  f5vm01ext        = var.f5vm01ext
+  f5vm02ext        = var.f5vm02ext
+  f5vm01ext_sec    = var.f5vm01ext_sec
+  f5vm02ext_sec    = var.f5vm02ext_sec
+  f5vm01int        = var.f5vm01int
+  f5vm02int        = var.f5vm02int
+  f5vm01int_sec    = var.f5vm01int_sec
+  f5vm02int_sec    = var.f5vm02int_sec
+  winjumpip        = var.winjumpip
+  linuxjumpip      = var.linuxjumpip
+  ilb01ip          = var.ilb01ip
+  asm_policy       = var.asm_policy
 }
 
 # deploy demo app
@@ -223,6 +246,7 @@ module firewall_three {
   instanceType    = var.instanceType
   app01ip         = var.app01ip
   subnets         = var.subnets
+  asm_policy      = var.asm_policy
 }
 # Deploy example ips
 module ips_three {
@@ -257,9 +281,10 @@ module waf_three {
   adminPassword   = var.adminPassword
   prefix          = var.projectPrefix
   backendPool     = azurerm_lb_backend_address_pool.backend_pool
-  availabilitySet = azurerm_availability_set.avset
+  availabilitySet = azurerm_availability_set.avset2
   instanceType    = var.instanceType
   subnets         = var.subnets
+  asm_policy      = var.asm_policy
 }
 # deploy demo app
 

@@ -11,8 +11,9 @@ resource azurerm_public_ip lbpip {
   name                = "${var.projectPrefix}-lb-pip"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
   domain_name_label   = "${var.projectPrefix}lbpip"
+  sku                 = "Standard"
 }
 
 # Create the Management Subnet within the Virtual Network

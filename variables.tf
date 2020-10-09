@@ -45,9 +45,17 @@ variable f5vm04ext { default = "10.90.6.5" }
 variable f5vm04ext_sec { default = "10.90.6.12" }
 # bigip internal private ips
 variable f5vm01int { default = "10.90.2.4" }
+variable f5vm01int_sec { default = "10.90.2.11" }
+
 variable f5vm02int { default = "10.90.2.5" }
+variable f5vm02int_sec { default = "10.90.2.12" }
+
 variable f5vm03int { default = "10.90.7.4" }
 variable f5vm04int { default = "10.90.7.5" }
+
+# azure internal load balancer
+variable ilb01ip { default = "10.90.2.10" }
+
 # Example application private ips
 variable app01ip { default = "10.90.2.101" }
 
@@ -56,10 +64,10 @@ variable ips01ext { default = "10.90.4.4" }
 variable ips01int { default = "10.90.5.4" }
 
 # winjump
-variable winjumpip { default = "10.90.0.98" }
+variable winjumpip { default = "10.90.3.98" }
 
 # linuxjump
-variable linuxjumpip { default = "10.90.0.99" }
+variable linuxjumpip { default = "10.90.3.99" }
 
 # device
 variable instanceType { default = "Standard_DS5_v2" }

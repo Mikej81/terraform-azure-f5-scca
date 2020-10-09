@@ -82,27 +82,28 @@ resource azurerm_virtual_machine winJump {
   }
 }
 
-resource azurerm_virtual_machine_extension winJump-run-startup-cmd {
-  name                 = "winJump-run-startup-cmd"
-  depends_on           = [azurerm_virtual_machine.winJump]
-  virtual_machine_id   = azurerm_virtual_machine.winJump.id
-  publisher            = "Microsoft.Compute"
-  type                 = "CustomScriptExtension"
-  type_handler_version = "1.9"
+# commented out until plumbing in place for VDMS Egress to internet
+#resource azurerm_virtual_machine_extension winJump-run-startup-cmd {
+#  name                 = "winJump-run-startup-cmd"
+#  depends_on           = [azurerm_virtual_machine.winJump]
+#  virtual_machine_id   = azurerm_virtual_machine.winJump.id
+#  publisher            = "Microsoft.Compute"
+#  type                 = "CustomScriptExtension"
+#  type_handler_version = "1.9"
+#  auto_upgrade_minor_version = true
 
+#  protected_settings = <<PROTECTED_SETTINGS
+#    {
+#      "commandToExecute": "powershell.exe -Command \"./DisableInternetExplorer-ESC.ps1; exit 0;\""
+#    }
+#  PROTECTED_SETTINGS
 
-  protected_settings = <<PROTECTED_SETTINGS
-    {
-      "commandToExecute": "powershell.exe -Command \"./DisableInternetExplorer-ESC.ps1; exit 0;\""
-    }
-  PROTECTED_SETTINGS
+#  settings = <<SETTINGS
+#    {
+#        "fileUris": [
+#          "https://gist.githubusercontent.com/Mikej81/74d9640f41b6a126cd599808cca4a325/raw/06b2071a1a34e7a9f570f4ee780a4acbdaab238a/DisableInternetExplorer-ESC.ps1"
+#          ]
+#    }
+#SETTINGS
 
-  settings = <<SETTINGS
-    {
-        "fileUris": [
-          "https://gist.githubusercontent.com/Mikej81/74d9640f41b6a126cd599808cca4a325/raw/06b2071a1a34e7a9f570f4ee780a4acbdaab238a/DisableInternetExplorer-ESC.ps1"
-          ]
-    }
-SETTINGS
-
-}
+#}
