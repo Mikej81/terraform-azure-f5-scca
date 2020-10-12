@@ -67,14 +67,12 @@ variable bigip_version { default = "latest" }
 variable licenses {
   type = map(string)
   default = {
-    license1   = ""
+    "license1" = ""
     "license2" = ""
     "license3" = ""
     "license4" = ""
   }
 }
-variable license1 { default = "" }
-variable license2 { default = "" }
 variable host1_name { default = "f5vm03" }
 variable host2_name { default = "f5vm04" }
 variable dns_server { default = "8.8.8.8" }

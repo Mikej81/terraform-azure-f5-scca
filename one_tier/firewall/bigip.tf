@@ -432,7 +432,7 @@ data template_file vm01_do_json {
     timezone        = var.timezone
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
-    license         = var.licenses["license1"] != "" ? var.licenses["license1"] : ""
+    bigip_regKey    = var.licenses["license1"] != "" ? var.licenses["license1"] : ""
   }
 }
 data template_file vm02_do_json {
@@ -456,7 +456,7 @@ data template_file vm02_do_json {
     timezone        = var.timezone
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
-    license         = var.licenses["license1"] != "" ? var.licenses["license2"] : ""
+    bigip_regKey    = var.licenses["license1"] != "" ? var.licenses["license2"] : ""
   }
 }
 

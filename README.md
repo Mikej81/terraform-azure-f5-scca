@@ -102,10 +102,6 @@ Ex.
 | ips01ext | Example IPS private ips | `string` | `"10.90.4.4"` | no |
 | ips01int | n/a | `string` | `"10.90.5.4"` | no |
 | jumpinstanceType | Be careful which instance type selected, jump boxes currently use Premium\_LRS managed disks | `string` | `"Standard_B2s"` | no |
-| license1 | n/a | `string` | `""` | no |
-| license2 | n/a | `string` | `""` | no |
-| license3 | n/a | `string` | `""` | no |
-| license4 | n/a | `string` | `""` | no |
 | licenses | BIGIP Setup | `map(string)` | <pre>{<br>  "license1": "",<br>  "license2": "",<br>  "license3": "",<br>  "license4": ""<br>}</pre> | no |
 | linuxjumpip | linuxjump | `string` | `"10.90.3.99"` | no |
 | location | n/a | `string` | `"usgovvirginia"` | no |
