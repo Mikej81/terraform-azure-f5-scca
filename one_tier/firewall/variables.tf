@@ -9,9 +9,8 @@ variable region {}
 variable securityGroup {
   default = "none"
 }
-variable availabilitySet {
-
-}
+variable availabilitySet {}
+variable availabilitySet2 {}
 
 variable subnets {}
 
@@ -23,6 +22,7 @@ variable subnetInternal {}
 variable backendPool {
   description = "azureLB resource pool"
 }
+variable managementPool {}
 
 # bigip mgmt private ips
 variable f5vm01mgmt {}
@@ -37,10 +37,13 @@ variable f5vm02ext_sec {}
 # Example application private ips
 variable app01ip {}
 
+variable ilb01ip {}
+
 # bigip internal private ips
 variable f5vm01int {}
+variable f5vm01int_sec {}
 variable f5vm02int {}
-
+variable f5vm02int_sec {}
 # winjump
 variable winjumpip {}
 
@@ -75,7 +78,7 @@ variable onboard_log { default = "/var/log/startup-script.log" }
 ## ASM Policy
 ##  -Examples:  https://github.com/f5devcentral/f5-asm-policy-templates
 ##  -Default is using OWASP Ready Autotuning
-variable asm_policy { default = "https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml" }
+variable asm_policy {}
 
 
 # TAGS

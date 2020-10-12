@@ -3,7 +3,8 @@ resource azurerm_public_ip f5vmpip01 {
   name                = "${var.prefix}-vm01-mgmt-pip01"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
+  sku                 = "Standard"
 
   tags = {
     Name = "${var.prefix}-f5vm-public-ip"
@@ -13,7 +14,8 @@ resource azurerm_public_ip f5vmpip02 {
   name                = "${var.prefix}-vm02-mgmt-pip02"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
+  sku                 = "Standard"
 
   tags = {
     Name = "${var.prefix}-f5vm-public-ip"
@@ -42,6 +44,19 @@ resource azurerm_network_interface vm01-mgmt-nic {
     costcenter  = var.costcenter
     application = var.application
   }
+}
+
+# Associate the Network Interface to the ManagementPool
+resource azurerm_network_interface_backend_address_pool_association mpool_assc_vm01 {
+  network_interface_id    = azurerm_network_interface.vm01-mgmt-nic.id
+  ip_configuration_name   = "primary"
+  backend_address_pool_id = var.managementPool.id
+}
+# Associate the Network Interface to the ManagementPool
+resource azurerm_network_interface_backend_address_pool_association mpool_assc_vm02 {
+  network_interface_id    = azurerm_network_interface.vm02-mgmt-nic.id
+  ip_configuration_name   = "primary"
+  backend_address_pool_id = var.managementPool.id
 }
 
 resource azurerm_network_interface_security_group_association bigip01-mgmt-nsg {
@@ -169,6 +184,13 @@ resource azurerm_network_interface vm01-int-nic {
     primary                       = true
   }
 
+  ip_configuration {
+    name                          = "secondary"
+    subnet_id                     = var.subnetInternal.id
+    private_ip_address_allocation = "Static"
+    private_ip_address            = var.f5vm01int_sec
+  }
+
   tags = {
     Name        = "${var.environment}-vm01-int-int"
     environment = var.environment
@@ -196,6 +218,13 @@ resource azurerm_network_interface vm02-int-nic {
     private_ip_address_allocation = "Static"
     private_ip_address            = var.f5vm02int
     primary                       = true
+  }
+
+  ip_configuration {
+    name                          = "secondary"
+    subnet_id                     = var.subnetInternal.id
+    private_ip_address_allocation = "Static"
+    private_ip_address            = var.f5vm02int_sec
   }
 
   tags = {
@@ -388,12 +417,15 @@ data template_file vm01_do_json {
     host1           = var.host1_name
     host2           = var.host2_name
     local_host      = var.host1_name
-    local_selfip    = var.f5vm01ext
+    external_selfip = var.f5vm01ext
+    internal_selfip = var.f5vm01int
     log_localip     = var.f5vm01ext
     log_destination = var.app01ip
+    vdmsSubnet      = var.subnets["vdms"]
     remote_host     = var.host2_name
     remote_selfip   = var.f5vm02ext
     externalGateway = local.ext_gw
+    internalGateway = local.int_gw
     mgmtGateway     = local.mgmt_gw
     dns_server      = var.dns_server
     ntp_server      = var.ntp_server
@@ -409,12 +441,15 @@ data template_file vm02_do_json {
     host1           = var.host1_name
     host2           = var.host2_name
     local_host      = var.host2_name
-    local_selfip    = var.f5vm02ext
+    external_selfip = var.f5vm02ext
+    internal_selfip = var.f5vm02int
     log_localip     = var.f5vm02ext
     log_destination = var.app01ip
+    vdmsSubnet      = var.subnets["vdms"]
     remote_host     = var.host1_name
     remote_selfip   = var.f5vm01ext
     externalGateway = local.ext_gw
+    internalGateway = local.int_gw
     mgmtGateway     = local.mgmt_gw
     dns_server      = var.dns_server
     ntp_server      = var.ntp_server
@@ -473,7 +508,7 @@ resource azurerm_virtual_machine_extension f5vm01-run-startup-cmd {
 
 resource azurerm_virtual_machine_extension f5vm02-run-startup-cmd {
   name                 = "${var.environment}-f5vm02-run-startup-cmd"
-  depends_on           = [azurerm_virtual_machine.f5vm02]
+  depends_on           = [azurerm_virtual_machine.f5vm01, azurerm_virtual_machine.f5vm02]
   virtual_machine_id   = azurerm_virtual_machine.f5vm02.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
