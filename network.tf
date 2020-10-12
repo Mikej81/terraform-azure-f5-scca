@@ -64,6 +64,7 @@ resource azurerm_route_table vdms_udr {
 
 }
 
+# Create VDMS Egress Route, ILB FrontEnd IP
 resource azurerm_route vdms_to_outbound {
   name                = "vdms_default_route"
   resource_group_name = azurerm_resource_group.main.name
@@ -71,8 +72,7 @@ resource azurerm_route vdms_to_outbound {
   route_table_name       = azurerm_route_table.vdms_udr.name
   address_prefix         = "0.0.0.0/0"
   next_hop_type          = "VirtualAppliance"
-  next_hop_in_ip_address = var.f5vm01int
-  # this route should actually point to egress IP / ILB
+  next_hop_in_ip_address = var.ilb01ip
 }
 
 resource azurerm_subnet_route_table_association udr_associate {

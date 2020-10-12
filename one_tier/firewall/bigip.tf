@@ -508,7 +508,7 @@ resource azurerm_virtual_machine_extension f5vm01-run-startup-cmd {
 
 resource azurerm_virtual_machine_extension f5vm02-run-startup-cmd {
   name                 = "${var.environment}-f5vm02-run-startup-cmd"
-  depends_on           = [azurerm_virtual_machine.f5vm02]
+  depends_on           = [azurerm_virtual_machine.f5vm01, azurerm_virtual_machine.f5vm02]
   virtual_machine_id   = azurerm_virtual_machine.f5vm02.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
