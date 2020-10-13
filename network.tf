@@ -70,6 +70,16 @@ resource azurerm_route vdms_to_outbound {
   resource_group_name = azurerm_resource_group.main.name
 
   route_table_name       = azurerm_route_table.vdms_udr.name
+  address_prefix         = var.cidr
+  next_hop_type          = "VirtualAppliance"
+  next_hop_in_ip_address = var.ilb01ip
+}
+
+resource azurerm_route vdms_default {
+  name                = "default"
+  resource_group_name = azurerm_resource_group.main.name
+
+  route_table_name       = azurerm_route_table.vdms_udr.name
   address_prefix         = "0.0.0.0/0"
   next_hop_type          = "VirtualAppliance"
   next_hop_in_ip_address = var.ilb01ip

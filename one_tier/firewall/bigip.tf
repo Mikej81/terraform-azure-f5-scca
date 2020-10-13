@@ -246,7 +246,7 @@ resource azurerm_network_interface_security_group_association bigip02-int-nsg {
   network_security_group_id = var.securityGroup.id
 }
 
-# Associate the Network Interface to the BackendPool
+# Associate the External Network Interface to the BackendPool
 resource azurerm_network_interface_backend_address_pool_association bpool_assc_vm01 {
   network_interface_id    = azurerm_network_interface.vm01-ext-nic.id
   ip_configuration_name   = "secondary"
@@ -257,6 +257,18 @@ resource azurerm_network_interface_backend_address_pool_association bpool_assc_v
   network_interface_id    = azurerm_network_interface.vm02-ext-nic.id
   ip_configuration_name   = "secondary"
   backend_address_pool_id = var.backendPool.id
+}
+
+resource azurerm_network_interface_backend_address_pool_association primary_pool_assc_vm01 {
+  network_interface_id    = azurerm_network_interface.vm01-ext-nic.id
+  ip_configuration_name   = "primary"
+  backend_address_pool_id = var.primaryPool.id
+}
+
+resource azurerm_network_interface_backend_address_pool_association primary_pool_assc_vm02 {
+  network_interface_id    = azurerm_network_interface.vm02-ext-nic.id
+  ip_configuration_name   = "primary"
+  backend_address_pool_id = var.primaryPool.id
 }
 
 # Obtain Gateway IP for each Subnet
@@ -482,6 +494,7 @@ data template_file as3_json {
     log_destination     = var.app01ip
     example_vs_address  = var.subnets["external"]
     mgmtVipAddress      = var.f5vm01ext_sec
+    transitVipAddress   = var.f5vm01int_sec
   }
 }
 
