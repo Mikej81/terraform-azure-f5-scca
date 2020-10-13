@@ -39,7 +39,7 @@ resource azurerm_lb_probe internal_tcp_probe {
   loadbalancer_id     = azurerm_lb.internalLoadBalancer.id
   name                = "${var.prefix}-internal-tcp-probe"
   protocol            = "tcp"
-  port                = 3456
+  port                = 34568
   interval_in_seconds = 5
   number_of_probes    = 2
 }
@@ -51,8 +51,9 @@ resource azurerm_lb_rule internal_all_rule {
   protocol                       = "all"
   frontend_port                  = 0
   backend_port                   = 0
+  load_distribution              = "SourceIPProtocol"
   frontend_ip_configuration_name = "internalLoadBalancerFrontEnd"
-  enable_floating_ip             = false
+  enable_floating_ip             = true
   backend_address_pool_id        = azurerm_lb_backend_address_pool.internal_backend_pool.id
   idle_timeout_in_minutes        = 5
   probe_id                       = azurerm_lb_probe.internal_tcp_probe.id

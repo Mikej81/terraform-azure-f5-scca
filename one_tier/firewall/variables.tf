@@ -23,6 +23,7 @@ variable backendPool {
   description = "azureLB resource pool"
 }
 variable managementPool {}
+variable primaryPool {}
 
 # bigip mgmt private ips
 variable f5vm01mgmt {}
