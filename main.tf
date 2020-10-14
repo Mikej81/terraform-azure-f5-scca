@@ -182,6 +182,9 @@ module firewall_one {
   subnetExternal   = azurerm_subnet.external
   subnetInternal   = azurerm_subnet.internal
   securityGroup    = azurerm_network_security_group.main
+  image_name       = var.image_name
+  product          = var.product
+  bigip_version    = var.bigip_version
   owner            = var.owner
   adminUserName    = var.adminUserName
   adminPassword    = var.adminPassword

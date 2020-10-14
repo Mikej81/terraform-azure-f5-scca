@@ -56,9 +56,9 @@ variable instanceType {}
 
 
 # BIGIP Image
-variable image_name { default = "f5-bigip-virtual-edition-25m-best-hourly" }
-variable product { default = "f5-big-ip-best" }
-variable bigip_version { default = "latest" }
+variable image_name {}
+variable product {}
+variable bigip_version {}
 
 # BIGIP Setup
 variable licenses {
