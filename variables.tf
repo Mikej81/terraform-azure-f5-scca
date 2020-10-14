@@ -7,10 +7,10 @@ variable adminUserName { default = "xadmin" }
 variable adminPassword { default = "pleaseUseVault123!!" }
 # Azure Region
 #  usgovvirginia, usgovarizona, etc
-variable location { default = "usgovarizona" }
+variable location { default = "usgovvirginia" }
 # Azure Regions
 #  US Gov Virginia, US Gov Arizona, etc
-variable region { default = "USGov Arizona" }
+variable region { default = "USGov Virginia" }
 # one_tier or three_tier
 variable deploymentType { default = "one_tier" }
 variable sshPublicKey {
@@ -86,8 +86,10 @@ variable jumpinstanceType { default = "Standard_B2s" }
 # check available image names with az cli:
 #    az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all
 # for BYOL image: f5-big-all-2slot-byol
+#variable image_name { default = "f5-big-all-2slot-byol" }
 variable image_name { default = "f5-bigip-virtual-edition-1g-best-hourly " }
 # For BYOL product: f5-big-ip-byol
+#variable product { default = "f5-big-ip-byol" }
 variable product { default = "f5-big-ip-best" }
 variable bigip_version { default = "latest" }
 

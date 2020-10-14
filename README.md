@@ -97,21 +97,21 @@ Ex.
 | host3\_name | n/a | `string` | `"f5vm03"` | no |
 | host4\_name | n/a | `string` | `"f5vm04"` | no |
 | ilb01ip | azure internal load balancer | `string` | `"10.90.2.10"` | no |
-| image\_name | BIGIP Image check available image names with az cli: az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all for BYOL image: f5-big-all-2slot-byol | `string` | `"f5-bigip-virtual-edition-1g-best-hourly "` | no |
+| image\_name | BIGIP Image check available image names with az cli: az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all for BYOL image: f5-big-all-2slot-byol variable image\_name { default = "f5-big-all-2slot-byol" } | `string` | `"f5-bigip-virtual-edition-1g-best-hourly "` | no |
 | instanceType | device | `string` | `"Standard_DS5_v2"` | no |
 | ips01ext | Example IPS private ips | `string` | `"10.90.4.4"` | no |
 | ips01int | n/a | `string` | `"10.90.5.4"` | no |
 | jumpinstanceType | Be careful which instance type selected, jump boxes currently use Premium\_LRS managed disks | `string` | `"Standard_B2s"` | no |
 | licenses | BIGIP Setup Licenses are only needed when using BYOL images | `map(string)` | <pre>{<br>  "license1": "",<br>  "license2": "",<br>  "license3": "",<br>  "license4": ""<br>}</pre> | no |
 | linuxjumpip | linuxjump | `string` | `"10.90.3.99"` | no |
-| location | Azure Region usgovvirginia, usgovarizona, etc | `string` | `"usgovarizona"` | no |
+| location | Azure Region usgovvirginia, usgovarizona, etc | `string` | `"usgovvirginia"` | no |
 | ntp\_server | n/a | `string` | `"time.nist.gov,0.us.pool.ntp.org"` | no |
 | onboard\_log | n/a | `string` | `"/var/log/startup-script.log"` | no |
 | owner | n/a | `string` | `"f5owner"` | no |
-| product | For BYOL product: f5-big-ip-byol | `string` | `"f5-big-ip-best"` | no |
+| product | For BYOL product: f5-big-ip-byol variable product { default = "f5-big-ip-byol" } | `string` | `"f5-big-ip-best"` | no |
 | projectPrefix | Azure Environment Prefix to prepend to all objects created, minus Windows Jumbox | `string` | `"mcscca"` | no |
 | purpose | TAGS | `string` | `"public"` | no |
-| region | Azure Regions US Gov Virginia, US Gov Arizona, etc | `string` | `"USGov Arizona"` | no |
+| region | Azure Regions US Gov Virginia, US Gov Arizona, etc | `string` | `"USGov Virginia"` | no |
 | sshPublicKey | ssh public key for instances | `string` | `""` | no |
 | sshPublicKeyPath | n/a | `string` | `"/mykey.pub"` | no |
 | subnets | n/a | `map(string)` | <pre>{<br>  "external": "10.90.1.0/24",<br>  "inspect_ext": "10.90.4.0/24",<br>  "inspect_int": "10.90.5.0/24",<br>  "internal": "10.90.2.0/24",<br>  "management": "10.90.0.0/24",<br>  "vdms": "10.90.3.0/24",<br>  "waf_ext": "10.90.6.0/24",<br>  "waf_int": "10.90.7.0/24"<br>}</pre> | no |
