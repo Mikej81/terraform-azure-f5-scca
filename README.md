@@ -97,7 +97,7 @@ Ex.
 | host3\_name | n/a | `string` | `"f5vm03"` | no |
 | host4\_name | n/a | `string` | `"f5vm04"` | no |
 | ilb01ip | azure internal load balancer | `string` | `"10.90.2.10"` | no |
-| image\_name | BIGIP Image check available image names with az cli: az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all | `string` | `"f5-bigip-virtual-edition-25m-best-hourly"` | no |
+| image\_name | BIGIP Image check available image names with az cli: az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all | `string` | `"f5-bigip-virtual-edition-1g-best-hourly "` | no |
 | instanceType | device | `string` | `"Standard_DS5_v2"` | no |
 | ips01ext | Example IPS private ips | `string` | `"10.90.4.4"` | no |
 | ips01int | n/a | `string` | `"10.90.5.4"` | no |

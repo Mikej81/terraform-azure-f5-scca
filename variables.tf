@@ -78,7 +78,7 @@ variable jumpinstanceType { default = "Standard_B2s" }
 # BIGIP Image
 # check available image names with az cli:
 #    az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all
-variable image_name { default = "f5-bigip-virtual-edition-25m-best-hourly" }
+variable image_name { default = "f5-bigip-virtual-edition-1g-best-hourly " }
 variable product { default = "f5-big-ip-best" }
 variable bigip_version { default = "latest" }
 
