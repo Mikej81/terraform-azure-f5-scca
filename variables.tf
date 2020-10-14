@@ -87,7 +87,7 @@ variable jumpinstanceType { default = "Standard_B2s" }
 #    az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all
 # for BYOL image: f5-big-all-2slot-byol
 #variable image_name { default = "f5-big-all-2slot-byol" }
-variable image_name { default = "f5-bigip-virtual-edition-1g-best-hourly " }
+variable image_name { default = "f5-bigip-virtual-edition-1g-best-hourly" }
 # For BYOL product: f5-big-ip-byol
 #variable product { default = "f5-big-ip-byol" }
 variable product { default = "f5-big-ip-best" }
