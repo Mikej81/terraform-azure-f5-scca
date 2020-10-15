@@ -35,48 +35,48 @@ variable subnets {
     "waf_int"     = "10.90.7.0/24"
   }
 }
-# bigip mgmt private ips
+# bigip mgmt private ips, this must be in management subnet
 variable f5vm01mgmt { default = "10.90.0.4" }
 variable f5vm02mgmt { default = "10.90.0.5" }
 variable f5vm03mgmt { default = "10.90.0.6" }
 variable f5vm04mgmt { default = "10.90.0.7" }
 
-# bigip external private ips
+# bigip external private ips, these must be in external subnet
 variable f5vm01ext { default = "10.90.1.4" }
 variable f5vm01ext_sec { default = "10.90.1.11" }
 variable f5vm02ext { default = "10.90.1.5" }
 variable f5vm02ext_sec { default = "10.90.1.12" }
+# three_tier bigip external, these must be in the waf_ext subnet
 variable f5vm03ext { default = "10.90.6.4" }
 variable f5vm03ext_sec { default = "10.90.6.11" }
 variable f5vm04ext { default = "10.90.6.5" }
 variable f5vm04ext_sec { default = "10.90.6.12" }
-# bigip internal private ips
+# bigip internal private ips, these must be in internal subnet
 variable f5vm01int { default = "10.90.2.4" }
 variable f5vm01int_sec { default = "10.90.2.11" }
-
 variable f5vm02int { default = "10.90.2.5" }
 variable f5vm02int_sec { default = "10.90.2.12" }
-
+# three_tier bigip internal, these must be in waf_int subnet
 variable f5vm03int { default = "10.90.7.4" }
 variable f5vm04int { default = "10.90.7.5" }
 
-# azure internal load balancer
+# azure internal load balancer, must be in internal subnet
 variable ilb01ip { default = "10.90.2.10" }
 
-# Example application private ips
+# Example application private ips, *currently* must be in internal subnet
 variable app01ip { default = "10.90.2.101" }
 
 # Example IPS private ips
 variable ips01ext { default = "10.90.4.4" }
 variable ips01int { default = "10.90.5.4" }
 
-# winjump
+# winjump, must be in VDMS subnet
 variable winjumpip { default = "10.90.3.98" }
 
-# linuxjump
+# linuxjump, must be in VDMS subnet
 variable linuxjumpip { default = "10.90.3.99" }
 
-# device
+# BIGIP Instance Type, DS5_v2 is a solid baseline for BEST
 variable instanceType { default = "Standard_DS5_v2" }
 
 # Be careful which instance type selected, jump boxes currently use Premium_LRS managed disks
@@ -91,7 +91,10 @@ variable image_name { default = "f5-bigip-virtual-edition-1g-best-hourly" }
 # For BYOL product: f5-big-ip-byol
 #variable product { default = "f5-big-ip-byol" }
 variable product { default = "f5-big-ip-best" }
-variable bigip_version { default = "latest" }
+# BIG-IP Version, 14.1.2 for "Compliance".  Options: 12.1.502000, 13.1.304000, 14.1.206000, 15.0.104000
+# verify available versions before using as images can change.
+variable bigip_version { default = "14.1.202000" }
+#variable bigip_version { default = "latest" }
 
 # BIGIP Setup
 # Licenses are only needed when using BYOL images
