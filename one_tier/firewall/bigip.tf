@@ -392,29 +392,46 @@ resource azurerm_virtual_machine f5vm02 {
     application = var.application
   }
 }
-
 # Setup Onboarding scripts
-data template_file vm_onboard {
-  template = file("./templates/onboard.tpl")
+# data http template_onboard {
+#   url = "https://raw.githubusercontent.com/vinnie357/bigip-bash-onboard-templates/master/azure/scca/runtime-init.sh.tpl"
+# }
+data template_file vm1_onboard {
+  #template = data.http.template_onboard.body
+  template = file("./templates/runtime-init.sh.tpl")
   vars = {
-    uname     = var.adminUserName
-    upassword = var.adminPassword
-    doVersion = "latest"
-    #example version:
+    onboard_log  = var.onboard_log
+    DO_Document  = data.template_file.vm01_do_json.rendered
+    AS3_Document = data.template_file.as3_json.rendered
+    mgmtGateway  = local.mgmt_gw
+    #
+    initVersion = "1.0.0"
+    #example ATC version:
     #as3Version            = "3.16.0"
-    as3Version                = "latest"
-    tsVersion                 = "latest"
-    cfVersion                 = "latest"
-    fastVersion               = "1.0.0"
-    doExternalDeclarationUrl  = "https://example.domain.com/do.json"
-    as3ExternalDeclarationUrl = "https://example.domain.com/as3.json"
-    tsExternalDeclarationUrl  = "https://example.domain.com/ts.json"
-    cfExternalDeclarationUrl  = "https://example.domain.com/cf.json"
-    onboard_log               = var.onboard_log
-    mgmtGateway               = local.mgmt_gw
-    DO1_Document              = data.template_file.vm01_do_json.rendered
-    DO2_Document              = data.template_file.vm02_do_json.rendered
-    AS3_Document              = data.template_file.as3_json.rendered
+    doVersion   = "1.15.0"
+    as3Version  = "3.22.1"
+    tsVersion   = "1.14.0"
+    cfVersion   = "1.5.0"
+    fastVersion = "1.4.0"
+  }
+}
+data template_file vm2_onboard {
+  #template = data.http.template_onboard.body
+  template = file("./templates/runtime-init.sh.tpl")
+  vars = {
+    onboard_log  = var.onboard_log
+    DO_Document  = data.template_file.vm02_do_json.rendered
+    AS3_Document = data.template_file.as3_json.rendered
+    mgmtGateway  = local.mgmt_gw
+    #
+    initVersion = "1.0.0"
+    #example ATC version:
+    #as3Version            = "3.16.0"
+    doVersion   = "1.15.0"
+    as3Version  = "3.22.1"
+    tsVersion   = "1.14.0"
+    cfVersion   = "1.5.0"
+    fastVersion = "1.4.0"
   }
 }
 
@@ -509,7 +526,7 @@ resource azurerm_virtual_machine_extension f5vm01-run-startup-cmd {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "echo '${base64encode(data.template_file.vm_onboard.rendered)}' >> ./startup.sh && cat ./startup.sh | base64 -d >> ./startup-script.sh && chmod +x ./startup-script.sh && rm ./startup.sh && bash ./startup-script.sh 1"
+        "commandToExecute": "echo '${base64encode(data.template_file.vm1_onboard.rendered)}' >> ./startup.sh && cat ./startup.sh | base64 -d >> ./startup-script.sh && chmod +x ./startup-script.sh && rm ./startup.sh && bash ./startup-script.sh 1"
     }
   SETTINGS
 
@@ -533,7 +550,7 @@ resource azurerm_virtual_machine_extension f5vm02-run-startup-cmd {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "echo '${base64encode(data.template_file.vm_onboard.rendered)}' >> ./startup.sh && cat ./startup.sh | base64 -d >> ./startup-script.sh && chmod +x ./startup-script.sh && rm ./startup.sh && bash ./startup-script.sh 2"
+        "commandToExecute": "echo '${base64encode(data.template_file.vm2_onboard.rendered)}' >> ./startup.sh && cat ./startup.sh | base64 -d >> ./startup-script.sh && chmod +x ./startup-script.sh && rm ./startup.sh && bash ./startup-script.sh 2"
     }
   SETTINGS
 
@@ -564,7 +581,11 @@ resource local_file vm_as3_file {
   filename = "${path.module}/vm_as3_data.json"
 }
 
-resource local_file onboard_file {
-  content  = data.template_file.vm_onboard.rendered
-  filename = "${path.module}/onboard.sh"
+resource local_file onboard_file1 {
+  content  = data.template_file.vm1_onboard.rendered
+  filename = "${path.module}/onboard1.sh"
+}
+resource local_file onboard_file2 {
+  content  = data.template_file.vm2_onboard.rendered
+  filename = "${path.module}/onboard2.sh"
 }
