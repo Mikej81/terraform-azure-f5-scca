@@ -14,23 +14,14 @@
 
 This solution uses an Terraform template to launch a three NIC deployment of a cloud-focused BIG-IP VE cluster (Active/Standby) in Microsoft Azure. Traffic flows from an ALB to the BIG-IP VE which then processes the traffic to application servers. This is the standard cloud design where the BIG-IP VE instance is running with a dual interface, where both management and data plane traffic is processed on each one.
 
-The BIG-IP VEs have the following modules enabled:
-* [Local Traffic Manager (LTM)](https://f5.com/products/big-ip/local-traffic-manager-ltm) module enabled to provide advanced traffic management functionality.
-* Firewall
-* WAF
-* Whatever
+The BIG-IP VEs have the following features / modules enabled:
 
-The one big thing in this Terraform accounted for is composing resources a bit differently to account for dependencies into Immutable/Mutable elements. i.e. stuff you would typically frequently change/mutate, such as traditional config on the BIG-IP. Once the template is deployed, there are certain resources (like the network infrastructure) that are fixed while others (like BIG-IP VMs and configurations) can be changed.
+- [Local / Global Availability](https://f5.com/products/big-ip/local-traffic-manager-ltm)
 
-Ex.
--> Run once
-- Deploy the entire infrastructure with all the neccessary resources, then we use Declarative Onboarding to configure the BIG-IP Cluster; AS3 to create a sample app proxy; then lastly use Service Discovery automatically add the DVWA container app to the LTM pool (Please note currently we also hardcode the node IP in the pool due to a bug in our AS3, which will be fixed in the next release)
+- [Firewall](https://www.f5.com/products/security/advanced-firewall-manager)
+  - Firewall with Intrusion Protection and IP Intelligence only available with BYOL deployments today.
 
--> Run many X
-- [Redeploy BIG-IP for replacement or upgrade](#Redeploy-BIG-IP-for-replacement-or-upgrade)
-- [Reconfigure BIG-IP configurations](#Rerun-AS3-on-the-big-ip-ve)
-
-**Networking Stack Type:** This solution deploys into a new networking stack, which is created along with the solution.
+- [Web Application Firewall](https://www.f5.com/products/security/advanced-waf)
 
 ## Prerequisites
 
@@ -43,7 +34,9 @@ Ex.
 ## Important configuration notes
 
 - All variables are configured in variables.tf
+
 ## variables
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
@@ -129,7 +122,35 @@ Ex.
 | tier\_three | three tier |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## Deployment
+
+For deployment you can do the traditional terraform commands or use the provided scripts.
+
+```bash
+terraform init
+terraform plan
+terraform apply
+```
+
+```bash
+./demo.sh
+```
+
+## Destruction
+
+For destruction / tear down you can do the trafitional terraform commands or use the provided scripts.
+
+```bash
+terraform destroy
+```
+
+```bash
+./cleanup.sh
+```
+
 ## Development
+
 Outline any requirements to setup a development environment if someone would like to contribute.  You may also link to another file for this information.
 
   ```bash
