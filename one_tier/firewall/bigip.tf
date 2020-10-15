@@ -433,8 +433,8 @@ data template_file vm01_do_json {
     host1           = var.host1_name
     host2           = var.host2_name
     local_host      = var.host1_name
-    external_selfip = var.f5vm01ext
-    internal_selfip = var.f5vm01int
+    external_selfip = "${var.f5vm01ext}/${element(split("/", var.subnets["external"]), 1)}"
+    internal_selfip = "${var.f5vm01int}/${element(split("/", var.subnets["internal"]), 1)}"
     log_localip     = var.f5vm01ext
     log_destination = var.app01ip
     vdmsSubnet      = var.subnets["vdms"]
@@ -454,11 +454,13 @@ data template_file vm01_do_json {
 data template_file vm02_do_json {
   template = data.http.onboard.body
   vars = {
-    host1           = var.host1_name
-    host2           = var.host2_name
-    local_host      = var.host2_name
-    external_selfip = var.f5vm02ext
-    internal_selfip = var.f5vm02int
+    host1      = var.host1_name
+    host2      = var.host2_name
+    local_host = var.host2_name
+    #external_selfip = var.f5vm02ext
+    #internal_selfip = var.f5vm02int
+    external_selfip = "${var.f5vm02ext}/${element(split("/", var.subnets["external"]), 1)}"
+    internal_selfip = "${var.f5vm02int}/${element(split("/", var.subnets["internal"]), 1)}"
     log_localip     = var.f5vm02ext
     log_destination = var.app01ip
     vdmsSubnet      = var.subnets["vdms"]
