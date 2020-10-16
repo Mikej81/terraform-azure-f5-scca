@@ -1,14 +1,18 @@
 ## OUTPUTS ###
-#data azurerm_public_ip lbpip {
-#  name                = azurerm_public_ip.lbpip.name
-#  resource_group_name = azurerm_resource_group.main.name
-#}
 
-output sg_id { value = azurerm_network_security_group.main.id }
-output sg_name { value = azurerm_network_security_group.main.name }
+output sg_id {
+  value       = azurerm_network_security_group.main.id
+  description = "Network Security Group ID"
+}
+output sg_name {
+  value       = azurerm_network_security_group.main.name
+  description = "Network Security Group Name"
+}
 
-# output ALB_app1_pip { value = data.azurerm_public_ip.lbpip.ip_address }
-output ALB_app1_pip { value = "https://${azurerm_public_ip.lbpip.ip_address}" }
+output ALB_app1_pip {
+  value       = "https://${azurerm_public_ip.lbpip.ip_address}"
+  description = "Public IP for applications.  Https for example app, RDP for Windows Jumpbox, SSH for Linux Jumpbox"
+}
 
 locals {
   one_tier = var.deploymentType == "one_tier" ? try({
@@ -49,6 +53,12 @@ locals {
 }
 
 # single tier
-output tier_one { value = local.one_tier }
+output tier_one {
+  value       = local.one_tier
+  description = "One Tier"
+}
 # three tier
-output tier_three { value = local.three_tier }
+output tier_three {
+  value       = local.three_tier
+  description = "Three Tier"
+}

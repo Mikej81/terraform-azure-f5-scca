@@ -107,11 +107,11 @@ The BIG-IP VEs have the following features / modules enabled:
 
 | Name | Description |
 |------|-------------|
-| sg\_id | n/a |
-| sg\_name | n/a |
-| ALB\_app1\_pip | output ALB\_app1\_pip { value = data.azurerm\_public\_ip.lbpip.ip\_address } |
-| tier\_one | single tier |
-| tier\_three | three tier |
+| sg\_id | Network Security Group ID |
+| sg\_name | Network Security Group Name |
+| ALB\_app1\_pip | Public IP for applications.  Https for example app, RDP for Windows Jumpbox, SSH for Linux Jumpbox |
+| tier\_one | One Tier |
+| tier\_three | Three Tier |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
