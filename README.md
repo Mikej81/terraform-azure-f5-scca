@@ -111,7 +111,7 @@ The BIG-IP VEs have the following features / modules enabled:
 | sg\_name | Network Security Group Name |
 | ALB\_app1\_pip | Public IP for applications.  Https for example app, RDP for Windows Jumpbox, SSH for Linux Jumpbox |
 | tier\_one | One Tier Outputs:  VM IDs, VM Mgmt IPs, VM External Private IPs |
-| tier\_three | One Tier Outputs:  VM IDs, VM Mgmt IPs, VM External Private IPs |
+| tier\_three | Three Tier Outputs:  VM IDs, VM Mgmt IPs, VM External Private IPs |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

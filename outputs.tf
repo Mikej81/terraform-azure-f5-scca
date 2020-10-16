@@ -60,5 +60,5 @@ output tier_one {
 # three tier
 output tier_three {
   value       = local.three_tier
-  description = "One Tier Outputs:  VM IDs, VM Mgmt IPs, VM External Private IPs"
+  description = "Three Tier Outputs:  VM IDs, VM Mgmt IPs, VM External Private IPs"
 }
