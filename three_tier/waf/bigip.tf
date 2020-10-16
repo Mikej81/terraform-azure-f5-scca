@@ -34,14 +34,7 @@ resource azurerm_network_interface vm03-mgmt-nic {
     public_ip_address_id          = azurerm_public_ip.f5vmpip03.id
   }
 
-  tags = {
-    Name        = "${var.environment}-vm03-mgmt-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 resource azurerm_network_interface_security_group_association bigip03-mgmt-nsg {
@@ -62,14 +55,7 @@ resource azurerm_network_interface vm04-mgmt-nic {
     public_ip_address_id          = azurerm_public_ip.f5vmpip04.id
   }
 
-  tags = {
-    Name        = "${var.environment}-vm04-mgmt-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 resource azurerm_network_interface_security_group_association bigip04-mgmt-nsg {
@@ -100,12 +86,12 @@ resource azurerm_network_interface vm03-ext-nic {
   }
 
   tags = {
-    Name                      = "${var.environment}-vm03-ext-int"
-    environment               = var.environment
-    owner                     = var.owner
-    group                     = var.group
-    costcenter                = var.costcenter
-    application               = var.application
+    Name                      = "${var.prefix}-vm03-ext-int"
+    environment               = var.tags["environment"]
+    owner                     = var.tags["owner"]
+    group                     = var.tags["group"]
+    costcenter                = var.tags["costcenter"]
+    application               = var.tags["application"]
     f5_cloud_failover_label   = "saca"
     f5_cloud_failover_nic_map = "external"
   }
@@ -138,12 +124,12 @@ resource azurerm_network_interface vm04-ext-nic {
   }
 
   tags = {
-    Name                      = "${var.environment}-vm03-ext-int"
-    environment               = var.environment
-    owner                     = var.owner
-    group                     = var.group
-    costcenter                = var.costcenter
-    application               = var.application
+    Name                      = "${var.prefix}-vm03-ext-int"
+    environment               = var.tags["environment"]
+    owner                     = var.tags["owner"]
+    group                     = var.tags["group"]
+    costcenter                = var.tags["costcenter"]
+    application               = var.tags["application"]
     f5_cloud_failover_label   = "saca"
     f5_cloud_failover_nic_map = "external"
   }
@@ -169,14 +155,7 @@ resource azurerm_network_interface vm03-int-nic {
     primary                       = true
   }
 
-  tags = {
-    Name        = "${var.environment}-vm03-int-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 resource azurerm_network_interface_security_group_association bigip03-int-nsg {
@@ -198,14 +177,7 @@ resource azurerm_network_interface vm04-int-nic {
     primary                       = true
   }
 
-  tags = {
-    Name        = "${var.environment}-vm04-int-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 resource azurerm_network_interface_security_group_association bigip04-int-nsg {
@@ -282,14 +254,7 @@ resource azurerm_virtual_machine f5vm03 {
     product   = var.product
   }
 
-  tags = {
-    Name        = "${var.environment}-f5vm03"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 resource azurerm_virtual_machine f5vm04 {
@@ -339,14 +304,7 @@ resource azurerm_virtual_machine f5vm04 {
     product   = var.product
   }
 
-  tags = {
-    Name        = "${var.environment}-f5vm04"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 # Setup Onboarding scripts
@@ -450,7 +408,7 @@ data template_file as3_json {
 
 # Run Startup Script
 resource azurerm_virtual_machine_extension f5vm03-run-startup-cmd {
-  name                 = "${var.environment}-f5vm03-run-startup-cmd"
+  name                 = "${var.prefix}-f5vm03-run-startup-cmd"
   depends_on           = [azurerm_virtual_machine.f5vm03]
   virtual_machine_id   = azurerm_virtual_machine.f5vm03.id
   publisher            = "Microsoft.Azure.Extensions"
@@ -463,18 +421,11 @@ resource azurerm_virtual_machine_extension f5vm03-run-startup-cmd {
     }
   SETTINGS
 
-  tags = {
-    Name        = "${var.environment}-f5vm03-startup-cmd"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 resource azurerm_virtual_machine_extension f5vm04-run-startup-cmd {
-  name                 = "${var.environment}-f5vm04-run-startup-cmd"
+  name                 = "${var.prefix}-f5vm04-run-startup-cmd"
   depends_on           = [azurerm_virtual_machine.f5vm04]
   virtual_machine_id   = azurerm_virtual_machine.f5vm04.id
   publisher            = "Microsoft.Azure.Extensions"
@@ -487,14 +438,7 @@ resource azurerm_virtual_machine_extension f5vm04-run-startup-cmd {
     }
   SETTINGS
 
-  tags = {
-    Name        = "${var.environment}-f5vm04-startup-cmd"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 

@@ -1,29 +1,53 @@
 # Azure Environment
-# Prefix to prepend to all objects created, minus Windows Jumbox
-variable projectPrefix { default = "mcscca" }
-# Admin Username for All systems
-variable adminUserName { default = "xadmin" }
-# Admin Password for all systems
-variable adminPassword { default = "pleaseUseVault123!!" }
-# Azure Region
-#  usgovvirginia, usgovarizona, etc
-variable location { default = "usgovvirginia" }
-# Azure Regions
-#  US Gov Virginia, US Gov Arizona, etc
-variable region { default = "USGov Virginia" }
-# one_tier or three_tier
-variable deploymentType { default = "one_tier" }
+variable projectPrefix {
+  type        = string
+  description = "REQUIRED: Prefix to prepend to all objects created, minus Windows Jumbox"
+  default     = "mcscca"
+}
+variable adminUserName {
+  type        = string
+  description = "REQUIRED: Admin Username for All systems"
+  default     = "xadmin"
+}
+variable adminPassword {
+  type        = string
+  description = "REQUIRED: Admin Password for all systems"
+  default     = "pleaseUseVault123!!"
+}
+variable location {
+  type        = string
+  description = "REQUIRED: Azure Region: usgovvirginia, usgovarizona, etc"
+  default     = "usgovvirginia"
+}
+variable region {
+  type        = string
+  description = "Azure Region: US Gov Virginia, US Gov Arizona, etc"
+  default     = "USGov Virginia"
+}
+variable deploymentType {
+  type        = string
+  description = "REQUIRED: This determines the type of deployment; one tier versus three tier: one_tier, three_tier"
+  default     = "one_tier"
+}
 variable sshPublicKey {
   type        = string
-  description = "ssh public key for instances"
+  description = "OPTIONAL: ssh public key for instances"
   default     = ""
 }
-variable sshPublicKeyPath { default = "/mykey.pub" }
+variable sshPublicKeyPath {
+  type        = string
+  description = "OPTIONAL: ssh public key path for instances"
+  default     = "/mykey.pub"
+}
 
 # NETWORK
-variable cidr { default = "10.90.0.0/16" }
+variable cidr {
+  description = "REQUIRED: VNET Network CIDR"
+  default     = "10.90.0.0/16"
+}
 variable subnets {
-  type = map(string)
+  type        = map(string)
+  description = "REQUIRED: Subnet CIDRs"
   default = {
     "management"  = "10.90.0.0/24"
     "external"    = "10.90.1.0/24"
@@ -35,11 +59,18 @@ variable subnets {
     "waf_int"     = "10.90.7.0/24"
   }
 }
-# bigip mgmt private ips, this must be in management subnet
-variable f5vm01mgmt { default = "10.90.0.4" }
-variable f5vm02mgmt { default = "10.90.0.5" }
-variable f5vm03mgmt { default = "10.90.0.6" }
-variable f5vm04mgmt { default = "10.90.0.7" }
+
+variable f5mgmt {
+  description = "F5 BIG-IP Management IPs.  These must be in the management subnet."
+  type        = map(string)
+  default = {
+    f5vm01mgmt = "10.90.0.4"
+    f5vm02mgmt = "10.90.0.5"
+    f5vm03mgmt = "10.90.0.6"
+    f5vm04mgmt = "10.90.0.7"
+  }
+
+}
 
 # bigip external private ips, these must be in external subnet
 variable f5vm01ext { default = "10.90.1.4" }
@@ -83,18 +114,21 @@ variable instanceType { default = "Standard_DS5_v2" }
 variable jumpinstanceType { default = "Standard_B2s" }
 
 # BIGIP Image
-# check available image names with az cli:
-#    az vm image list --output table --publisher f5-networks --location usgovvirginia --offer f5-big-ip --all
-# for BYOL image: f5-big-all-2slot-byol
-#variable image_name { default = "f5-big-all-2slot-byol" }
-variable image_name { default = "f5-bigip-virtual-edition-1g-best-hourly" }
-# For BYOL product: f5-big-ip-byol
-#variable product { default = "f5-big-ip-byol" }
-variable product { default = "f5-big-ip-best" }
-# BIG-IP Version, 14.1.2 for "Compliance".  Options: 12.1.502000, 13.1.304000, 14.1.206000, 15.0.104000
-# verify available versions before using as images can change.
-variable bigip_version { default = "14.1.202000" }
-#variable bigip_version { default = "latest" }
+variable image_name {
+  type        = string
+  description = "REQUIRED: BIG-IP Image Name.  'az vm image list --output table --publisher f5-networks --location [region] --offer f5-big-ip --all'  Default f5-bigip-virtual-edition-1g-best-hourly is PAYG Image.  For BYOL use f5-big-all-2slot-byol"
+  default     = "f5-bigip-virtual-edition-1g-best-hourly"
+}
+variable product {
+  type        = string
+  description = "REQUIRED: BYOL = f5-big-ip-byol, PAYG = f5-big-ip-best"
+  default     = "f5-big-ip-best"
+}
+variable bigip_version {
+  type        = string
+  description = "REQUIRED: BIG-IP Version, 14.1.2 for Compliance.  Options: 12.1.502000, 13.1.304000, 14.1.206000, 15.0.104000, latest.  Note: verify available versions before using as images can change."
+  default     = "14.1.202000"
+}
 
 # BIGIP Setup
 # Licenses are only needed when using BYOL images
@@ -115,15 +149,24 @@ variable dns_server { default = "8.8.8.8,8.8.4.4" }
 variable ntp_server { default = "time.nist.gov,0.us.pool.ntp.org" }
 variable timezone { default = "UTC" }
 variable onboard_log { default = "/var/log/startup-script.log" }
+
 ## ASM Policy
-##  -Examples:  https://github.com/f5devcentral/f5-asm-policy-templates
-##  -Default is using OWASP Ready Autotuning
-variable asm_policy { default = "https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml" }
+variable asm_policy {
+  type        = string
+  description = "REQUIRED: ASM Policy.  Examples:  https://github.com/f5devcentral/f5-asm-policy-templates.  Default: OWASP Ready Autotuning"
+  default     = "https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml"
+}
 
 # TAGS
-variable purpose { default = "public" }
-variable environment { default = "f5env" } #ex. dev/staging/prod
-variable owner { default = "f5owner" }
-variable group { default = "f5group" }
-variable costcenter { default = "f5costcenter" }
-variable application { default = "f5app" }
+variable tags {
+  description = "Environment tags for objects"
+  type        = map(string)
+  default = {
+    "purpose"     = "public"
+    "environment" = "f5env" #ex. dev/staging/prod
+    "owner"       = "f5owner"
+    "group"       = "f5group"
+    "costcenter"  = "f5costcenter"
+    "application" = "f5app"
+  }
+}

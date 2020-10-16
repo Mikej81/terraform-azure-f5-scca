@@ -1,18 +1,7 @@
-# winJump
-# #Storage Container
-# resource "azurerm_storage_container" "vhds" {
-#   name                  = var.ARM_AZ_STGCONT_VHDS_NAME
-#   resource_group_name   = azurerm_resource_group.RGName.name
-#   storage_account_name  = azurerm_storage_account.azrmstgacc-stdssdlrs-001.name
-#   container_access_type = "private"
-# }
-#https://www.terraform.io/docs/providers/azurerm/r/network_interface.html
-
 resource azurerm_network_interface winjump-ext-nic {
   name                = "${var.prefix}-winjump-ext-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
-  #network_security_group_id = var.securityGroup.id
 
   ip_configuration {
     name                          = "primary"
@@ -22,14 +11,7 @@ resource azurerm_network_interface winjump-ext-nic {
     primary                       = true
   }
 
-  tags = {
-    Name        = "${var.environment}-winjump-ext-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = "winjump"
-  }
+  tags = var.tags
 }
 
 resource "azurerm_network_interface_security_group_association" "winjump-ext-nsg" {
@@ -37,12 +19,10 @@ resource "azurerm_network_interface_security_group_association" "winjump-ext-nsg
   network_security_group_id = var.securityGroup.id
 }
 
-#https://www.terraform.io/docs/providers/azurerm/r/virtual_machine.html
 resource azurerm_virtual_machine winJump {
-  name                = "winJump"
-  resource_group_name = var.resourceGroup.name
-  location            = var.resourceGroup.location
-  #vm_size = "Standard_B2s" #Information about the Virtual Machines Sizes: https://docs.microsoft.com/nl-be/azure/virtual-machines/windows/sizes-general
+  name                  = "winJump"
+  resource_group_name   = var.resourceGroup.name
+  location              = var.resourceGroup.location
   vm_size               = var.instanceType
   network_interface_ids = [azurerm_network_interface.winjump-ext-nic.id] #Front-End Network
 
@@ -50,7 +30,7 @@ resource azurerm_virtual_machine winJump {
     provision_vm_agent = true
     timezone           = var.timezone
   }
-  #OS Image selection: https://docs.microsoft.com/en-us/azure/virtual-machines/windows/cli-ps-findimage
+
   storage_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
@@ -59,8 +39,7 @@ resource azurerm_virtual_machine winJump {
   }
 
   storage_os_disk {
-    name = "winJump-os"
-    # vhd_uri       = "${azurerm_storage_account.azrmstgacc-stdssdlrs-001.primary_blob_endpoint}${azurerm_storage_container.vhds.name}/winJumpos.vhd"
+    name          = "winJump-os"
     caching       = "ReadWrite"
     create_option = "FromImage"
     os_type       = "Windows"
@@ -72,14 +51,7 @@ resource azurerm_virtual_machine winJump {
     admin_password = var.adminPassword
   }
 
-  tags = {
-    Name        = "${var.environment}-winJump"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 # commented out until plumbing in place for VDMS Egress to internet

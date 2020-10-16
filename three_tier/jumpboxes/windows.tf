@@ -1,13 +1,3 @@
-# winJump
-# #Storage Container
-# resource "azurerm_storage_container" "vhds" {
-#   name                  = var.ARM_AZ_STGCONT_VHDS_NAME
-#   resource_group_name   = azurerm_resource_group.RGName.name
-#   storage_account_name  = azurerm_storage_account.azrmstgacc-stdssdlrs-001.name
-#   container_access_type = "private"
-# }
-#https://www.terraform.io/docs/providers/azurerm/r/network_interface.html
-
 resource azurerm_network_interface winjump-ext-nic {
   name                = "${var.prefix}-winjump-ext-nic"
   location            = var.resourceGroup.location
@@ -22,14 +12,7 @@ resource azurerm_network_interface winjump-ext-nic {
     primary                       = true
   }
 
-  tags = {
-    Name        = "${var.environment}-winjump-ext-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = "winjump"
-  }
+  tags = var.tags
 }
 
 resource "azurerm_network_interface_security_group_association" "winjump-ext-nsg" {
@@ -71,18 +54,11 @@ resource azurerm_virtual_machine winJump {
     admin_password = var.adminPassword
   }
 
-  tags = {
-    Name        = "${var.environment}-winJump"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 resource azurerm_virtual_machine_extension winJump-run-startup-cmd {
-  name                 = "winJump-run-startup-cmd"
+  name                 = "${var.prefix}-winJump-run-startup-cmd"
   depends_on           = [azurerm_virtual_machine.winJump]
   virtual_machine_id   = azurerm_virtual_machine.winJump.id
   publisher            = "Microsoft.Compute"

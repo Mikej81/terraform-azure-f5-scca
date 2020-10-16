@@ -36,14 +36,7 @@ resource azurerm_network_interface vm01-mgmt-nic {
     public_ip_address_id          = azurerm_public_ip.f5vmpip01.id
   }
 
-  tags = {
-    Name        = "${var.environment}-vm01-mgmt-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 # Associate the Network Interface to the ManagementPool
@@ -77,14 +70,7 @@ resource azurerm_network_interface vm02-mgmt-nic {
     public_ip_address_id          = azurerm_public_ip.f5vmpip02.id
   }
 
-  tags = {
-    Name        = "${var.environment}-vm02-mgmt-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 resource azurerm_network_interface_security_group_association bigip02-mgmt-nsg {
@@ -116,12 +102,12 @@ resource azurerm_network_interface vm01-ext-nic {
   }
 
   tags = {
-    Name                      = "${var.environment}-vm01-ext-int"
-    environment               = var.environment
-    owner                     = var.owner
-    group                     = var.group
-    costcenter                = var.costcenter
-    application               = var.application
+    Name                      = "${var.prefix}-vm01-ext-int"
+    environment               = var.tags["environment"]
+    owner                     = var.tags["owner"]
+    group                     = var.tags["group"]
+    costcenter                = var.tags["costcenter"]
+    application               = var.tags["application"]
     f5_cloud_failover_label   = "saca"
     f5_cloud_failover_nic_map = "external"
   }
@@ -155,12 +141,12 @@ resource azurerm_network_interface vm02-ext-nic {
   }
 
   tags = {
-    Name                      = "${var.environment}-vm01-ext-int"
-    environment               = var.environment
-    owner                     = var.owner
-    group                     = var.group
-    costcenter                = var.costcenter
-    application               = var.application
+    Name                      = "${var.prefix}-vm01-ext-int"
+    environment               = var.tags["environment"]
+    owner                     = var.tags["owner"]
+    group                     = var.tags["group"]
+    costcenter                = var.tags["costcenter"]
+    application               = var.tags["application"]
     f5_cloud_failover_label   = "saca"
     f5_cloud_failover_nic_map = "external"
   }
@@ -194,14 +180,7 @@ resource azurerm_network_interface vm01-int-nic {
     private_ip_address            = var.f5vm01int_sec
   }
 
-  tags = {
-    Name        = "${var.environment}-vm01-int-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 resource azurerm_network_interface_security_group_association bigip01-int-nsg {
@@ -231,14 +210,7 @@ resource azurerm_network_interface vm02-int-nic {
     private_ip_address            = var.f5vm02int_sec
   }
 
-  tags = {
-    Name        = "${var.environment}-vm02-int-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 resource azurerm_network_interface_security_group_association bigip02-int-nsg {
@@ -289,11 +261,7 @@ resource azurerm_virtual_machine f5vm01 {
   vm_size                      = var.instanceType
   availability_set_id          = var.availabilitySet.id
 
-  # Uncomment this line to delete the OS disk automatically when deleting the VM
-  delete_os_disk_on_termination = true
-
-
-  # Uncomment this line to delete the data disks automatically when deleting the VM
+  delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true
 
   storage_image_reference {
@@ -314,7 +282,6 @@ resource azurerm_virtual_machine f5vm01 {
     computer_name  = "${var.prefix}vm01"
     admin_username = var.adminUserName
     admin_password = var.adminPassword
-    #custom_data    = data.template_file.vm_onboard.rendered
   }
 
   os_profile_linux_config {
@@ -327,14 +294,7 @@ resource azurerm_virtual_machine f5vm01 {
     product   = var.product
   }
 
-  tags = {
-    Name        = "${var.environment}-f5vm01"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 resource azurerm_virtual_machine f5vm02 {
@@ -346,10 +306,7 @@ resource azurerm_virtual_machine f5vm02 {
   vm_size                      = var.instanceType
   availability_set_id          = var.availabilitySet.id
 
-  # Uncomment this line to delete the OS disk automatically when deleting the VM
-  delete_os_disk_on_termination = true
-
-  # Uncomment this line to delete the data disks automatically when deleting the VM
+  delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true
 
   storage_image_reference {
@@ -370,7 +327,6 @@ resource azurerm_virtual_machine f5vm02 {
     computer_name  = "${var.prefix}vm02"
     admin_username = var.adminUserName
     admin_password = var.adminPassword
-    #custom_data    = data.template_file.vm_onboard.rendered
   }
 
   os_profile_linux_config {
@@ -383,14 +339,7 @@ resource azurerm_virtual_machine f5vm02 {
     product   = var.product
   }
 
-  tags = {
-    Name        = "${var.environment}-f5vm02"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 # Setup Onboarding scripts
@@ -504,7 +453,7 @@ data template_file as3_json {
 
 # Run Startup Script
 resource azurerm_virtual_machine_extension f5vm01-run-startup-cmd {
-  name                 = "${var.environment}-f5vm01-run-startup-cmd"
+  name                 = "${var.prefix}-f5vm01-run-startup-cmd"
   depends_on           = [azurerm_virtual_machine.f5vm01]
   virtual_machine_id   = azurerm_virtual_machine.f5vm01.id
   publisher            = "Microsoft.Azure.Extensions"
@@ -517,18 +466,11 @@ resource azurerm_virtual_machine_extension f5vm01-run-startup-cmd {
     }
   SETTINGS
 
-  tags = {
-    Name        = "${var.environment}-f5vm01-startup-cmd"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 resource azurerm_virtual_machine_extension f5vm02-run-startup-cmd {
-  name                 = "${var.environment}-f5vm02-run-startup-cmd"
+  name                 = "${var.prefix}-f5vm02-run-startup-cmd"
   depends_on           = [azurerm_virtual_machine.f5vm01, azurerm_virtual_machine.f5vm02]
   virtual_machine_id   = azurerm_virtual_machine.f5vm02.id
   publisher            = "Microsoft.Azure.Extensions"
@@ -541,14 +483,7 @@ resource azurerm_virtual_machine_extension f5vm02-run-startup-cmd {
     }
   SETTINGS
 
-  tags = {
-    Name        = "${var.environment}-f5vm02-startup-cmd"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
 
 

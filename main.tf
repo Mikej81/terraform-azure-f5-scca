@@ -185,7 +185,6 @@ module firewall_one {
   image_name       = var.image_name
   product          = var.product
   bigip_version    = var.bigip_version
-  owner            = var.owner
   adminUserName    = var.adminUserName
   adminPassword    = var.adminPassword
   prefix           = var.projectPrefix
@@ -199,8 +198,8 @@ module firewall_one {
   app01ip          = var.app01ip
   host1_name       = var.host1_name
   host2_name       = var.host2_name
-  f5vm01mgmt       = var.f5vm01mgmt
-  f5vm02mgmt       = var.f5vm02mgmt
+  f5vm01mgmt       = var.f5mgmt["f5vm01mgmt"]
+  f5vm02mgmt       = var.f5mgmt["f5vm02mgmt"]
   f5vm01ext        = var.f5vm01ext
   f5vm02ext        = var.f5vm02ext
   f5vm01ext_sec    = var.f5vm01ext_sec
@@ -214,6 +213,7 @@ module firewall_one {
   licenses         = var.licenses
   ilb01ip          = var.ilb01ip
   asm_policy       = var.asm_policy
+  tags             = var.tags
 }
 
 # deploy demo app
@@ -230,6 +230,7 @@ module app_one {
   adminUserName = var.adminUserName
   adminPassword = var.adminPassword
   app01ip       = var.app01ip
+  tags          = var.tags
 }
 # deploy jumpboxes
 module jump_one {
@@ -241,13 +242,13 @@ module jump_one {
   region        = var.region
   subnet        = azurerm_subnet.vdms
   securityGroup = azurerm_network_security_group.main
-  owner         = var.owner
   adminUserName = var.adminUserName
   adminPassword = var.adminPassword
   prefix        = var.projectPrefix
   instanceType  = var.jumpinstanceType
   linuxjumpip   = var.linuxjumpip
   winjumpip     = var.winjumpip
+  tags          = var.tags
 }
 
 #
@@ -265,17 +266,34 @@ module firewall_three {
   subnetExternal  = azurerm_subnet.external
   subnetInternal  = azurerm_subnet.internal
   securityGroup   = azurerm_network_security_group.main
-  owner           = var.owner
+  image_name      = var.image_name
+  product         = var.product
+  bigip_version   = var.bigip_version
   adminUserName   = var.adminUserName
   adminPassword   = var.adminPassword
   prefix          = var.projectPrefix
   backendPool     = azurerm_lb_backend_address_pool.backend_pool
   availabilitySet = azurerm_availability_set.avset
   instanceType    = var.instanceType
+  f5vm01mgmt      = var.f5mgmt["f5vm01mgmt"]
+  f5vm02mgmt      = var.f5mgmt["f5vm02mgmt"]
+  f5vm03mgmt      = var.f5mgmt["f5vm03mgmt"]
+  f5vm04mgmt      = var.f5mgmt["f5vm04mgmt"]
+  f5vm01ext       = var.f5vm01ext
+  f5vm02ext       = var.f5vm02ext
+  f5vm01ext_sec   = var.f5vm01ext_sec
+  f5vm02ext_sec   = var.f5vm02ext_sec
+  f5vm01int       = var.f5vm01int
+  f5vm02int       = var.f5vm02int
+  f5vm01int_sec   = var.f5vm01int_sec
+  f5vm02int_sec   = var.f5vm02int_sec
   app01ip         = var.app01ip
   subnets         = var.subnets
   licenses        = var.licenses
   asm_policy      = var.asm_policy
+  winjumpip       = var.winjumpip
+  linuxjumpip     = var.linuxjumpip
+  tags            = var.tags
 }
 # Deploy example ips
 module ips_three {
@@ -292,6 +310,7 @@ module ips_three {
   adminUserName        = var.adminUserName
   adminPassword        = var.adminPassword
   subnets              = var.subnets
+  tags                 = var.tags
 }
 # Deploy waf HA cluster
 module waf_three {
@@ -305,7 +324,6 @@ module waf_three {
   subnetExternal  = azurerm_subnet.external
   subnetInternal  = azurerm_subnet.internal
   securityGroup   = azurerm_network_security_group.main
-  owner           = var.owner
   adminUserName   = var.adminUserName
   adminPassword   = var.adminPassword
   prefix          = var.projectPrefix
@@ -315,6 +333,7 @@ module waf_three {
   subnets         = var.subnets
   licenses        = var.licenses
   asm_policy      = var.asm_policy
+  tags            = var.tags
 }
 # deploy demo app
 
@@ -331,6 +350,7 @@ module app_three {
   adminPassword  = var.adminPassword
   subnets        = var.subnets
   prefix         = var.projectPrefix
+  tags           = var.tags
 }
 # deploy jumpboxes
 module jump_three {
@@ -342,10 +362,10 @@ module jump_three {
   region         = var.region
   subnetExternal = azurerm_subnet.external
   securityGroup  = azurerm_network_security_group.main
-  owner          = var.owner
   adminUserName  = var.adminUserName
   adminPassword  = var.adminPassword
   prefix         = var.projectPrefix
   instanceType   = var.jumpinstanceType
   subnets        = var.subnets
+  tags           = var.tags
 }

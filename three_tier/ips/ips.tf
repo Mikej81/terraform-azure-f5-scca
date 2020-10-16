@@ -23,14 +23,7 @@ resource azurerm_network_interface ips01-ext-nic {
     primary                       = true
   }
 
-  tags = {
-    Name        = "${var.environment}-ips01-ext-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    ipslication = "ips1"
-  }
+  tags = var.tags
 }
 
 # internal network interface for ips vm
@@ -50,14 +43,7 @@ resource azurerm_network_interface ips01-int-nic {
     primary                       = true
   }
 
-  tags = {
-    Name        = "${var.environment}-ips01-int-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = "ips01"
-  }
+  tags = var.tags
 }
 
 # ips01-VM
@@ -104,12 +90,5 @@ resource azurerm_virtual_machine ips01-vm {
     disable_password_authentication = false
   }
 
-  tags = {
-    Name        = "${var.environment}-ips01"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }

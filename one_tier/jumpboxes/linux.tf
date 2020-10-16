@@ -13,14 +13,7 @@ resource azurerm_network_interface linuxJump-ext-nic {
     primary                       = true
   }
 
-  tags = {
-    Name        = "${var.environment}-linuxJump-ext-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = "linuxJump"
-  }
+  tags = var.tags
 }
 
 resource "azurerm_network_interface_security_group_association" "linuxJump-ext-nsg" {
@@ -34,8 +27,7 @@ resource azurerm_virtual_machine linuxJump {
   resource_group_name = var.resourceGroup.name
 
   network_interface_ids = [azurerm_network_interface.linuxJump-ext-nic.id]
-  #vm_size               = "Standard_DS1_v2"
-  vm_size = var.instanceType
+  vm_size               = var.instanceType
 
   storage_os_disk {
     name              = "${var.prefix}-linuxJumpOsDisk"
@@ -70,12 +62,5 @@ resource azurerm_virtual_machine linuxJump {
     disable_password_authentication = false
   }
 
-  tags = {
-    Name        = "${var.environment}-linuxJump"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }

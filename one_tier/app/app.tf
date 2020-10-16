@@ -12,14 +12,7 @@ resource azurerm_network_interface app01-ext-nic {
     primary                       = true
   }
 
-  tags = {
-    Name        = "${var.environment}-app01-ext-int"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = "app1"
-  }
+  tags = var.tags
 }
 
 resource azurerm_network_interface_security_group_association app-nsg {
@@ -72,12 +65,5 @@ resource azurerm_virtual_machine app01-vm {
     disable_password_authentication = false
   }
 
-  tags = {
-    Name        = "${var.environment}-app01"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }

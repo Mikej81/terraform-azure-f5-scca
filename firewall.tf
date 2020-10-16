@@ -69,12 +69,5 @@ resource azurerm_network_security_group main {
     destination_address_prefix = "*"
   }
 
-  tags = {
-    Name        = "${var.environment}-bigip-sg"
-    environment = var.environment
-    owner       = var.owner
-    group       = var.group
-    costcenter  = var.costcenter
-    application = var.application
-  }
+  tags = var.tags
 }
