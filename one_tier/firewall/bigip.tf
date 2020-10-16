@@ -32,7 +32,7 @@ resource azurerm_network_interface vm01-mgmt-nic {
     name                          = "primary"
     subnet_id                     = var.subnetMgmt.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.f5vm01mgmt
+    private_ip_address            = var.f5_mgmt["f5vm01mgmt"]
     public_ip_address_id          = azurerm_public_ip.f5vmpip01.id
   }
 
@@ -66,7 +66,7 @@ resource azurerm_network_interface vm02-mgmt-nic {
     name                          = "primary"
     subnet_id                     = var.subnetMgmt.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.f5vm02mgmt
+    private_ip_address            = var.f5_mgmt["f5vm02mgmt"]
     public_ip_address_id          = azurerm_public_ip.f5vmpip02.id
   }
 
@@ -90,7 +90,7 @@ resource azurerm_network_interface vm01-ext-nic {
     name                          = "primary"
     subnet_id                     = var.subnetExternal.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.f5vm01ext
+    private_ip_address            = var.f5_t1_ext["f5vm01ext"]
     primary                       = true
   }
 
@@ -98,7 +98,7 @@ resource azurerm_network_interface vm01-ext-nic {
     name                          = "secondary"
     subnet_id                     = var.subnetExternal.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.f5vm01ext_sec
+    private_ip_address            = var.f5_t1_ext["f5vm01ext_sec"]
   }
 
   tags = {
@@ -129,7 +129,7 @@ resource azurerm_network_interface vm02-ext-nic {
     name                          = "primary"
     subnet_id                     = var.subnetExternal.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.f5vm02ext
+    private_ip_address            = var.f5_t1_ext["f5vm02ext"]
     primary                       = true
   }
 
@@ -137,7 +137,7 @@ resource azurerm_network_interface vm02-ext-nic {
     name                          = "secondary"
     subnet_id                     = var.subnetExternal.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.f5vm02ext_sec
+    private_ip_address            = var.f5_t1_ext["f5vm02ext_sec"]
   }
 
   tags = {
@@ -169,7 +169,7 @@ resource azurerm_network_interface vm01-int-nic {
     name                          = "primary"
     subnet_id                     = var.subnetInternal.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.f5vm01int
+    private_ip_address            = var.f5_t1_int["f5vm01int"]
     primary                       = true
   }
 
@@ -177,7 +177,7 @@ resource azurerm_network_interface vm01-int-nic {
     name                          = "secondary"
     subnet_id                     = var.subnetInternal.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.f5vm01int_sec
+    private_ip_address            = var.f5_t1_int["f5vm01int_sec"]
   }
 
   tags = var.tags
@@ -199,7 +199,7 @@ resource azurerm_network_interface vm02-int-nic {
     name                          = "primary"
     subnet_id                     = var.subnetInternal.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.f5vm02int
+    private_ip_address            = var.f5_t1_int["f5vm02int"]
     primary                       = true
   }
 
@@ -207,7 +207,7 @@ resource azurerm_network_interface vm02-int-nic {
     name                          = "secondary"
     subnet_id                     = var.subnetInternal.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.f5vm02int_sec
+    private_ip_address            = var.f5_t1_int["f5vm02int_sec"]
   }
 
   tags = var.tags
@@ -346,11 +346,9 @@ resource azurerm_virtual_machine f5vm02 {
 data template_file vm_onboard {
   template = file("./templates/onboard.tpl")
   vars = {
-    uname     = var.adminUserName
-    upassword = var.adminPassword
-    doVersion = "latest"
-    #example version:
-    #as3Version            = "3.16.0"
+    uname                     = var.adminUserName
+    upassword                 = var.adminPassword
+    doVersion                 = "latest"
     as3Version                = "latest"
     tsVersion                 = "latest"
     cfVersion                 = "latest"
@@ -382,13 +380,13 @@ data template_file vm01_do_json {
     host1           = var.host1_name
     host2           = var.host2_name
     local_host      = var.host1_name
-    external_selfip = "${var.f5vm01ext}/${element(split("/", var.subnets["external"]), 1)}"
-    internal_selfip = "${var.f5vm01int}/${element(split("/", var.subnets["internal"]), 1)}"
-    log_localip     = var.f5vm01ext
+    external_selfip = "${var.f5_t1_ext["f5vm01ext"]}/${element(split("/", var.subnets["external"]), 1)}"
+    internal_selfip = "${var.f5_t1_int["f5vm01int"]}/${element(split("/", var.subnets["internal"]), 1)}"
+    log_localip     = var.f5_t1_ext["f5vm01ext"]
     log_destination = var.app01ip
     vdmsSubnet      = var.subnets["vdms"]
     remote_host     = var.host2_name
-    remote_selfip   = var.f5vm02ext
+    remote_selfip   = var.f5_t1_ext["f5vm02ext"]
     externalGateway = local.ext_gw
     internalGateway = local.int_gw
     mgmtGateway     = local.mgmt_gw
@@ -403,18 +401,16 @@ data template_file vm01_do_json {
 data template_file vm02_do_json {
   template = data.http.onboard.body
   vars = {
-    host1      = var.host1_name
-    host2      = var.host2_name
-    local_host = var.host2_name
-    #external_selfip = var.f5vm02ext
-    #internal_selfip = var.f5vm02int
-    external_selfip = "${var.f5vm02ext}/${element(split("/", var.subnets["external"]), 1)}"
-    internal_selfip = "${var.f5vm02int}/${element(split("/", var.subnets["internal"]), 1)}"
-    log_localip     = var.f5vm02ext
+    host1           = var.host1_name
+    host2           = var.host2_name
+    local_host      = var.host2_name
+    external_selfip = "${var.f5_t1_ext["f5vm02ext"]}/${element(split("/", var.subnets["external"]), 1)}"
+    internal_selfip = "${var.f5_t1_int["f5vm02int"]}/${element(split("/", var.subnets["internal"]), 1)}"
+    log_localip     = var.f5_t1_ext["f5vm02ext"]
     log_destination = var.app01ip
     vdmsSubnet      = var.subnets["vdms"]
     remote_host     = var.host1_name
-    remote_selfip   = var.f5vm01ext
+    remote_selfip   = var.f5_t1_ext["f5vm01ext"]
     externalGateway = local.ext_gw
     internalGateway = local.int_gw
     mgmtGateway     = local.mgmt_gw
@@ -436,7 +432,7 @@ data template_file as3_json {
   vars = {
     uuid                = random_uuid.as3_uuid.result
     baseline_waf_policy = var.asm_policy
-    exampleVipAddress   = var.f5vm01ext
+    exampleVipAddress   = var.f5_t1_ext["f5vm01ext"]
     exampleVipSubnet    = var.subnets["external"]
     rdp_pool_addresses  = var.winjumpip
     ssh_pool_addresses  = var.linuxjumpip
@@ -444,10 +440,10 @@ data template_file as3_json {
     ips_pool_addresses  = var.app01ip
     log_destination     = var.app01ip
     example_vs_address  = var.subnets["external"]
-    mgmtVipAddress      = var.f5vm01ext_sec
-    mgmtVipAddress2     = var.f5vm02ext_sec
-    transitVipAddress   = var.f5vm01int_sec
-    transitVipAddress2  = var.f5vm02int_sec
+    mgmtVipAddress      = var.f5_t1_ext["f5vm01ext_sec"]
+    mgmtVipAddress2     = var.f5_t1_ext["f5vm02ext_sec"]
+    transitVipAddress   = var.f5_t1_int["f5vm01int_sec"]
+    transitVipAddress2  = var.f5_t1_int["f5vm02int_sec"]
   }
 }
 

@@ -60,7 +60,7 @@ variable subnets {
   }
 }
 
-variable f5mgmt {
+variable f5_mgmt {
   description = "F5 BIG-IP Management IPs.  These must be in the management subnet."
   type        = map(string)
   default = {
@@ -72,23 +72,49 @@ variable f5mgmt {
 }
 
 # bigip external private ips, these must be in external subnet
-variable f5vm01ext { default = "10.90.1.4" }
-variable f5vm01ext_sec { default = "10.90.1.11" }
-variable f5vm02ext { default = "10.90.1.5" }
-variable f5vm02ext_sec { default = "10.90.1.12" }
-# three_tier bigip external, these must be in the waf_ext subnet
-variable f5vm03ext { default = "10.90.6.4" }
-variable f5vm03ext_sec { default = "10.90.6.11" }
-variable f5vm04ext { default = "10.90.6.5" }
-variable f5vm04ext_sec { default = "10.90.6.12" }
-# bigip internal private ips, these must be in internal subnet
-variable f5vm01int { default = "10.90.2.4" }
-variable f5vm01int_sec { default = "10.90.2.11" }
-variable f5vm02int { default = "10.90.2.5" }
-variable f5vm02int_sec { default = "10.90.2.12" }
-# three_tier bigip internal, these must be in waf_int subnet
-variable f5vm03int { default = "10.90.7.4" }
-variable f5vm04int { default = "10.90.7.5" }
+variable f5_t1_ext {
+  description = "Tier 1 BIG-IP External IPs.  These must be in the external subnet."
+  type        = map(string)
+  default = {
+    f5vm01ext     = "10.90.1.4"
+    f5vm01ext_sec = "10.90.1.11"
+    f5vm02ext     = "10.90.1.5"
+    f5vm02ext_sec = "10.90.1.12"
+  }
+}
+
+variable f5_t1_int {
+  description = "Tier 1 BIG-IP Internal IPs.  These must be in the internal subnet."
+  type        = map(string)
+  default = {
+    f5vm01int     = "10.90.2.4"
+    f5vm01int_sec = "10.90.2.11"
+    f5vm02int     = "10.90.2.5"
+    f5vm02int_sec = "10.90.2.12"
+  }
+}
+
+variable f5_t3_ext {
+  description = "Tier 3 BIG-IP External IPs.  These must be in the waf external subnet."
+  type        = map(string)
+  default = {
+    f5vm03ext     = "10.90.6.4"
+    f5vm03ext_sec = "10.90.6.11"
+    f5vm04ext     = "10.90.6.5"
+    f5vm04ext_sec = "10.90.6.12"
+  }
+}
+
+variable f5_t3_int {
+  description = "Tier 3 BIG-IP Internal IPs.  These must be in the waf internal subnet."
+  type        = map(string)
+  default = {
+    f5vm03int     = "10.90.7.4"
+    f5vm03int_sec = "10.90.7.11"
+    f5vm04int     = "10.90.7.5"
+    f5vm04int_sec = "10.90.7.12"
+  }
+}
 
 # azure internal load balancer, must be in internal subnet
 variable ilb01ip { default = "10.90.2.10" }

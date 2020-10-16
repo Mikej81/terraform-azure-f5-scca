@@ -9,9 +9,8 @@ variable region {}
 variable securityGroup {
   default = "none"
 }
-variable availabilitySet {
-
-}
+variable availabilitySet {}
+variable availabilitySet2 {}
 
 variable prefix {}
 # bigip network
@@ -21,27 +20,15 @@ variable subnetExternal {}
 variable subnetInternal {}
 variable app01ip {}
 
-variable backendPool {
-  description = "azureLB resource pool"
-}
+variable backendPool {}
+variable managementPool {}
+variable primaryPool {}
 
-# bigip mgmt private ips
-variable f5vm01mgmt {}
-variable f5vm02mgmt {}
-variable f5vm03mgmt {}
-variable f5vm04mgmt {}
-
-# bigip external private ips
-variable f5vm01ext {}
-variable f5vm01ext_sec {}
-variable f5vm02ext {}
-variable f5vm02ext_sec {}
-
-# bigip internal private ips
-variable f5vm01int {}
-variable f5vm02int {}
-variable f5vm01int_sec {}
-variable f5vm02int_sec {}
+variable f5_mgmt {}
+variable f5_t1_ext {}
+variable f5_t1_int {}
+variable f5_t3_ext {}
+variable f5_t3_int {}
 
 # winjump
 variable winjumpip {}
