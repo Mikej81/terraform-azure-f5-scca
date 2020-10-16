@@ -37,3 +37,5 @@ fileignoreconfig:
   checksum: a87ddc39a3ff63889026917ce85d5fff8a0a2beef4450b4cef111d3ebc79146a
 - filename: variables.tf
   checksum: 6a3ec95aa9baedf962f9ce6af45027bd10ffc63ed5cbc34a73dfa9d88cbd3cc7
+- filename: analytics/analytics.tf
+  checksum: 2e58dea05f3e4c73847b8a5d4a9e4d09f8070198f28a8694c861c68876763171
