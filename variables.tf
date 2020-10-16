@@ -1,7 +1,7 @@
 # Azure Environment
 variable projectPrefix {
   type        = string
-  description = "REQUIRED: Prefix to prepend to all objects created, minus Windows Jumbox"
+  description = "REQUIRED: Prefix to prepend to all objects created, minus Windows Jumpbox"
   default     = "mcscca"
 }
 variable adminUserName {

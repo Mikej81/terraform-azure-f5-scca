@@ -53,63 +53,63 @@ The BIG-IP VEs have the following features / modules enabled:
 
 ## Inputs
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| adminPassword | REQUIRED: Admin Password for all systems | `string` | `"pleaseUseVault123!!"` | no |
-| adminUserName | REQUIRED: Admin Username for All systems | `string` | `"xadmin"` | no |
-| app01ip | Example application private ips, *currently* must be in internal subnet | `string` | `"10.90.2.101"` | no |
-| asm\_policy | REQUIRED: ASM Policy.  Examples:  https://github.com/f5devcentral/f5-asm-policy-templates.  Default: OWASP Ready Autotuning | `string` | `"https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml"` | no |
-| bigip\_version | REQUIRED: BIG-IP Version, 14.1.2 for Compliance.  Options: 12.1.502000, 13.1.304000, 14.1.206000, 15.0.104000, latest.  Note: verify available versions before using as images can change. | `string` | `"14.1.202000"` | no |
-| cidr | REQUIRED: VNET Network CIDR | `string` | `"10.90.0.0/16"` | no |
-| deploymentType | REQUIRED: This determines the type of deployment; one tier versus three tier: one\_tier, three\_tier | `string` | `"one_tier"` | no |
-| dns\_server | n/a | `string` | `"8.8.8.8,8.8.4.4"` | no |
-| f5mgmt | F5 BIG-IP Management IPs.  These must be in the management subnet. | `map(string)` | <pre>{<br>  "f5vm01mgmt": "10.90.0.4",<br>  "f5vm02mgmt": "10.90.0.5",<br>  "f5vm03mgmt": "10.90.0.6",<br>  "f5vm04mgmt": "10.90.0.7"<br>}</pre> | no |
-| f5vm01ext | bigip external private ips, these must be in external subnet | `string` | `"10.90.1.4"` | no |
-| f5vm01ext\_sec | n/a | `string` | `"10.90.1.11"` | no |
-| f5vm01int | bigip internal private ips, these must be in internal subnet | `string` | `"10.90.2.4"` | no |
-| f5vm01int\_sec | n/a | `string` | `"10.90.2.11"` | no |
-| f5vm02ext | n/a | `string` | `"10.90.1.5"` | no |
-| f5vm02ext\_sec | n/a | `string` | `"10.90.1.12"` | no |
-| f5vm02int | n/a | `string` | `"10.90.2.5"` | no |
-| f5vm02int\_sec | n/a | `string` | `"10.90.2.12"` | no |
-| f5vm03ext | three\_tier bigip external, these must be in the waf\_ext subnet | `string` | `"10.90.6.4"` | no |
-| f5vm03ext\_sec | n/a | `string` | `"10.90.6.11"` | no |
-| f5vm03int | three\_tier bigip internal, these must be in waf\_int subnet | `string` | `"10.90.7.4"` | no |
-| f5vm04ext | n/a | `string` | `"10.90.6.5"` | no |
-| f5vm04ext\_sec | n/a | `string` | `"10.90.6.12"` | no |
-| f5vm04int | n/a | `string` | `"10.90.7.5"` | no |
-| host1\_name | n/a | `string` | `"f5vm01"` | no |
-| host2\_name | n/a | `string` | `"f5vm02"` | no |
-| host3\_name | n/a | `string` | `"f5vm03"` | no |
-| host4\_name | n/a | `string` | `"f5vm04"` | no |
-| ilb01ip | azure internal load balancer, must be in internal subnet | `string` | `"10.90.2.10"` | no |
-| image\_name | REQUIRED: BIG-IP Image Name.  'az vm image list --output table --publisher f5-networks --location [region] --offer f5-big-ip --all'  Default f5-bigip-virtual-edition-1g-best-hourly is PAYG Image.  For BYOL use f5-big-all-2slot-byol | `string` | `"f5-bigip-virtual-edition-1g-best-hourly"` | no |
-| instanceType | BIGIP Instance Type, DS5\_v2 is a solid baseline for BEST | `string` | `"Standard_DS5_v2"` | no |
-| ips01ext | Example IPS private ips | `string` | `"10.90.4.4"` | no |
-| ips01int | n/a | `string` | `"10.90.5.4"` | no |
-| jumpinstanceType | Be careful which instance type selected, jump boxes currently use Premium\_LRS managed disks | `string` | `"Standard_B2s"` | no |
-| licenses | BIGIP Setup Licenses are only needed when using BYOL images | `map(string)` | <pre>{<br>  "license1": "",<br>  "license2": "",<br>  "license3": "",<br>  "license4": ""<br>}</pre> | no |
-| linuxjumpip | linuxjump, must be in VDMS subnet | `string` | `"10.90.3.99"` | no |
-| location | REQUIRED: Azure Region: usgovvirginia, usgovarizona, etc | `string` | `"usgovvirginia"` | no |
-| ntp\_server | n/a | `string` | `"time.nist.gov,0.us.pool.ntp.org"` | no |
-| onboard\_log | n/a | `string` | `"/var/log/startup-script.log"` | no |
-| product | REQUIRED: BYOL = f5-big-ip-byol, PAYG = f5-big-ip-best | `string` | `"f5-big-ip-best"` | no |
-| projectPrefix | REQUIRED: Prefix to prepend to all objects created, minus Windows Jumbox | `string` | `"mcscca"` | no |
-| region | Azure Region: US Gov Virginia, US Gov Arizona, etc | `string` | `"USGov Virginia"` | no |
-| sshPublicKey | OPTIONAL: ssh public key for instances | `string` | `""` | no |
-| sshPublicKeyPath | OPTIONAL: ssh public key path for instances | `string` | `"/mykey.pub"` | no |
-| subnets | REQUIRED: Subnet CIDRs | `map(string)` | <pre>{<br>  "external": "10.90.1.0/24",<br>  "inspect_ext": "10.90.4.0/24",<br>  "inspect_int": "10.90.5.0/24",<br>  "internal": "10.90.2.0/24",<br>  "management": "10.90.0.0/24",<br>  "vdms": "10.90.3.0/24",<br>  "waf_ext": "10.90.6.0/24",<br>  "waf_int": "10.90.7.0/24"<br>}</pre> | no |
-| tags | Environment tags for objects | `map(string)` | <pre>{<br>  "application": "f5app",<br>  "costcenter": "f5costcenter",<br>  "environment": "f5env",<br>  "group": "f5group",<br>  "owner": "f5owner",<br>  "purpose": "public"<br>}</pre> | no |
-| timezone | n/a | `string` | `"UTC"` | no |
-| winjumpip | winjump, must be in VDMS subnet | `string` | `"10.90.3.98"` | no |
+| Name | Description | Type | Default |
+|------|-------------|------|---------|
+| projectPrefix | REQUIRED: Prefix to prepend to all objects created, minus Windows Jumpbox | `string` | `"mcscca"` |
+| adminUserName | REQUIRED: Admin Username for All systems | `string` | `"xadmin"` |
+| adminPassword | REQUIRED: Admin Password for all systems | `string` | `"pleaseUseVault123!!"` |
+| location | REQUIRED: Azure Region: usgovvirginia, usgovarizona, etc | `string` | `"usgovvirginia"` |
+| region | Azure Region: US Gov Virginia, US Gov Arizona, etc | `string` | `"USGov Virginia"` |
+| deploymentType | REQUIRED: This determines the type of deployment; one tier versus three tier: one\_tier, three\_tier | `string` | `"one_tier"` |
+| sshPublicKey | OPTIONAL: ssh public key for instances | `string` | `""` |
+| sshPublicKeyPath | OPTIONAL: ssh public key path for instances | `string` | `"/mykey.pub"` |
+| cidr | REQUIRED: VNET Network CIDR | `string` | `"10.90.0.0/16"` |
+| subnets | REQUIRED: Subnet CIDRs | `map(string)` | <pre>{<br>  "external": "10.90.1.0/24",<br>  "inspect_ext": "10.90.4.0/24",<br>  "inspect_int": "10.90.5.0/24",<br>  "internal": "10.90.2.0/24",<br>  "management": "10.90.0.0/24",<br>  "vdms": "10.90.3.0/24",<br>  "waf_ext": "10.90.6.0/24",<br>  "waf_int": "10.90.7.0/24"<br>}</pre> |
+| f5mgmt | F5 BIG-IP Management IPs.  These must be in the management subnet. | `map(string)` | <pre>{<br>  "f5vm01mgmt": "10.90.0.4",<br>  "f5vm02mgmt": "10.90.0.5",<br>  "f5vm03mgmt": "10.90.0.6",<br>  "f5vm04mgmt": "10.90.0.7"<br>}</pre> |
+| f5vm01ext | bigip external private ips, these must be in external subnet | `string` | `"10.90.1.4"` |
+| f5vm01ext\_sec | n/a | `string` | `"10.90.1.11"` |
+| f5vm02ext | n/a | `string` | `"10.90.1.5"` |
+| f5vm02ext\_sec | n/a | `string` | `"10.90.1.12"` |
+| f5vm03ext | three\_tier bigip external, these must be in the waf\_ext subnet | `string` | `"10.90.6.4"` |
+| f5vm03ext\_sec | n/a | `string` | `"10.90.6.11"` |
+| f5vm04ext | n/a | `string` | `"10.90.6.5"` |
+| f5vm04ext\_sec | n/a | `string` | `"10.90.6.12"` |
+| f5vm01int | bigip internal private ips, these must be in internal subnet | `string` | `"10.90.2.4"` |
+| f5vm01int\_sec | n/a | `string` | `"10.90.2.11"` |
+| f5vm02int | n/a | `string` | `"10.90.2.5"` |
+| f5vm02int\_sec | n/a | `string` | `"10.90.2.12"` |
+| f5vm03int | three\_tier bigip internal, these must be in waf\_int subnet | `string` | `"10.90.7.4"` |
+| f5vm04int | n/a | `string` | `"10.90.7.5"` |
+| ilb01ip | azure internal load balancer, must be in internal subnet | `string` | `"10.90.2.10"` |
+| app01ip | Example application private ips, *currently* must be in internal subnet | `string` | `"10.90.2.101"` |
+| ips01ext | Example IPS private ips | `string` | `"10.90.4.4"` |
+| ips01int | n/a | `string` | `"10.90.5.4"` |
+| winjumpip | winjump, must be in VDMS subnet | `string` | `"10.90.3.98"` |
+| linuxjumpip | linuxjump, must be in VDMS subnet | `string` | `"10.90.3.99"` |
+| instanceType | BIGIP Instance Type, DS5\_v2 is a solid baseline for BEST | `string` | `"Standard_DS5_v2"` |
+| jumpinstanceType | Be careful which instance type selected, jump boxes currently use Premium\_LRS managed disks | `string` | `"Standard_B2s"` |
+| image\_name | REQUIRED: BIG-IP Image Name.  'az vm image list --output table --publisher f5-networks --location [region] --offer f5-big-ip --all'  Default f5-bigip-virtual-edition-1g-best-hourly is PAYG Image.  For BYOL use f5-big-all-2slot-byol | `string` | `"f5-bigip-virtual-edition-1g-best-hourly"` |
+| product | REQUIRED: BYOL = f5-big-ip-byol, PAYG = f5-big-ip-best | `string` | `"f5-big-ip-best"` |
+| bigip\_version | REQUIRED: BIG-IP Version, 14.1.2 for Compliance.  Options: 12.1.502000, 13.1.304000, 14.1.206000, 15.0.104000, latest.  Note: verify available versions before using as images can change. | `string` | `"14.1.202000"` |
+| licenses | BIGIP Setup Licenses are only needed when using BYOL images | `map(string)` | <pre>{<br>  "license1": "",<br>  "license2": "",<br>  "license3": "",<br>  "license4": ""<br>}</pre> |
+| host1\_name | n/a | `string` | `"f5vm01"` |
+| host2\_name | n/a | `string` | `"f5vm02"` |
+| host3\_name | n/a | `string` | `"f5vm03"` |
+| host4\_name | n/a | `string` | `"f5vm04"` |
+| dns\_server | n/a | `string` | `"8.8.8.8,8.8.4.4"` |
+| ntp\_server | n/a | `string` | `"time.nist.gov,0.us.pool.ntp.org"` |
+| timezone | n/a | `string` | `"UTC"` |
+| onboard\_log | n/a | `string` | `"/var/log/startup-script.log"` |
+| asm\_policy | REQUIRED: ASM Policy.  Examples:  https://github.com/f5devcentral/f5-asm-policy-templates.  Default: OWASP Ready Autotuning | `string` | `"https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml"` |
+| tags | Environment tags for objects | `map(string)` | <pre>{<br>  "application": "f5app",<br>  "costcenter": "f5costcenter",<br>  "environment": "f5env",<br>  "group": "f5group",<br>  "owner": "f5owner",<br>  "purpose": "public"<br>}</pre> |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| ALB\_app1\_pip | output ALB\_app1\_pip { value = data.azurerm\_public\_ip.lbpip.ip\_address } |
 | sg\_id | n/a |
 | sg\_name | n/a |
+| ALB\_app1\_pip | output ALB\_app1\_pip { value = data.azurerm\_public\_ip.lbpip.ip\_address } |
 | tier\_one | single tier |
 | tier\_three | three tier |
 

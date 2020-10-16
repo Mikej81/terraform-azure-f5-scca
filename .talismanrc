@@ -1,6 +1,6 @@
 fileignoreconfig:
 - filename: README.md
-  checksum: 8c03fce0bfb290bfbbf75c6c0379727d02cfe0d87c24409501b0ab3ea0471a0c
+  checksum: 15a536f97e989919d98c237edc9fb692b9d387fb48fcb74ff8ac3c8ab7e50c5a
 - filename: .envVarsHelperExample.sh
   checksum: d23f7ec7542ce599c8fdf647b7f038e143d5d6a644ac44bbb09b2ac0e8a74365
 - filename: cloud-libs-notes.sh
