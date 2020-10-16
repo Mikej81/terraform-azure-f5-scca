@@ -496,7 +496,9 @@ data template_file as3_json {
     log_destination     = var.app01ip
     example_vs_address  = var.subnets["external"]
     mgmtVipAddress      = var.f5vm01ext_sec
+    mgmtVipAddress2     = var.f5vm02ext_sec
     transitVipAddress   = var.f5vm01int_sec
+    transitVipAddress2  = var.f5vm02int_sec
   }
 }
 
