@@ -57,7 +57,7 @@ resource azurerm_virtual_machine app01-vm {
               # juice shop
               docker run -d --restart always -p 3000:3000 bkimminich/juice-shop
               # rsyslogd with PimpMyLogs
-              docker run -d -e SYSLOG_USERNAME=xadmin -e SYSLOG_PASSWORD=password123 -p 8080:80 -p 514:514/udp pbertera/syslogserver
+              docker run -d -e SYSLOG_USERNAME=${var.adminUserName} -e SYSLOG_PASSWORD=${var.adminPassword} -p 8080:80 -p 514:514/udp pbertera/syslogserver
               EOF
   }
 

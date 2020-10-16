@@ -69,7 +69,6 @@ variable f5mgmt {
     f5vm03mgmt = "10.90.0.6"
     f5vm04mgmt = "10.90.0.7"
   }
-
 }
 
 # bigip external private ips, these must be in external subnet
