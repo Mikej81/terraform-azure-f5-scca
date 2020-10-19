@@ -39,7 +39,7 @@ resource azurerm_virtual_machine winJump {
   }
 
   storage_os_disk {
-    name          = "winJump-os"
+    name          = "${var.prefix}-winJump-os"
     caching       = "ReadWrite"
     create_option = "FromImage"
     os_type       = "Windows"
@@ -56,7 +56,7 @@ resource azurerm_virtual_machine winJump {
 
 # commented out until plumbing in place for VDMS Egress to internet
 #resource azurerm_virtual_machine_extension winJump-run-startup-cmd {
-#  name                 = "winJump-run-startup-cmd"
+#  name                 = "${var.prefix}-winJump-run-startup-cmd"
 #  depends_on           = [azurerm_virtual_machine.winJump]
 #  virtual_machine_id   = azurerm_virtual_machine.winJump.id
 #  publisher            = "Microsoft.Compute"

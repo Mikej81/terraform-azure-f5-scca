@@ -3,28 +3,27 @@
 variable instanceType {}
 
 # winjump
-variable winjumpip { default = "10.90.2.98" }
+variable winjumpip {}
 
 # linuxjump
-variable linuxjumpip { default = "10.90.2.99" }
+variable linuxjumpip {}
 
 variable timezone { default = "UTC" }
 
 # cloud
 variable location {}
 variable region {}
-variable prefix { default = "scca" }
-variable subnets {}
-variable resourceGroup { default = "scca-tf-rg" }
+variable prefix {}
+variable resourceGroup {}
 variable securityGroup { default = "none" }
 
 # network
-variable subnetExternal { default = "none" }
+variable subnet {}
 
 # creds
-variable adminUserName { default = "admin" }
-variable adminPassword { default = "2017F5Networks!!" }
-variable sshPublicKey { default = "/mykey.pub" }
+variable adminUserName {}
+variable adminPassword {}
+variable sshPublicKey {}
 
 # TAGS
 variable tags {}

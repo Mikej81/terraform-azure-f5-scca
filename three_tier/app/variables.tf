@@ -1,24 +1,19 @@
 
 variable prefix {}
+variable resourceGroup {}
 variable location {}
 variable region {}
-variable resourceGroup {
-  default = "scca-tf-rg"
-}
-
 variable securityGroup {
   default = "none"
 }
 
-variable subnets {}
+variable subnet {}
 
-variable subnetExternal {
-  default = "none"
-}
-
-variable app01ext { default = "10.90.2.101" }
-variable adminUserName { default = "admin" }
-variable adminPassword { default = "2017F5Networks!!" }
+variable app01ip {}
+variable adminUserName {}
+variable adminPassword {}
 
 # TAGS
 variable tags {}
+
+variable timezone {}

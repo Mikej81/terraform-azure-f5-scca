@@ -346,11 +346,9 @@ resource azurerm_virtual_machine f5vm02 {
 data template_file vm_onboard {
   template = file("./templates/onboard.tpl")
   vars = {
-    uname     = var.adminUserName
-    upassword = var.adminPassword
-    doVersion = "latest"
-    #example version:
-    #as3Version            = "3.16.0"
+    uname                     = var.adminUserName
+    upassword                 = var.adminPassword
+    doVersion                 = "latest"
     as3Version                = "latest"
     tsVersion                 = "latest"
     cfVersion                 = "latest"
@@ -379,15 +377,15 @@ data http onboard {
 data template_file vm01_do_json {
   template = data.http.onboard.body
   vars = {
-    host1           = var.host1_name
-    host2           = var.host2_name
-    local_host      = var.host1_name
+    host1           = var.hosts["host1"]
+    host2           = var.hosts["host2"]
+    local_host      = var.hosts["host1"]
     external_selfip = "${var.f5_t1_ext["f5vm01ext"]}/${element(split("/", var.subnets["external"]), 1)}"
     internal_selfip = "${var.f5_t1_int["f5vm01int"]}/${element(split("/", var.subnets["internal"]), 1)}"
     log_localip     = var.f5_t1_ext["f5vm01ext"]
     log_destination = var.app01ip
     vdmsSubnet      = var.subnets["vdms"]
-    remote_host     = var.host2_name
+    remote_host     = var.hosts["host2"]
     remote_selfip   = var.f5_t1_ext["f5vm02ext"]
     externalGateway = local.ext_gw
     internalGateway = local.int_gw
@@ -403,15 +401,15 @@ data template_file vm01_do_json {
 data template_file vm02_do_json {
   template = data.http.onboard.body
   vars = {
-    host1           = var.host1_name
-    host2           = var.host2_name
-    local_host      = var.host2_name
+    host1           = var.hosts["host1"]
+    host2           = var.hosts["host2"]
+    local_host      = var.hosts["host2"]
     external_selfip = "${var.f5_t1_ext["f5vm02ext"]}/${element(split("/", var.subnets["external"]), 1)}"
     internal_selfip = "${var.f5_t1_int["f5vm02int"]}/${element(split("/", var.subnets["internal"]), 1)}"
     log_localip     = var.f5_t1_ext["f5vm02ext"]
     log_destination = var.app01ip
     vdmsSubnet      = var.subnets["vdms"]
-    remote_host     = var.host1_name
+    remote_host     = var.hosts["host1"]
     remote_selfip   = var.f5_t1_ext["f5vm01ext"]
     externalGateway = local.ext_gw
     internalGateway = local.int_gw

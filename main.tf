@@ -196,8 +196,7 @@ module firewall_one {
   instanceType     = var.instanceType
   subnets          = var.subnets
   app01ip          = var.app01ip
-  host1_name       = var.host1_name
-  host2_name       = var.host2_name
+  hosts            = var.hosts
   f5_mgmt          = var.f5_mgmt
   f5_t1_ext        = var.f5_t1_ext
   f5_t1_int        = var.f5_t1_int
@@ -207,6 +206,9 @@ module firewall_one {
   ilb01ip          = var.ilb01ip
   asm_policy       = var.asm_policy
   tags             = var.tags
+  timezone         = var.timezone
+  ntp_server       = var.ntp_server
+  dns_server       = var.dns_server
 }
 
 # deploy demo app
@@ -224,6 +226,7 @@ module app_one {
   adminPassword = var.adminPassword
   app01ip       = var.app01ip
   tags          = var.tags
+  timezone      = var.timezone
 }
 # deploy jumpboxes
 module jump_one {
@@ -242,6 +245,7 @@ module jump_one {
   linuxjumpip   = var.linuxjumpip
   winjumpip     = var.winjumpip
   tags          = var.tags
+  timezone      = var.timezone
 }
 
 #
@@ -270,6 +274,7 @@ module firewall_three {
   availabilitySet  = azurerm_availability_set.avset
   availabilitySet2 = azurerm_availability_set.avset2
   instanceType     = var.instanceType
+  hosts            = var.hosts
   f5_mgmt          = var.f5_mgmt
   f5_t1_ext        = var.f5_t1_ext
   f5_t1_int        = var.f5_t1_int
@@ -282,6 +287,9 @@ module firewall_three {
   winjumpip        = var.winjumpip
   linuxjumpip      = var.linuxjumpip
   tags             = var.tags
+  timezone         = var.timezone
+  ntp_server       = var.ntp_server
+  dns_server       = var.dns_server
 }
 # Deploy example ips
 module ips_three {
@@ -299,6 +307,7 @@ module ips_three {
   adminPassword        = var.adminPassword
   subnets              = var.subnets
   tags                 = var.tags
+  timezone             = var.timezone
 }
 # Deploy waf HA cluster
 module waf_three {
@@ -322,6 +331,9 @@ module waf_three {
   licenses        = var.licenses
   asm_policy      = var.asm_policy
   tags            = var.tags
+  timezone        = var.timezone
+  ntp_server      = var.ntp_server
+  dns_server      = var.dns_server
 }
 # deploy demo app
 
@@ -331,29 +343,31 @@ module app_three {
   resourceGroup = azurerm_resource_group.main
   location      = var.location
   region        = var.region
-  #   ssh_publickey = var.sshPublicKeyPath
-  securityGroup  = azurerm_network_security_group.main
-  subnetExternal = azurerm_subnet.external
-  adminUserName  = var.adminUserName
-  adminPassword  = var.adminPassword
-  subnets        = var.subnets
-  prefix         = var.projectPrefix
-  tags           = var.tags
+  securityGroup = azurerm_network_security_group.main
+  adminUserName = var.adminUserName
+  adminPassword = var.adminPassword
+  subnet        = azurerm_subnet.internal
+  prefix        = var.projectPrefix
+  app01ip       = var.app01ip
+  tags          = var.tags
+  timezone      = var.timezone
 }
 # deploy jumpboxes
 module jump_three {
-  count          = var.deploymentType == "three_tier" ? 1 : 0
-  source         = "./three_tier/jumpboxes"
-  resourceGroup  = azurerm_resource_group.main
-  sshPublicKey   = var.sshPublicKeyPath
-  location       = var.location
-  region         = var.region
-  subnetExternal = azurerm_subnet.external
-  securityGroup  = azurerm_network_security_group.main
-  adminUserName  = var.adminUserName
-  adminPassword  = var.adminPassword
-  prefix         = var.projectPrefix
-  instanceType   = var.jumpinstanceType
-  subnets        = var.subnets
-  tags           = var.tags
+  count         = var.deploymentType == "three_tier" ? 1 : 0
+  source        = "./three_tier/jumpboxes"
+  resourceGroup = azurerm_resource_group.main
+  sshPublicKey  = var.sshPublicKeyPath
+  location      = var.location
+  region        = var.region
+  securityGroup = azurerm_network_security_group.main
+  adminUserName = var.adminUserName
+  adminPassword = var.adminPassword
+  prefix        = var.projectPrefix
+  instanceType  = var.jumpinstanceType
+  subnet        = azurerm_subnet.vdms
+  linuxjumpip   = var.linuxjumpip
+  winjumpip     = var.winjumpip
+  tags          = var.tags
+  timezone      = var.timezone
 }

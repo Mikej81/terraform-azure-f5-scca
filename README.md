@@ -55,7 +55,7 @@ The BIG-IP VEs have the following features / modules enabled:
 
 | Name | Description | Type | Default |
 |------|-------------|------|---------|
-| projectPrefix | REQUIRED: Prefix to prepend to all objects created, minus Windows Jumpbox | `string` | `"mcscca"` |
+| projectPrefix | REQUIRED: Prefix to prepend to all objects created, minus Windows Jumpbox | `string` | `"mjcscca"` |
 | adminUserName | REQUIRED: Admin Username for All systems | `string` | `"xadmin"` |
 | adminPassword | REQUIRED: Admin Password for all systems | `string` | `"pleaseUseVault123!!"` |
 | location | REQUIRED: Azure Region: usgovvirginia, usgovarizona, etc | `string` | `"usgovvirginia"` |
@@ -82,12 +82,9 @@ The BIG-IP VEs have the following features / modules enabled:
 | product | REQUIRED: BYOL = f5-big-ip-byol, PAYG = f5-big-ip-best | `string` | `"f5-big-ip-best"` |
 | bigip\_version | REQUIRED: BIG-IP Version, 14.1.2 for Compliance.  Options: 12.1.502000, 13.1.304000, 14.1.206000, 15.0.104000, latest.  Note: verify available versions before using as images can change. | `string` | `"14.1.202000"` |
 | licenses | BIGIP Setup Licenses are only needed when using BYOL images | `map(string)` | <pre>{<br>  "license1": "",<br>  "license2": "",<br>  "license3": "",<br>  "license4": ""<br>}</pre> |
-| host1\_name | n/a | `string` | `"f5vm01"` |
-| host2\_name | n/a | `string` | `"f5vm02"` |
-| host3\_name | n/a | `string` | `"f5vm03"` |
-| host4\_name | n/a | `string` | `"f5vm04"` |
-| dns\_server | n/a | `string` | `"8.8.8.8,8.8.4.4"` |
-| ntp\_server | n/a | `string` | `"time.nist.gov,0.us.pool.ntp.org"` |
+| hosts | n/a | `map(string)` | <pre>{<br>  "host1": "f5vm01",<br>  "host2": "f5vm02",<br>  "host3": "f5vm03",<br>  "host4": "f5vm04"<br>}</pre> |
+| dns\_server | n/a | `string` | `"8.8.8.8"` |
+| ntp\_server | n/a | `string` | `"time.nist.gov"` |
 | timezone | n/a | `string` | `"UTC"` |
 | onboard\_log | n/a | `string` | `"/var/log/startup-script.log"` |
 | asm\_policy | REQUIRED: ASM Policy.  Examples:  https://github.com/f5devcentral/f5-asm-policy-templates.  Default: OWASP Ready Autotuning | `string` | `"https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml"` |

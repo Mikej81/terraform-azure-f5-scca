@@ -7,7 +7,7 @@ resource azurerm_network_interface linuxJump-ext-nic {
 
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = var.subnetExternal.id
+    subnet_id                     = var.subnet.id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.linuxjumpip
     primary                       = true
@@ -22,15 +22,15 @@ resource "azurerm_network_interface_security_group_association" "linuxJump-ext-n
 }
 
 resource azurerm_virtual_machine linuxJump {
-  name                = "linuxJump"
+  name                = "${var.prefix}-linuxJump"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
 
   network_interface_ids = [azurerm_network_interface.linuxJump-ext-nic.id]
-  vm_size               = "Standard_DS1_v2"
+  vm_size               = var.instanceType
 
   storage_os_disk {
-    name              = "linuxJumpOsDisk"
+    name              = "${var.prefix}-linuxJumpOsDisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Premium_LRS"

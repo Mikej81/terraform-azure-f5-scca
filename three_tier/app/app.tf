@@ -6,9 +6,9 @@ resource azurerm_network_interface app01-ext-nic {
 
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = var.subnetExternal.id
+    subnet_id                     = var.subnet.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = var.app01ext
+    private_ip_address            = var.app01ip
     primary                       = true
   }
 
@@ -23,7 +23,7 @@ resource azurerm_network_interface_security_group_association app-nsg {
 # app01-VM
 resource azurerm_virtual_machine app01-vm {
   count               = 1
-  name                = "app01-vm"
+  name                = "${var.prefix}-app01-vm"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
 
@@ -31,7 +31,7 @@ resource azurerm_virtual_machine app01-vm {
   vm_size               = "Standard_DS1_v2"
 
   storage_os_disk {
-    name              = "appOsDisk"
+    name              = "${var.prefix}-appOsDisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Premium_LRS"
@@ -56,6 +56,8 @@ resource azurerm_virtual_machine app01-vm {
               docker run -d -p 443:443 -p 80:80 --restart unless-stopped -e F5DEMO_APP=website -e F5DEMO_NODENAME='F5 Azure' -e F5DEMO_COLOR=ffd734 -e F5DEMO_NODENAME_SSL='F5 Azure (SSL)' -e F5DEMO_COLOR_SSL=a0bf37 chen23/f5-demo-app:ssl;
               # juice shop
               docker run -d --restart always -p 3000:3000 bkimminich/juice-shop
+              # rsyslogd with PimpMyLogs
+              docker run -d -e SYSLOG_USERNAME=${var.adminUserName} -e SYSLOG_PASSWORD=${var.adminPassword} -p 8080:80 -p 514:514/udp pbertera/syslogserver
               EOF
   }
 

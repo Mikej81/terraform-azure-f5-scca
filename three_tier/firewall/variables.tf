@@ -55,11 +55,11 @@ variable licenses {
     "license4" = ""
   }
 }
-variable host1_name { default = "f5vm01" }
-variable host2_name { default = "f5vm02" }
-variable dns_server { default = "8.8.8.8" }
-variable ntp_server { default = "0.us.pool.ntp.org" }
-variable timezone { default = "UTC" }
+
+variable hosts {}
+variable dns_server {}
+variable ntp_server {}
+variable timezone {}
 variable onboard_log { default = "/var/log/startup-script.log" }
 variable asm_policy {}
 

@@ -2,7 +2,7 @@
 variable projectPrefix {
   type        = string
   description = "REQUIRED: Prefix to prepend to all objects created, minus Windows Jumpbox"
-  default     = "mcscca"
+  default     = "mjcscca"
 }
 variable adminUserName {
   type        = string
@@ -166,12 +166,24 @@ variable licenses {
     "license4" = ""
   }
 }
-variable host1_name { default = "f5vm01" }
-variable host2_name { default = "f5vm02" }
-variable host3_name { default = "f5vm03" }
-variable host4_name { default = "f5vm04" }
-variable dns_server { default = "8.8.8.8,8.8.4.4" }
-variable ntp_server { default = "time.nist.gov,0.us.pool.ntp.org" }
+
+variable hosts {
+  type = map(string)
+  default = {
+    "host1" = "f5vm01"
+    "host2" = "f5vm02"
+    "host3" = "f5vm03"
+    "host4" = "f5vm04"
+  }
+}
+
+#variable host1_name { default = "f5vm01" }
+#variable host2_name { default = "f5vm02" }
+#variable host3_name { default = "f5vm03" }
+#variable host4_name { default = "f5vm04" }
+
+variable dns_server { default = "8.8.8.8" }
+variable ntp_server { default = "time.nist.gov" }
 variable timezone { default = "UTC" }
 variable onboard_log { default = "/var/log/startup-script.log" }
 
@@ -188,7 +200,7 @@ variable tags {
   type        = map(string)
   default = {
     "purpose"     = "public"
-    "environment" = "f5env" #ex. dev/staging/prod
+    "environment" = "f5env"
     "owner"       = "f5owner"
     "group"       = "f5group"
     "costcenter"  = "f5costcenter"

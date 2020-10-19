@@ -24,3 +24,5 @@ variable adminPassword { default = "2017F5Networks!!" }
 
 # TAGS
 variable tags {}
+
+variable timezone {}

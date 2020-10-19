@@ -21,9 +21,9 @@ variable securityGroup { default = "none" }
 variable subnet {}
 
 # creds
-variable adminUserName { default = "" }
-variable adminPassword { default = "" }
-variable sshPublicKey { default = "" }
+variable adminUserName {}
+variable adminPassword {}
+variable sshPublicKey {}
 
 # TAGS
 variable tags {}
