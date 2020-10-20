@@ -168,7 +168,6 @@ resource azurerm_lb_outbound_rule egress_rule {
   }
 }
 
-
 # Demo Application
 #
 # Deploys on all use-cases as long as configured in variables.tf
@@ -188,6 +187,27 @@ module demo_app {
   tags          = var.tags
   timezone      = var.timezone
   instanceType  = var.appInstanceType
+}
+
+# Jump Boxes
+#
+# Deploys a Windows and Linux jumpbox
+module jump_one {
+  source        = "./jumpboxes"
+  resourceGroup = azurerm_resource_group.main
+  sshPublicKey  = var.sshPublicKeyPath
+  location      = var.location
+  region        = var.region
+  subnet        = azurerm_subnet.vdms
+  securityGroup = azurerm_network_security_group.main
+  adminUserName = var.adminUserName
+  adminPassword = var.adminPassword
+  prefix        = var.projectPrefix
+  instanceType  = var.jumpinstanceType
+  linuxjumpip   = var.linuxjumpip
+  winjumpip     = var.winjumpip
+  tags          = var.tags
+  timezone      = var.timezone
 }
 
 # Single Tier
@@ -232,26 +252,6 @@ module firewall_one {
   timezone         = var.timezone
   ntp_server       = var.ntp_server
   dns_server       = var.dns_server
-}
-
-# deploy jumpboxes
-module jump_one {
-  count         = var.deploymentType == "one_tier" ? 1 : 0
-  source        = "./one_tier/jumpboxes"
-  resourceGroup = azurerm_resource_group.main
-  sshPublicKey  = var.sshPublicKeyPath
-  location      = var.location
-  region        = var.region
-  subnet        = azurerm_subnet.vdms
-  securityGroup = azurerm_network_security_group.main
-  adminUserName = var.adminUserName
-  adminPassword = var.adminPassword
-  prefix        = var.projectPrefix
-  instanceType  = var.jumpinstanceType
-  linuxjumpip   = var.linuxjumpip
-  winjumpip     = var.winjumpip
-  tags          = var.tags
-  timezone      = var.timezone
 }
 
 #
@@ -360,24 +360,4 @@ module waf_three {
   ntp_server       = var.ntp_server
   dns_server       = var.dns_server
   vnet             = azurerm_virtual_network.main
-}
-
-# deploy jumpboxes
-module jump_three {
-  count         = var.deploymentType == "three_tier" ? 1 : 0
-  source        = "./three_tier/jumpboxes"
-  resourceGroup = azurerm_resource_group.main
-  sshPublicKey  = var.sshPublicKeyPath
-  location      = var.location
-  region        = var.region
-  securityGroup = azurerm_network_security_group.main
-  adminUserName = var.adminUserName
-  adminPassword = var.adminPassword
-  prefix        = var.projectPrefix
-  instanceType  = var.jumpinstanceType
-  subnet        = azurerm_subnet.vdms
-  linuxjumpip   = var.linuxjumpip
-  winjumpip     = var.winjumpip
-  tags          = var.tags
-  timezone      = var.timezone
 }
