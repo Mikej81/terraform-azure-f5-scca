@@ -12,27 +12,19 @@ fileignoreconfig:
 - filename: hashicorp.asc
   checksum: 4219882f27fe37ad32625be510a7a1c3bece735a4936fa48a725138e8cdedbb5
 - filename: main.tf
-  checksum: 9a5d529d3875b9271d0da7fb6d78bb387881fdf77f49b52bfa2bf894eb0c251a
+  checksum: 838dfa26d4a2e65502f5bd58be0204d0a484b8b3085caa5004e5651d977deabe
 - filename: one_tier/app/app.tf
   checksum: deab3a0fb18605009370e0cb52257c591d7dfcd92a8b1351102e3c93359b6a23
 - filename: one_tier/firewall/bigip.tf
-  checksum: e03a905b087d4f9aa7b3364b7126c087349f43e5884ac55f838cd7c98752805f
-- filename: one_tier/jumpboxes/linux.tf
-  checksum: 73a90ab2caa07167bab48a924a095d169c352442ce92331e1d186ce4dded3454
-- filename: one_tier/jumpboxes/windows.tf
-  checksum: f7db2f3dbf258f15be1df6347c06e3d7bb848f58e85892d1b6f31e183ae22a2f
+  checksum: 24d89b21fee3fd72ae1ab5befe78593c5f9e5cb58fbb1dc0dbe8aa987c3c9c2e
 - filename: three_tier/app/app.tf
-  checksum: 8888fa0674a603d747ad83a0e9aaf9ad65c01b204751942a2bf03a58ce3125c1
+  checksum: 72c08600ff18b53663d554b914f5bd89b555a38e0ddfb19fe18add2ae9d29b62
 - filename: three_tier/firewall/bigip.tf
-  checksum: 4eabe4158a1fe6f4b91ad94c83a1b7206015c241200055136286acac10e0bced
+  checksum: 0aa935732565f43cb1574f43a0c46867176ffb648a7d539824bcd4c463864131
 - filename: three_tier/ips/ips.tf
   checksum: 3841cf9c56d495bd16115596ab48ef37a4e49850d53898e693ffd4aefcbdf4cc
-- filename: three_tier/jumpboxes/linux.tf
-  checksum: 3f9f0956aa008d1a75e1b769f243cf46e06e224abdd9519ab30264aba339f953
-- filename: three_tier/jumpboxes/windows.tf
-  checksum: 383a72522e1b4df332058e99e24f0904d4615928af937ccee70d21e5f6afe6dc
 - filename: three_tier/waf/bigip.tf
-  checksum: cea878ccffb9047427d93b93c0e88eb7e2d632f19660c41abec36d0a722021ff
+  checksum: f66520637c23a0714c28c8791b6042c4d1efd8802a0196ece220b5dd1a19b318
 - filename: admin.auto.tfvars.example
   checksum: a87ddc39a3ff63889026917ce85d5fff8a0a2beef4450b4cef111d3ebc79146a
 - filename: variables.tf

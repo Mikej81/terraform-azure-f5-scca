@@ -1,8 +1,8 @@
 variable resourceGroup {}
 # admin credentials
-variable adminUserName { default = "" }
-variable adminPassword { default = "" }
-variable sshPublicKey { default = "" }
+variable adminUserName {}
+variable adminPassword {}
+variable sshPublicKey {}
 # cloud info
 variable location {}
 variable region {}
@@ -19,32 +19,18 @@ variable prefix {}
 variable subnetMgmt {}
 variable subnetExternal {}
 variable subnetInternal {}
-variable backendPool {
-  description = "azureLB resource pool"
-}
+variable backendPool {}
 variable managementPool {}
 variable primaryPool {}
 
-# bigip mgmt private ips
-variable f5vm01mgmt {}
-variable f5vm02mgmt {}
-
-# bigip external private ips
-variable f5vm01ext {}
-variable f5vm01ext_sec {}
-variable f5vm02ext {}
-variable f5vm02ext_sec {}
-
-# Example application private ips
 variable app01ip {}
 
 variable ilb01ip {}
 
-# bigip internal private ips
-variable f5vm01int {}
-variable f5vm01int_sec {}
-variable f5vm02int {}
-variable f5vm02int_sec {}
+variable f5_mgmt {}
+variable f5_t1_ext {}
+variable f5_t1_int {}
+
 # winjump
 variable winjumpip {}
 
@@ -60,6 +46,8 @@ variable image_name {}
 variable product {}
 variable bigip_version {}
 
+variable cidr {}
+
 # BIGIP Setup
 variable licenses {
   type = map(string)
@@ -70,17 +58,12 @@ variable licenses {
     "license4" = ""
   }
 }
-variable host1_name {}
-variable host2_name {}
-variable dns_server { default = "8.8.8.8" }
-variable ntp_server { default = "0.us.pool.ntp.org" }
-variable timezone { default = "UTC" }
+variable hosts {}
+variable dns_server {}
+variable ntp_server {}
+variable timezone {}
 variable onboard_log { default = "/var/log/startup-script.log" }
-## ASM Policy
-##  -Examples:  https://github.com/f5devcentral/f5-asm-policy-templates
-##  -Default is using OWASP Ready Autotuning
 variable asm_policy {}
-
 
 # TAGS
 variable tags {}

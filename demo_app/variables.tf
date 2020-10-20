@@ -7,13 +7,15 @@ variable securityGroup {
   default = "none"
 }
 
-variable subnet {
-  default = "none"
-}
+variable subnet {}
 
 variable app01ip {}
 variable adminUserName {}
 variable adminPassword {}
 
+variable instanceType {}
+
 # TAGS
 variable tags {}
+
+variable timezone {}
