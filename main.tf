@@ -168,6 +168,27 @@ resource azurerm_lb_outbound_rule egress_rule {
   }
 }
 
+
+# Demo Application
+#
+# Deploys on all use-cases as long as configured in variables.tf
+# deploy demo app
+module demo_app {
+  count         = var.deployDemoApp == "deploy" ? 1 : 0
+  source        = "./demo_app"
+  location      = var.location
+  region        = var.region
+  resourceGroup = azurerm_resource_group.main
+  prefix        = var.projectPrefix
+  securityGroup = azurerm_network_security_group.main
+  subnet        = azurerm_subnet.application
+  adminUserName = var.adminUserName
+  adminPassword = var.adminPassword
+  app01ip       = var.app01ip
+  tags          = var.tags
+  timezone      = var.timezone
+}
+
 # Single Tier
 #
 # Deploy firewall HA cluster
@@ -195,6 +216,7 @@ module firewall_one {
   availabilitySet2 = azurerm_availability_set.avset2
   instanceType     = var.instanceType
   subnets          = var.subnets
+  cidr             = var.cidr
   app01ip          = var.app01ip
   hosts            = var.hosts
   f5_mgmt          = var.f5_mgmt
@@ -211,23 +233,6 @@ module firewall_one {
   dns_server       = var.dns_server
 }
 
-# deploy demo app
-module app_one {
-  count         = var.deploymentType == "one_tier" ? 1 : 0
-  source        = "./one_tier/app"
-  location      = var.location
-  region        = var.region
-  resourceGroup = azurerm_resource_group.main
-  #   ssh_publickey = var.sshPublicKeyPath}"
-  prefix        = var.projectPrefix
-  securityGroup = azurerm_network_security_group.main
-  subnet        = azurerm_subnet.internal
-  adminUserName = var.adminUserName
-  adminPassword = var.adminPassword
-  app01ip       = var.app01ip
-  tags          = var.tags
-  timezone      = var.timezone
-}
 # deploy jumpboxes
 module jump_one {
   count         = var.deploymentType == "one_tier" ? 1 : 0
@@ -335,23 +340,7 @@ module waf_three {
   ntp_server      = var.ntp_server
   dns_server      = var.dns_server
 }
-# deploy demo app
 
-module app_three {
-  count         = var.deploymentType == "three_tier" ? 1 : 0
-  source        = "./three_tier/app"
-  resourceGroup = azurerm_resource_group.main
-  location      = var.location
-  region        = var.region
-  securityGroup = azurerm_network_security_group.main
-  adminUserName = var.adminUserName
-  adminPassword = var.adminPassword
-  subnet        = azurerm_subnet.internal
-  prefix        = var.projectPrefix
-  app01ip       = var.app01ip
-  tags          = var.tags
-  timezone      = var.timezone
-}
 # deploy jumpboxes
 module jump_three {
   count         = var.deploymentType == "three_tier" ? 1 : 0

@@ -29,6 +29,11 @@ variable deploymentType {
   description = "REQUIRED: This determines the type of deployment; one tier versus three tier: one_tier, three_tier"
   default     = "one_tier"
 }
+variable deployDemoApp {
+  type        = string
+  description = "OPTIONAL: Deploy Demo Application with Stack. Recommended to show functionality.  Options: deploy, anything else."
+  default     = "deploy"
+}
 variable sshPublicKey {
   type        = string
   description = "OPTIONAL: ssh public key for instances"
@@ -57,6 +62,7 @@ variable subnets {
     "inspect_int" = "10.90.5.0/24"
     "waf_ext"     = "10.90.6.0/24"
     "waf_int"     = "10.90.7.0/24"
+    "application" = "10.90.10.0/24"
   }
 }
 
@@ -120,7 +126,7 @@ variable f5_t3_int {
 variable ilb01ip { default = "10.90.2.10" }
 
 # Example application private ips, *currently* must be in internal subnet
-variable app01ip { default = "10.90.2.101" }
+variable app01ip { default = "10.90.10.101" }
 
 # Example IPS private ips
 variable ips01ext { default = "10.90.4.4" }
@@ -176,11 +182,6 @@ variable hosts {
     "host4" = "f5vm04"
   }
 }
-
-#variable host1_name { default = "f5vm01" }
-#variable host2_name { default = "f5vm02" }
-#variable host3_name { default = "f5vm03" }
-#variable host4_name { default = "f5vm04" }
 
 variable dns_server { default = "8.8.8.8" }
 variable ntp_server { default = "time.nist.gov" }

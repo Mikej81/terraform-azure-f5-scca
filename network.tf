@@ -48,6 +48,14 @@ resource azurerm_subnet vdms {
   address_prefixes     = [var.subnets["vdms"]]
 }
 
+# Create the Demo Application Subnet within the Virtual Network
+resource azurerm_subnet application {
+  name                 = "application"
+  virtual_network_name = azurerm_virtual_network.main.name
+  resource_group_name  = azurerm_resource_group.main.name
+  address_prefixes     = [var.subnets["application"]]
+}
+
 # Obtain Gateway IP for each Subnet
 locals {
   depends_on = [azurerm_subnet.mgmt, azurerm_subnet.external]

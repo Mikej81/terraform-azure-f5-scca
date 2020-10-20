@@ -1,25 +1,25 @@
 # Create a Public IP for the Virtual Machines
 resource azurerm_public_ip f5vmpip01 {
-  name                = "${var.prefix}-vm01-mgmt-pip01"
+  name                = "${var.prefix}-vm01-mgmt-pip01-delete-me"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
   allocation_method   = "Static"
   sku                 = "Standard"
 
   tags = {
-    Name = "${var.prefix}-f5vm-public-ip"
+    Name = "${var.prefix}-f5vm-public-ip-delete-me"
   }
 }
 
 resource azurerm_public_ip f5vmpip02 {
-  name                = "${var.prefix}-vm02-mgmt-pip02"
+  name                = "${var.prefix}-vm02-mgmt-pip02-delete-me"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
   allocation_method   = "Static"
   sku                 = "Standard"
 
   tags = {
-    Name = "${var.prefix}-f5vm-public-ip"
+    Name = "${var.prefix}-f5vm-public-ip-delete-me"
   }
 }
 
@@ -386,6 +386,8 @@ data template_file vm01_do_json {
     log_localip     = var.f5_t1_ext["f5vm01ext"]
     log_destination = var.app01ip
     vdmsSubnet      = var.subnets["vdms"]
+    appSubnet       = var.subnets["application"]
+    vnetSubnet      = var.cidr
     remote_host     = var.hosts["host2"]
     remote_selfip   = var.f5_t1_ext["f5vm02ext"]
     externalGateway = local.ext_gw
@@ -410,6 +412,8 @@ data template_file vm02_do_json {
     log_localip     = var.f5_t1_ext["f5vm02ext"]
     log_destination = var.app01ip
     vdmsSubnet      = var.subnets["vdms"]
+    appSubnet       = var.subnets["application"]
+    vnetSubnet      = var.cidr
     remote_host     = var.hosts["host1"]
     remote_selfip   = var.f5_t1_ext["f5vm01ext"]
     externalGateway = local.ext_gw
