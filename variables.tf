@@ -27,7 +27,7 @@ variable region {
 variable deploymentType {
   type        = string
   description = "REQUIRED: This determines the type of deployment; one tier versus three tier: one_tier, three_tier"
-  default     = "one_tier"
+  default     = "three_tier"
 }
 variable deployDemoApp {
   type        = string
@@ -143,6 +143,9 @@ variable instanceType { default = "Standard_DS5_v2" }
 
 # Be careful which instance type selected, jump boxes currently use Premium_LRS managed disks
 variable jumpinstanceType { default = "Standard_B2s" }
+
+# Demo Application Instance Size
+variable appInstanceType { default = "Standard_DS3_v2" }
 
 # BIGIP Image
 variable image_name {

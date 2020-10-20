@@ -1,6 +1,6 @@
 # network interface for app vm
-resource azurerm_network_interface app01-ext-nic {
-  name                = "${var.prefix}-app01-ext-nic"
+resource azurerm_network_interface app01-nic {
+  name                = "${var.prefix}-app01-nic"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
 
@@ -16,7 +16,7 @@ resource azurerm_network_interface app01-ext-nic {
 }
 
 resource azurerm_network_interface_security_group_association app-nsg {
-  network_interface_id      = azurerm_network_interface.app01-ext-nic.id
+  network_interface_id      = azurerm_network_interface.app01-nic.id
   network_security_group_id = var.securityGroup.id
 }
 
@@ -27,8 +27,8 @@ resource azurerm_virtual_machine app01-vm {
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
 
-  network_interface_ids = [azurerm_network_interface.app01-ext-nic.id]
-  vm_size               = "Standard_DS1_v2"
+  network_interface_ids = [azurerm_network_interface.app01-nic.id]
+  vm_size               = var.instanceType
 
   storage_os_disk {
     name              = "${var.prefix}-appOsDisk"

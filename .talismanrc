@@ -12,7 +12,7 @@ fileignoreconfig:
 - filename: hashicorp.asc
   checksum: 4219882f27fe37ad32625be510a7a1c3bece735a4936fa48a725138e8cdedbb5
 - filename: main.tf
-  checksum: fbfc12de74ec17c9ffaf8e32b8ced139d62d670000c2758c7695d9f9f060a72e
+  checksum: e66efa8b67096a92f61e2548d480a75d4ca5bd6bfa2d12a12276c453297422e4
 - filename: one_tier/app/app.tf
   checksum: deab3a0fb18605009370e0cb52257c591d7dfcd92a8b1351102e3c93359b6a23
 - filename: one_tier/firewall/bigip.tf
@@ -32,7 +32,7 @@ fileignoreconfig:
 - filename: three_tier/jumpboxes/windows.tf
   checksum: 93f10ff015394453f39800879bdcdc3a95aa717f283e9579a92daacbdc92242c
 - filename: three_tier/waf/bigip.tf
-  checksum: cea878ccffb9047427d93b93c0e88eb7e2d632f19660c41abec36d0a722021ff
+  checksum: f66520637c23a0714c28c8791b6042c4d1efd8802a0196ece220b5dd1a19b318
 - filename: admin.auto.tfvars.example
   checksum: a87ddc39a3ff63889026917ce85d5fff8a0a2beef4450b4cef111d3ebc79146a
 - filename: variables.tf

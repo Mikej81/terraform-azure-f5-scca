@@ -60,7 +60,7 @@ The BIG-IP VEs have the following features / modules enabled:
 | adminPassword | REQUIRED: Admin Password for all systems | `string` | `"pleaseUseVault123!!"` |
 | location | REQUIRED: Azure Region: usgovvirginia, usgovarizona, etc | `string` | `"usgovvirginia"` |
 | region | Azure Region: US Gov Virginia, US Gov Arizona, etc | `string` | `"USGov Virginia"` |
-| deploymentType | REQUIRED: This determines the type of deployment; one tier versus three tier: one\_tier, three\_tier | `string` | `"one_tier"` |
+| deploymentType | REQUIRED: This determines the type of deployment; one tier versus three tier: one\_tier, three\_tier | `string` | `"three_tier"` |
 | deployDemoApp | OPTIONAL: Deploy Demo Application with Stack. Recommended to show functionality.  Options: deploy, anything else. | `string` | `"deploy"` |
 | sshPublicKey | OPTIONAL: ssh public key for instances | `string` | `""` |
 | sshPublicKeyPath | OPTIONAL: ssh public key path for instances | `string` | `"/mykey.pub"` |
@@ -79,6 +79,7 @@ The BIG-IP VEs have the following features / modules enabled:
 | linuxjumpip | linuxjump, must be in VDMS subnet | `string` | `"10.90.3.99"` |
 | instanceType | BIGIP Instance Type, DS5\_v2 is a solid baseline for BEST | `string` | `"Standard_DS5_v2"` |
 | jumpinstanceType | Be careful which instance type selected, jump boxes currently use Premium\_LRS managed disks | `string` | `"Standard_B2s"` |
+| appInstanceType | Demo Application Instance Size | `string` | `"Standard_DS3_v2"` |
 | image\_name | REQUIRED: BIG-IP Image Name.  'az vm image list --output table --publisher f5-networks --location [region] --offer f5-big-ip --all'  Default f5-bigip-virtual-edition-1g-best-hourly is PAYG Image.  For BYOL use f5-big-all-2slot-byol | `string` | `"f5-bigip-virtual-edition-1g-best-hourly"` |
 | product | REQUIRED: BYOL = f5-big-ip-byol, PAYG = f5-big-ip-best | `string` | `"f5-big-ip-best"` |
 | bigip\_version | REQUIRED: BIG-IP Version, 14.1.2 for Compliance.  Options: 12.1.502000, 13.1.304000, 14.1.206000, 15.0.104000, latest.  Note: verify available versions before using as images can change. | `string` | `"14.1.202000"` |

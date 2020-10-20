@@ -13,6 +13,8 @@ variable app01ip {}
 variable adminUserName {}
 variable adminPassword {}
 
+variable instanceType {}
+
 # TAGS
 variable tags {}
 

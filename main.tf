@@ -187,6 +187,7 @@ module demo_app {
   app01ip       = var.app01ip
   tags          = var.tags
   timezone      = var.timezone
+  instanceType  = var.appInstanceType
 }
 
 # Single Tier
@@ -284,9 +285,10 @@ module firewall_three {
   f5_t1_ext        = var.f5_t1_ext
   f5_t1_int        = var.f5_t1_int
   f5_t3_ext        = var.f5_t3_ext
-  f5_t3_int        = var.f5_t3_ext
+  f5_t3_int        = var.f5_t3_int
   app01ip          = var.app01ip
   subnets          = var.subnets
+  cidr             = var.cidr
   licenses         = var.licenses
   asm_policy       = var.asm_policy
   winjumpip        = var.winjumpip
@@ -306,6 +308,7 @@ module ips_three {
   resourceGroup        = azurerm_resource_group.main
   virtual_network_name = azurerm_virtual_network.main.name
   securityGroup        = azurerm_network_security_group.main
+  instanceType         = var.instanceType
   ips01ext             = var.ips01ext
   ips01int             = var.ips01int
   adminUserName        = var.adminUserName
@@ -316,29 +319,46 @@ module ips_three {
 }
 # Deploy waf HA cluster
 module waf_three {
-  count           = var.deploymentType == "three_tier" ? 1 : 0
-  source          = "./three_tier/waf"
-  resourceGroup   = azurerm_resource_group.main
-  sshPublicKey    = var.sshPublicKeyPath
-  location        = var.location
-  region          = var.region
-  subnetMgmt      = azurerm_subnet.mgmt
-  subnetExternal  = azurerm_subnet.external
-  subnetInternal  = azurerm_subnet.internal
-  securityGroup   = azurerm_network_security_group.main
-  adminUserName   = var.adminUserName
-  adminPassword   = var.adminPassword
-  prefix          = var.projectPrefix
-  backendPool     = azurerm_lb_backend_address_pool.backend_pool
-  availabilitySet = azurerm_availability_set.avset2
-  instanceType    = var.instanceType
-  subnets         = var.subnets
-  licenses        = var.licenses
-  asm_policy      = var.asm_policy
-  tags            = var.tags
-  timezone        = var.timezone
-  ntp_server      = var.ntp_server
-  dns_server      = var.dns_server
+  count            = var.deploymentType == "three_tier" ? 1 : 0
+  source           = "./three_tier/waf"
+  resourceGroup    = azurerm_resource_group.main
+  sshPublicKey     = var.sshPublicKeyPath
+  location         = var.location
+  region           = var.region
+  subnetMgmt       = azurerm_subnet.mgmt
+  subnetExternal   = azurerm_subnet.external
+  subnetInternal   = azurerm_subnet.internal
+  securityGroup    = azurerm_network_security_group.main
+  image_name       = var.image_name
+  product          = var.product
+  bigip_version    = var.bigip_version
+  adminUserName    = var.adminUserName
+  adminPassword    = var.adminPassword
+  prefix           = var.projectPrefix
+  backendPool      = azurerm_lb_backend_address_pool.backend_pool
+  managementPool   = azurerm_lb_backend_address_pool.management_pool
+  primaryPool      = azurerm_lb_backend_address_pool.primary_pool
+  availabilitySet  = azurerm_availability_set.avset
+  availabilitySet2 = azurerm_availability_set.avset2
+  instanceType     = var.instanceType
+  hosts            = var.hosts
+  f5_mgmt          = var.f5_mgmt
+  f5_t1_ext        = var.f5_t1_ext
+  f5_t1_int        = var.f5_t1_int
+  f5_t3_ext        = var.f5_t3_ext
+  f5_t3_int        = var.f5_t3_int
+  app01ip          = var.app01ip
+  subnets          = var.subnets
+  cidr             = var.cidr
+  licenses         = var.licenses
+  asm_policy       = var.asm_policy
+  winjumpip        = var.winjumpip
+  linuxjumpip      = var.linuxjumpip
+  tags             = var.tags
+  timezone         = var.timezone
+  ntp_server       = var.ntp_server
+  dns_server       = var.dns_server
+  vnet             = azurerm_virtual_network.main
 }
 
 # deploy jumpboxes

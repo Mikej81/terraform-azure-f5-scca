@@ -63,6 +63,7 @@ locals {
   ext_gw     = cidrhost(azurerm_subnet.external.address_prefix, 1)
   int_gw     = cidrhost(azurerm_subnet.internal.address_prefix, 1)
 }
+
 # Create VDMS UDR
 resource azurerm_route_table vdms_udr {
   name                          = "${var.projectPrefix}_vdms_user_defined_route_table"

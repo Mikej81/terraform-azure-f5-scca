@@ -45,6 +45,8 @@ variable image_name {}
 variable product {}
 variable bigip_version {}
 
+variable cidr {}
+
 # BIGIP Setup
 variable licenses {
   type = map(string)

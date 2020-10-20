@@ -385,6 +385,8 @@ data template_file vm01_do_json {
     log_localip     = var.f5_t1_ext["f5vm01ext"]
     log_destination = var.app01ip
     vdmsSubnet      = var.subnets["vdms"]
+    appSubnet       = var.subnets["application"]
+    vnetSubnet      = var.cidr
     remote_host     = var.hosts["host2"]
     remote_selfip   = var.f5_t1_ext["f5vm02ext"]
     externalGateway = local.ext_gw
@@ -409,6 +411,8 @@ data template_file vm02_do_json {
     log_localip     = var.f5_t1_ext["f5vm02ext"]
     log_destination = var.app01ip
     vdmsSubnet      = var.subnets["vdms"]
+    appSubnet       = var.subnets["application"]
+    vnetSubnet      = var.cidr
     remote_host     = var.hosts["host1"]
     remote_selfip   = var.f5_t1_ext["f5vm01ext"]
     externalGateway = local.ext_gw
