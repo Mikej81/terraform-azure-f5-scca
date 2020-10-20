@@ -47,6 +47,8 @@ variable bigip_version {}
 
 variable cidr {}
 
+variable ilb01ip {}
+
 # BIGIP Setup
 variable licenses {
   type = map(string)

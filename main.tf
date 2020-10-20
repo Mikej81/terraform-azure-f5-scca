@@ -290,6 +290,7 @@ module firewall_three {
   subnets          = var.subnets
   cidr             = var.cidr
   licenses         = var.licenses
+  ilb01ip          = var.ilb01ip
   asm_policy       = var.asm_policy
   winjumpip        = var.winjumpip
   linuxjumpip      = var.linuxjumpip
