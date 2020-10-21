@@ -22,28 +22,12 @@ resource azurerm_public_ip f5vmpip04 {
   }
 }
 
-# Create the external Subnet within the Virtual Network
-resource azurerm_subnet waf_external {
-  name                 = "waf_external"
-  virtual_network_name = var.vnet.name
-  resource_group_name  = var.resourceGroup.name
-  address_prefixes     = [var.subnets["waf_ext"]]
-}
-
-# Create the internal Subnet within the Virtual Network
-resource azurerm_subnet waf_internal {
-  name                 = "waf_internal"
-  virtual_network_name = var.vnet.name
-  resource_group_name  = var.resourceGroup.name
-  address_prefixes     = [var.subnets["waf_int"]]
-}
-
 # Obtain Gateway IP for each Subnet
 locals {
-  depends_on = [var.subnetMgmt, azurerm_subnet.waf_external, azurerm_subnet.waf_internal]
+  depends_on = [var.subnetMgmt, var.subnetWafExt, var.subnetWafInt]
   mgmt_gw    = cidrhost(var.subnetMgmt.address_prefix, 1)
-  waf_ext_gw = cidrhost(azurerm_subnet.waf_external.address_prefix, 1)
-  waf_int_gw = cidrhost(azurerm_subnet.waf_internal.address_prefix, 1)
+  waf_ext_gw = cidrhost(var.subnetWafExt[0].address_prefix, 1)
+  waf_int_gw = cidrhost(var.subnetWafInt[0].address_prefix, 1)
 }
 
 # Create the first network interface card for Management
@@ -98,7 +82,7 @@ resource azurerm_network_interface vm03-ext-nic {
 
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = azurerm_subnet.waf_external.id
+    subnet_id                     = var.subnetWafExt[0].id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.f5_t3_ext["f5vm03ext"]
     primary                       = true
@@ -106,7 +90,7 @@ resource azurerm_network_interface vm03-ext-nic {
 
   ip_configuration {
     name                          = "secondary"
-    subnet_id                     = azurerm_subnet.waf_external.id
+    subnet_id                     = var.subnetWafExt[0].id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.f5_t3_ext["f5vm03ext_sec"]
   }
@@ -136,7 +120,7 @@ resource azurerm_network_interface vm04-ext-nic {
 
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = azurerm_subnet.waf_external.id
+    subnet_id                     = var.subnetWafExt[0].id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.f5_t3_ext["f5vm04ext"]
     primary                       = true
@@ -144,7 +128,7 @@ resource azurerm_network_interface vm04-ext-nic {
 
   ip_configuration {
     name                          = "secondary"
-    subnet_id                     = azurerm_subnet.waf_external.id
+    subnet_id                     = var.subnetWafExt[0].id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.f5_t3_ext["f5vm04ext_sec"]
   }
@@ -175,7 +159,7 @@ resource azurerm_network_interface vm03-int-nic {
 
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = azurerm_subnet.waf_internal.id
+    subnet_id                     = var.subnetWafInt[0].id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.f5_t3_int["f5vm03int"]
     primary                       = true
@@ -197,7 +181,7 @@ resource azurerm_network_interface vm04-int-nic {
 
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = azurerm_subnet.waf_internal.id
+    subnet_id                     = var.subnetWafInt[0].id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.f5_t3_int["f5vm04int"]
     primary                       = true
@@ -342,7 +326,7 @@ data template_file vm_onboard {
 resource random_uuid as3_uuid {}
 
 data http onboard {
-  url = "https://raw.githubusercontent.com/Mikej81/f5-bigip-hardening-DO/master/dist/terraform/latest/${var.licenses["license1"] != "" ? "byol" : "payg"}_cluster.json"
+  url = "https://raw.githubusercontent.com/Mikej81/f5-bigip-hardening-DO/master/dist/terraform/latest/${var.licenses["license3"] != "" ? "byol" : "payg"}_cluster.json"
 }
 
 data template_file vm03_do_json {
@@ -368,7 +352,7 @@ data template_file vm03_do_json {
     timezone        = var.timezone
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
-    license         = var.licenses["license1"] != "" ? var.licenses["license1"] : ""
+    license         = var.licenses["license3"] != "" ? var.licenses["license3"] : ""
     log_localip     = var.f5_t3_ext["f5vm03ext"]
     log_destination = var.app01ip
   }
@@ -397,7 +381,7 @@ data template_file vm04_do_json {
     timezone        = var.timezone
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
-    license         = var.licenses["license1"] != "" ? var.licenses["license2"] : ""
+    license         = var.licenses["license4"] != "" ? var.licenses["license4"] : ""
     log_localip     = var.f5_t3_ext["f5vm04ext"]
     log_destination = var.app01ip
   }
@@ -413,12 +397,12 @@ data template_file as3_json {
     uuid                = random_uuid.as3_uuid.result
     baseline_waf_policy = var.asm_policy
     exampleVipAddress   = var.f5_t3_ext["f5vm03ext"]
+    exampleVipSubnet    = var.subnets["waf_ext"]
+    ips_pool_addresses  = var.app01ip
     rdp_pool_addresses  = var.winjumpip
     ssh_pool_addresses  = var.linuxjumpip
     app_pool_addresses  = var.app01ip
     log_destination     = var.app01ip
-    exampleVipSubnet    = "setme"
-    ips_pool_addresses  = "setme"
     mgmtVipAddress      = var.f5_t1_ext["f5vm01ext_sec"]
     mgmtVipAddress2     = var.f5_t1_ext["f5vm02ext_sec"]
     transitVipAddress   = var.f5_t1_int["f5vm01int_sec"]

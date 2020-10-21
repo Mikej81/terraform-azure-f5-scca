@@ -48,6 +48,24 @@ resource azurerm_subnet vdms {
   address_prefixes     = [var.subnets["vdms"]]
 }
 
+#Create the external Subnet within the Virtual Network
+resource azurerm_subnet waf_external {
+  count                = var.deploymentType == "three_tier" ? 1 : 0
+  name                 = "waf_external"
+  virtual_network_name = azurerm_virtual_network.main.name
+  resource_group_name  = azurerm_resource_group.main.name
+  address_prefixes     = [var.subnets["waf_ext"]]
+}
+
+# Create the internal Subnet within the Virtual Network
+resource azurerm_subnet waf_internal {
+  count                = var.deploymentType == "three_tier" ? 1 : 0
+  name                 = "waf_internal"
+  virtual_network_name = azurerm_virtual_network.main.name
+  resource_group_name  = azurerm_resource_group.main.name
+  address_prefixes     = [var.subnets["waf_int"]]
+}
+
 # Create the Demo Application Subnet within the Virtual Network
 resource azurerm_subnet application {
   name                 = "application"

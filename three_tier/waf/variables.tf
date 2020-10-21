@@ -18,6 +18,8 @@ variable subnets {}
 variable subnetMgmt {}
 variable subnetExternal {}
 variable subnetInternal {}
+variable subnetWafExt {}
+variable subnetWafInt {}
 variable app01ip {}
 variable backendPool {
   description = "azureLB resource pool"
