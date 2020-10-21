@@ -267,6 +267,8 @@ module firewall_three {
   subnetMgmt       = azurerm_subnet.mgmt
   subnetExternal   = azurerm_subnet.external
   subnetInternal   = azurerm_subnet.internal
+  subnetWafExt     = azurerm_subnet.waf_external
+  subnetWafInt     = azurerm_subnet.waf_internal
   securityGroup    = azurerm_network_security_group.main
   image_name       = var.image_name
   product          = var.product
@@ -291,6 +293,7 @@ module firewall_three {
   cidr             = var.cidr
   licenses         = var.licenses
   ilb01ip          = var.ilb01ip
+  ilb02ip          = var.ilb02ip
   asm_policy       = var.asm_policy
   winjumpip        = var.winjumpip
   linuxjumpip      = var.linuxjumpip
@@ -329,6 +332,8 @@ module waf_three {
   subnetMgmt       = azurerm_subnet.mgmt
   subnetExternal   = azurerm_subnet.external
   subnetInternal   = azurerm_subnet.internal
+  subnetWafExt     = azurerm_subnet.waf_external
+  subnetWafInt     = azurerm_subnet.waf_internal
   securityGroup    = azurerm_network_security_group.main
   image_name       = var.image_name
   product          = var.product

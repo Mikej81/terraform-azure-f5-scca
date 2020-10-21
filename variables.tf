@@ -27,7 +27,7 @@ variable region {
 variable deploymentType {
   type        = string
   description = "REQUIRED: This determines the type of deployment; one tier versus three tier: one_tier, three_tier"
-  default     = "one_tier"
+  default     = "three_tier"
 }
 variable deployDemoApp {
   type        = string
@@ -122,8 +122,19 @@ variable f5_t3_int {
   }
 }
 
-# azure internal load balancer, must be in internal subnet
-variable ilb01ip { default = "10.90.2.10" }
+#
+variable ilb01ip {
+  type        = string
+  description = "REQUIRED: Used by One and Three Tier.  Azure internal load balancer ip, this is used as egress, must be in internal subnet"
+  default     = "10.90.2.10"
+}
+
+variable ilb02ip {
+  type        = string
+  description = "REQUIRED: Used by Three Tier only.  Azure waf external load balancer ip, this is used as egress, must be in waf_ext subnet"
+  default     = "10.90.6.10"
+}
+
 
 # Example application private ips, *currently* must be in internal subnet
 variable app01ip { default = "10.90.10.101" }
