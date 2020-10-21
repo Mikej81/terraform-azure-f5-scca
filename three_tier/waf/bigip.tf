@@ -338,12 +338,10 @@ data template_file vm_onboard {
   }
 }
 
-# template ATC json
-
 # as3 uuid generation
 resource random_uuid as3_uuid {}
 
-data http template {
+data http onboard {
   url = "https://raw.githubusercontent.com/Mikej81/f5-bigip-hardening-DO/master/dist/terraform/latest/${var.licenses["license1"] != "" ? "byol" : "payg"}_cluster.json"
 }
 
@@ -351,9 +349,9 @@ data template_file vm03_do_json {
   #template = "${file("./templates/cluster.json")}"
   template = data.http.template.body
   vars = {
-    host1           = var.hosts["host1"]
-    host2           = var.hosts["host2"]
-    local_host      = var.hosts["host1"]
+    host1           = var.hosts["host3"]
+    host2           = var.hosts["host4"]
+    local_host      = var.hosts["host3"]
     external_selfip = "${var.f5_t3_ext["f5vm03ext"]}/${element(split("/", var.subnets["waf_ext"]), 1)}"
     internal_selfip = "${var.f5_t3_int["f5vm03int"]}/${element(split("/", var.subnets["waf_int"]), 1)}"
     log_localip     = var.f5_t3_ext["f5vm03ext"]
@@ -361,7 +359,7 @@ data template_file vm03_do_json {
     vdmsSubnet      = var.subnets["vdms"]
     appSubnet       = var.subnets["application"]
     vnetSubnet      = var.cidr
-    remote_host     = var.hosts["host2"]
+    remote_host     = var.hosts["host4"]
     remote_selfip   = var.f5_t3_ext["f5vm04ext"]
     externalGateway = local.waf_ext_gw
     internalGateway = local.waf_int_gw
@@ -372,8 +370,8 @@ data template_file vm03_do_json {
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
     license         = var.licenses["license1"] != "" ? var.licenses["license1"] : ""
-    log_destination = "setme"
-    log_localip     = "setme"
+    log_localip     = var.f5_t3_ext["f5vm03ext"]
+    log_destination = var.app01ip
   }
 }
 
@@ -381,9 +379,9 @@ data template_file vm04_do_json {
   #template = "${file("./templates/cluster.json")}"
   template = data.http.template.body
   vars = {
-    host1           = var.hosts["host1"]
-    host2           = var.hosts["host2"]
-    local_host      = var.hosts["host2"]
+    host1           = var.hosts["host3"]
+    host2           = var.hosts["host4"]
+    local_host      = var.hosts["host4"]
     external_selfip = "${var.f5_t3_ext["f5vm04ext"]}/${element(split("/", var.subnets["waf_ext"]), 1)}"
     internal_selfip = "${var.f5_t3_int["f5vm04int"]}/${element(split("/", var.subnets["waf_int"]), 1)}"
     log_localip     = var.f5_t3_ext["f5vm04ext"]
@@ -391,7 +389,7 @@ data template_file vm04_do_json {
     vdmsSubnet      = var.subnets["vdms"]
     appSubnet       = var.subnets["application"]
     vnetSubnet      = var.cidr
-    remote_host     = var.hosts["host1"]
+    remote_host     = var.hosts["host3"]
     remote_selfip   = var.f5_t3_ext["f5vm03ext"]
     externalGateway = local.waf_ext_gw
     internalGateway = local.waf_int_gw
@@ -402,8 +400,8 @@ data template_file vm04_do_json {
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
     license         = var.licenses["license1"] != "" ? var.licenses["license2"] : ""
-    log_destination = "setme"
-    log_localip     = "setme"
+    log_localip     = var.f5_t3_ext["f5vm04ext"]
+    log_destination = var.app01ip
   }
 }
 
