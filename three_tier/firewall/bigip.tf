@@ -1,6 +1,6 @@
 # Create a Public IP for the Virtual Machines
 resource azurerm_public_ip f5vmpip01 {
-  name                = "${var.prefix}-vm01-mgmt-pip01"
+  name                = "${var.prefix}-vm01-mgmt-pip01-delete-me"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
   allocation_method   = "Static"
@@ -11,7 +11,7 @@ resource azurerm_public_ip f5vmpip01 {
   }
 }
 resource azurerm_public_ip f5vmpip02 {
-  name                = "${var.prefix}-vm02-mgmt-pip02"
+  name                = "${var.prefix}-vm02-mgmt-pip02-delete-me"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
   allocation_method   = "Static"

@@ -18,6 +18,8 @@ variable subnets {}
 variable subnetMgmt {}
 variable subnetExternal {}
 variable subnetInternal {}
+variable subnetWafExt {}
+variable subnetWafInt {}
 variable app01ip {}
 
 variable backendPool {}
@@ -48,6 +50,7 @@ variable bigip_version {}
 variable cidr {}
 
 variable ilb01ip {}
+variable ilb02ip {}
 
 # BIGIP Setup
 variable licenses {

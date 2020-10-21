@@ -122,8 +122,19 @@ variable f5_t3_int {
   }
 }
 
-# azure internal load balancer, must be in internal subnet
-variable ilb01ip { default = "10.90.2.10" }
+#
+variable ilb01ip {
+  type        = string
+  description = "REQUIRED: Used by One and Three Tier.  Azure internal load balancer ip, this is used as egress, must be in internal subnet"
+  default     = "10.90.2.10"
+}
+
+variable ilb02ip {
+  type        = string
+  description = "REQUIRED: Used by Three Tier only.  Azure waf external load balancer ip, this is used as egress, must be in waf_ext subnet"
+  default     = "10.90.6.10"
+}
+
 
 # Example application private ips, *currently* must be in internal subnet
 variable app01ip { default = "10.90.10.101" }
