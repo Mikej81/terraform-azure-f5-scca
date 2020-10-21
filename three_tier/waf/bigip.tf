@@ -346,8 +346,7 @@ data http onboard {
 }
 
 data template_file vm03_do_json {
-  #template = "${file("./templates/cluster.json")}"
-  template = data.http.template.body
+  template = data.http.onboard.body
   vars = {
     host1           = var.hosts["host3"]
     host2           = var.hosts["host4"]
@@ -376,8 +375,7 @@ data template_file vm03_do_json {
 }
 
 data template_file vm04_do_json {
-  #template = "${file("./templates/cluster.json")}"
-  template = data.http.template.body
+  template = data.http.onboard.body
   vars = {
     host1           = var.hosts["host3"]
     host2           = var.hosts["host4"]
