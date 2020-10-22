@@ -28,14 +28,14 @@ locals {
   }) : { none = "none" }
   three_tier = var.deploymentType == "three_tier" ? try(
     {
-      f5vm01_id              = try(module.waf_three[0].f5vm01_id, "none")
-      f5vm01_mgmt_private_ip = try(module.waf_three[0].f5vm01_mgmt_private_ip, "none")
-      f5vm01_mgmt_public_ip  = "https://${try(module.waf_three[0].f5vm01_mgmt_public_ip, "none")}"
+      f5vm01_id              = try(module.firewall_three[0].f5vm01_id, "none")
+      f5vm01_mgmt_private_ip = try(module.firewall_three[0].f5vm01_mgmt_private_ip, "none")
+      f5vm01_mgmt_public_ip  = "https://${try(module.firewall_three[0].f5vm01_mgmt_public_ip, "none")}"
       f5vm01_ext_private_ip  = try(module.waf_three[0].f5vm01_ext_private_ip, "none")
       #
-      f5vm02_id              = try(module.waf_three[0].f5vm02_id, "none")
-      f5vm02_mgmt_private_ip = try(module.waf_three[0].f5vm02_mgmt_private_ip, "none")
-      f5vm02_mgmt_public_ip  = "https://${try(module.waf_three[0].f5vm02_mgmt_public_ip, "none")}"
+      f5vm02_id              = try(module.firewall_three[0].f5vm02_id, "none")
+      f5vm02_mgmt_private_ip = try(module.firewall_three[0].f5vm02_mgmt_private_ip, "none")
+      f5vm02_mgmt_public_ip  = "https://${try(module.firewall_three[0].f5vm02_mgmt_public_ip, "none")}"
       f5vm02_ext_private_ip  = try(module.waf_three[0].f5vm02_ext_private_ip, "none")
       #
       f5vm03_id              = try(module.waf_three[0].f5vm03_id, "none")

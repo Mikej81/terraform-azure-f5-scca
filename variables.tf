@@ -27,7 +27,7 @@ variable region {
 variable deploymentType {
   type        = string
   description = "REQUIRED: This determines the type of deployment; one tier versus three tier: one_tier, three_tier"
-  default     = "one_tier"
+  default     = "three_tier"
 }
 variable deployDemoApp {
   type        = string
@@ -135,19 +135,27 @@ variable ilb02ip {
   default     = "10.90.6.10"
 }
 
-
-# Example application private ips, *currently* must be in internal subnet
-variable app01ip { default = "10.90.10.101" }
+variable app01ip {
+  type        = string
+  description = "OPTIONAL: Example Application used by all use-cases to demonstrate functionality of deploymeny, must reside in the application subnet."
+  default     = "10.90.10.101"
+}
 
 # Example IPS private ips
 variable ips01ext { default = "10.90.4.4" }
 variable ips01int { default = "10.90.5.4" }
 
-# winjump, must be in VDMS subnet
-variable winjumpip { default = "10.90.3.98" }
+variable winjumpip {
+  type        = string
+  description = "REQUIRED: Used by all use-cases for RDP/Windows Jumpbox, must reside in VDMS subnet."
+  default     = "10.90.3.98"
+}
 
-# linuxjump, must be in VDMS subnet
-variable linuxjumpip { default = "10.90.3.99" }
+variable linuxjumpip {
+  type        = string
+  description = "REQUIRED: Used by all use-cases for SSH/Linux Jumpbox, must reside in VDMS subnet."
+  default     = "10.90.3.99"
+}
 
 # BIGIP Instance Type, DS5_v2 is a solid baseline for BEST
 variable instanceType { default = "Standard_DS5_v2" }
@@ -197,10 +205,11 @@ variable hosts {
   }
 }
 
-variable dns_server { default = "8.8.8.8" }
-variable ntp_server { default = "time.nist.gov" }
-variable timezone { default = "UTC" }
-variable onboard_log { default = "/var/log/startup-script.log" }
+variable dns_server {
+  type        = string
+  description = "REQUIRED: Default is set to Azure DNS IP."
+  default     = "168.63.129.16"
+}
 
 ## ASM Policy
 variable asm_policy {
@@ -208,6 +217,10 @@ variable asm_policy {
   description = "REQUIRED: ASM Policy.  Examples:  https://github.com/f5devcentral/f5-asm-policy-templates.  Default: OWASP Ready Autotuning"
   default     = "https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml"
 }
+
+variable ntp_server { default = "time.nist.gov" }
+variable timezone { default = "UTC" }
+variable onboard_log { default = "/var/log/startup-script.log" }
 
 # TAGS
 variable tags {

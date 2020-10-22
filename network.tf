@@ -116,3 +116,41 @@ resource azurerm_subnet_route_table_association udr_associate {
   subnet_id      = azurerm_subnet.vdms.id
   route_table_id = azurerm_route_table.vdms_udr.id
 }
+
+# Create WAF UDR
+resource azurerm_route_table waf_udr {
+  count                         = var.deploymentType == "three_tier" ? 1 : 0
+  name                          = "${var.projectPrefix}_waf_user_defined_route_table"
+  resource_group_name           = azurerm_resource_group.main.name
+  location                      = azurerm_resource_group.main.location
+  disable_bgp_route_propagation = false
+}
+
+# Create 3 Tier VDMS Egress Route, ILB FrontEnd IP
+resource azurerm_route waf_to_outbound {
+  count               = var.deploymentType == "three_tier" ? 1 : 0
+  name                = "waf_default_route"
+  resource_group_name = azurerm_resource_group.main.name
+
+  route_table_name       = azurerm_route_table.waf_udr[0].name
+  address_prefix         = var.cidr
+  next_hop_type          = "VirtualAppliance"
+  next_hop_in_ip_address = var.ilb02ip
+}
+
+resource azurerm_route waf_default {
+  count               = var.deploymentType == "three_tier" ? 1 : 0
+  name                = "default"
+  resource_group_name = azurerm_resource_group.main.name
+
+  route_table_name       = azurerm_route_table.waf_udr[0].name
+  address_prefix         = "0.0.0.0/0"
+  next_hop_type          = "VirtualAppliance"
+  next_hop_in_ip_address = var.ilb02ip
+}
+
+resource azurerm_subnet_route_table_association waf_udr_associate {
+  count          = var.deploymentType == "three_tier" ? 1 : 0
+  subnet_id      = azurerm_subnet.waf_external[0].id
+  route_table_id = azurerm_route_table.waf_udr[0].id
+}

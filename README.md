@@ -60,7 +60,7 @@ The BIG-IP VEs have the following features / modules enabled:
 | adminPassword | REQUIRED: Admin Password for all systems | `string` | `"pleaseUseVault123!!"` |
 | location | REQUIRED: Azure Region: usgovvirginia, usgovarizona, etc | `string` | `"usgovvirginia"` |
 | region | Azure Region: US Gov Virginia, US Gov Arizona, etc | `string` | `"USGov Virginia"` |
-| deploymentType | REQUIRED: This determines the type of deployment; one tier versus three tier: one\_tier, three\_tier | `string` | `"one_tier"` |
+| deploymentType | REQUIRED: This determines the type of deployment; one tier versus three tier: one\_tier, three\_tier | `string` | `"three_tier"` |
 | deployDemoApp | OPTIONAL: Deploy Demo Application with Stack. Recommended to show functionality.  Options: deploy, anything else. | `string` | `"deploy"` |
 | sshPublicKey | OPTIONAL: ssh public key for instances | `string` | `""` |
 | sshPublicKeyPath | OPTIONAL: ssh public key path for instances | `string` | `"/mykey.pub"` |
@@ -73,11 +73,11 @@ The BIG-IP VEs have the following features / modules enabled:
 | f5\_t3\_int | Tier 3 BIG-IP Internal IPs.  These must be in the waf internal subnet. | `map(string)` | <pre>{<br>  "f5vm03int": "10.90.7.4",<br>  "f5vm03int_sec": "10.90.7.11",<br>  "f5vm04int": "10.90.7.5",<br>  "f5vm04int_sec": "10.90.7.12"<br>}</pre> |
 | ilb01ip | REQUIRED: Used by One and Three Tier.  Azure internal load balancer ip, this is used as egress, must be in internal subnet | `string` | `"10.90.2.10"` |
 | ilb02ip | REQUIRED: Used by Three Tier only.  Azure waf external load balancer ip, this is used as egress, must be in waf\_ext subnet | `string` | `"10.90.6.10"` |
-| app01ip | Example application private ips, *currently* must be in internal subnet | `string` | `"10.90.10.101"` |
+| app01ip | OPTIONAL: Example Application used by all use-cases to demonstrate functionality of deploymeny, must reside in the application subnet. | `string` | `"10.90.10.101"` |
 | ips01ext | Example IPS private ips | `string` | `"10.90.4.4"` |
 | ips01int | n/a | `string` | `"10.90.5.4"` |
-| winjumpip | winjump, must be in VDMS subnet | `string` | `"10.90.3.98"` |
-| linuxjumpip | linuxjump, must be in VDMS subnet | `string` | `"10.90.3.99"` |
+| winjumpip | REQUIRED: Used by all use-cases for RDP/Windows Jumpbox, must reside in VDMS subnet. | `string` | `"10.90.3.98"` |
+| linuxjumpip | REQUIRED: Used by all use-cases for SSH/Linux Jumpbox, must reside in VDMS subnet. | `string` | `"10.90.3.99"` |
 | instanceType | BIGIP Instance Type, DS5\_v2 is a solid baseline for BEST | `string` | `"Standard_DS5_v2"` |
 | jumpinstanceType | Be careful which instance type selected, jump boxes currently use Premium\_LRS managed disks | `string` | `"Standard_B2s"` |
 | appInstanceType | Demo Application Instance Size | `string` | `"Standard_DS3_v2"` |
@@ -86,11 +86,11 @@ The BIG-IP VEs have the following features / modules enabled:
 | bigip\_version | REQUIRED: BIG-IP Version, 14.1.2 for Compliance.  Options: 12.1.502000, 13.1.304000, 14.1.206000, 15.0.104000, latest.  Note: verify available versions before using as images can change. | `string` | `"14.1.202000"` |
 | licenses | BIGIP Setup Licenses are only needed when using BYOL images | `map(string)` | <pre>{<br>  "license1": "",<br>  "license2": "",<br>  "license3": "",<br>  "license4": ""<br>}</pre> |
 | hosts | n/a | `map(string)` | <pre>{<br>  "host1": "f5vm01",<br>  "host2": "f5vm02",<br>  "host3": "f5vm03",<br>  "host4": "f5vm04"<br>}</pre> |
-| dns\_server | n/a | `string` | `"8.8.8.8"` |
+| dns\_server | REQUIRED: Default is set to Azure DNS IP. | `string` | `"168.63.129.16"` |
+| asm\_policy | REQUIRED: ASM Policy.  Examples:  https://github.com/f5devcentral/f5-asm-policy-templates.  Default: OWASP Ready Autotuning | `string` | `"https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml"` |
 | ntp\_server | n/a | `string` | `"time.nist.gov"` |
 | timezone | n/a | `string` | `"UTC"` |
 | onboard\_log | n/a | `string` | `"/var/log/startup-script.log"` |
-| asm\_policy | REQUIRED: ASM Policy.  Examples:  https://github.com/f5devcentral/f5-asm-policy-templates.  Default: OWASP Ready Autotuning | `string` | `"https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml"` |
 | tags | Environment tags for objects | `map(string)` | <pre>{<br>  "application": "f5app",<br>  "costcenter": "f5costcenter",<br>  "environment": "f5env",<br>  "group": "f5group",<br>  "owner": "f5owner",<br>  "purpose": "public"<br>}</pre> |
 
 ## Outputs

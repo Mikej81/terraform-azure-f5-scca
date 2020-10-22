@@ -59,7 +59,7 @@ resource azurerm_virtual_machine ips01-vm {
   vm_size                      = var.instanceType
 
   storage_os_disk {
-    name              = "ipsOsDisk"
+    name              = "${var.prefix}-ipsOsDisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Premium_LRS"
