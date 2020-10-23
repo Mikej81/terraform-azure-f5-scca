@@ -207,7 +207,7 @@ variable hosts {
 
 variable dns_server {
   type        = string
-  description = "REQUIRED: Default is set to Azure DNS IP."
+  description = "REQUIRED: Default is set to Azure DNS."
   default     = "168.63.129.16"
 }
 

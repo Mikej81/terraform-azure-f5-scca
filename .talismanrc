@@ -32,4 +32,4 @@ fileignoreconfig:
 - filename: analytics/analytics.tf
   checksum: 2e58dea05f3e4c73847b8a5d4a9e4d09f8070198f28a8694c861c68876763171
 - filename: jumpboxes/windows.tf
-  checksum: ba5d4598e78e0dc0ac5402f01445965f6cb6d6c5a629007a29abc64f386a46be
+  checksum: 5e62dc5baf743d52f22be67a66e4bcf045251461a81dc1d5886cfbe5e189277d

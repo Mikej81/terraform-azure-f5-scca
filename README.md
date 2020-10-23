@@ -86,7 +86,7 @@ The BIG-IP VEs have the following features / modules enabled:
 | bigip\_version | REQUIRED: BIG-IP Version, 14.1.2 for Compliance.  Options: 12.1.502000, 13.1.304000, 14.1.206000, 15.0.104000, latest.  Note: verify available versions before using as images can change. | `string` | `"14.1.202000"` |
 | licenses | BIGIP Setup Licenses are only needed when using BYOL images | `map(string)` | <pre>{<br>  "license1": "",<br>  "license2": "",<br>  "license3": "",<br>  "license4": ""<br>}</pre> |
 | hosts | n/a | `map(string)` | <pre>{<br>  "host1": "f5vm01",<br>  "host2": "f5vm02",<br>  "host3": "f5vm03",<br>  "host4": "f5vm04"<br>}</pre> |
-| dns\_server | REQUIRED: Default is set to Azure DNS IP. | `string` | `"168.63.129.16"` |
+| dns\_server | REQUIRED: Default is set to Azure DNS. | `string` | `"168.63.129.16"` |
 | asm\_policy | REQUIRED: ASM Policy.  Examples:  https://github.com/f5devcentral/f5-asm-policy-templates.  Default: OWASP Ready Autotuning | `string` | `"https://raw.githubusercontent.com/f5devcentral/f5-asm-policy-templates/master/owasp_ready_template/owasp-auto-tune-v1.1.xml"` |
 | ntp\_server | n/a | `string` | `"time.nist.gov"` |
 | timezone | n/a | `string` | `"UTC"` |

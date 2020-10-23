@@ -342,7 +342,7 @@ data template_file vm_onboard {
 resource random_uuid as3_uuid {}
 
 data http onboard {
-  url = "https://raw.githubusercontent.com/Mikej81/f5-bigip-hardening-DO/master/dist/terraform/latest/${var.licenses["license3"] != "" ? "byol" : "payg"}_cluster.json"
+  url = "https://raw.githubusercontent.com/Mikej81/f5-bigip-hardening-DO/master/dist/terraform/latest/${var.licenses["license3"] != "" ? "byol" : "payg"}_cluster_waf_tier.json"
 }
 
 data template_file vm03_do_json {
