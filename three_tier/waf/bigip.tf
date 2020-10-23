@@ -211,19 +211,6 @@ resource azurerm_network_interface_security_group_association bigip04-int-nsg {
   network_security_group_id = var.securityGroup.id
 }
 
-# Associate the Network Interface to the BackendPool
-# resource azurerm_network_interface_backend_address_pool_association bpool_assc_vm03 {
-#   network_interface_id    = azurerm_network_interface.vm03-ext-nic.id
-#   ip_configuration_name   = "secondary"
-#   backend_address_pool_id = var.backendPool.id
-# }
-
-# resource azurerm_network_interface_backend_address_pool_association bpool_assc_vm04 {
-#   network_interface_id    = azurerm_network_interface.vm04-ext-nic.id
-#   ip_configuration_name   = "secondary"
-#   backend_address_pool_id = var.backendPool.id
-# }
-
 # Create F5 BIGIP VMs
 resource azurerm_virtual_machine f5vm03 {
   name                         = "${var.prefix}-f5vm03"
@@ -415,10 +402,10 @@ data template_file as3_json {
     ssh_pool_addresses  = var.linuxjumpip
     app_pool_addresses  = var.app01ip
     log_destination     = var.app01ip
-    mgmtVipAddress      = var.f5_t1_ext["f5vm01ext_sec"]
-    mgmtVipAddress2     = var.f5_t1_ext["f5vm02ext_sec"]
-    transitVipAddress   = var.f5_t1_int["f5vm01int_sec"]
-    transitVipAddress2  = var.f5_t1_int["f5vm02int_sec"]
+    mgmtVipAddress      = var.f5_t3_ext["f5vm03ext_sec"]
+    mgmtVipAddress2     = var.f5_t3_ext["f5vm04ext_sec"]
+    transitVipAddress   = var.f5_t3_int["f5vm03int_sec"]
+    transitVipAddress2  = var.f5_t3_int["f5vm04int_sec"]
   }
 }
 

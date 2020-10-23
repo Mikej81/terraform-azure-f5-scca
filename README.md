@@ -71,11 +71,13 @@ The BIG-IP VEs have the following features / modules enabled:
 | f5\_t1\_int | Tier 1 BIG-IP Internal IPs.  These must be in the internal subnet. | `map(string)` | <pre>{<br>  "f5vm01int": "10.90.2.4",<br>  "f5vm01int_sec": "10.90.2.11",<br>  "f5vm02int": "10.90.2.5",<br>  "f5vm02int_sec": "10.90.2.12"<br>}</pre> |
 | f5\_t3\_ext | Tier 3 BIG-IP External IPs.  These must be in the waf external subnet. | `map(string)` | <pre>{<br>  "f5vm03ext": "10.90.6.4",<br>  "f5vm03ext_sec": "10.90.6.11",<br>  "f5vm04ext": "10.90.6.5",<br>  "f5vm04ext_sec": "10.90.6.12"<br>}</pre> |
 | f5\_t3\_int | Tier 3 BIG-IP Internal IPs.  These must be in the waf internal subnet. | `map(string)` | <pre>{<br>  "f5vm03int": "10.90.7.4",<br>  "f5vm03int_sec": "10.90.7.11",<br>  "f5vm04int": "10.90.7.5",<br>  "f5vm04int_sec": "10.90.7.12"<br>}</pre> |
-| ilb01ip | REQUIRED: Used by One and Three Tier.  Azure internal load balancer ip, this is used as egress, must be in internal subnet | `string` | `"10.90.2.10"` |
-| ilb02ip | REQUIRED: Used by Three Tier only.  Azure waf external load balancer ip, this is used as egress, must be in waf\_ext subnet | `string` | `"10.90.6.10"` |
+| ilb01ip | REQUIRED: Used by One and Three Tier.  Azure internal load balancer ip, this is used as egress, must be in internal subnet. | `string` | `"10.90.2.10"` |
+| ilb02ip | REQUIRED: Used by Three Tier only.  Azure waf external load balancer ip, this is used as egress, must be in waf\_ext subnet. | `string` | `"10.90.6.10"` |
+| ilb03ip | REQUIRED: Used by Three Tier only.  Azure waf external load balancer ip, this is used as ingress, must be in waf\_ext subnet. | `string` | `"10.90.6.13"` |
 | app01ip | OPTIONAL: Example Application used by all use-cases to demonstrate functionality of deploymeny, must reside in the application subnet. | `string` | `"10.90.10.101"` |
 | ips01ext | Example IPS private ips | `string` | `"10.90.4.4"` |
 | ips01int | n/a | `string` | `"10.90.5.4"` |
+| ips01mgmt | n/a | `string` | `"10.90.0.8"` |
 | winjumpip | REQUIRED: Used by all use-cases for RDP/Windows Jumpbox, must reside in VDMS subnet. | `string` | `"10.90.3.98"` |
 | linuxjumpip | REQUIRED: Used by all use-cases for SSH/Linux Jumpbox, must reside in VDMS subnet. | `string` | `"10.90.3.99"` |
 | instanceType | BIGIP Instance Type, DS5\_v2 is a solid baseline for BEST | `string` | `"Standard_DS5_v2"` |
@@ -97,9 +99,8 @@ The BIG-IP VEs have the following features / modules enabled:
 
 | Name | Description |
 |------|-------------|
-| sg\_id | Network Security Group ID |
-| sg\_name | Network Security Group Name |
-| ALB\_app1\_pip | Public IP for applications.  Https for example app, RDP for Windows Jumpbox, SSH for Linux Jumpbox |
+| DemoApplication\_443 | Public IP for applications.  Https for example app, RDP for Windows Jumpbox, SSH for Linux Jumpbox |
+| rSyslogdHttp\_8080 | Public IP for applications.  Https for example app, RDP for Windows Jumpbox, SSH for Linux Jumpbox |
 | tier\_one | One Tier Outputs:  VM IDs, VM Mgmt IPs, VM External Private IPs |
 | tier\_three | Three Tier Outputs:  VM IDs, VM Mgmt IPs, VM External Private IPs |
 

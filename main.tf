@@ -294,6 +294,7 @@ module firewall_three {
   licenses         = var.licenses
   ilb01ip          = var.ilb01ip
   ilb02ip          = var.ilb02ip
+  ilb03ip          = var.ilb03ip
   asm_policy       = var.asm_policy
   winjumpip        = var.winjumpip
   linuxjumpip      = var.linuxjumpip
@@ -309,12 +310,16 @@ module ips_three {
   prefix               = var.projectPrefix
   location             = var.location
   region               = var.region
+  subnetMgmt           = azurerm_subnet.mgmt
+  subnetInspectExt     = azurerm_subnet.inspect_external[0]
+  subnetInspectInt     = azurerm_subnet.inspect_internal[0]
   resourceGroup        = azurerm_resource_group.main
   virtual_network_name = azurerm_virtual_network.main.name
   securityGroup        = azurerm_network_security_group.main
   instanceType         = var.instanceType
   ips01ext             = var.ips01ext
   ips01int             = var.ips01int
+  ips01mgmt            = var.ips01mgmt
   adminUserName        = var.adminUserName
   adminPassword        = var.adminPassword
   subnets              = var.subnets

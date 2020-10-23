@@ -21,8 +21,10 @@ fileignoreconfig:
   checksum: 72c08600ff18b53663d554b914f5bd89b555a38e0ddfb19fe18add2ae9d29b62
 - filename: three_tier/firewall/bigip.tf
   checksum: 0aa935732565f43cb1574f43a0c46867176ffb648a7d539824bcd4c463864131
+- filename: three_tier/ips/ips.sh
+  checksum: c7a73589d16bfabab9026abe55bae6e180c3e284a8f206dee3dc42ac9781d14a
 - filename: three_tier/ips/ips.tf
-  checksum: 3841cf9c56d495bd16115596ab48ef37a4e49850d53898e693ffd4aefcbdf4cc
+  checksum: b2dee33e7ec3395ce5e56953e60471763d3e29f9d5a124dad27e2e440710d8b6
 - filename: three_tier/waf/bigip.tf
   checksum: f66520637c23a0714c28c8791b6042c4d1efd8802a0196ece220b5dd1a19b318
 - filename: admin.auto.tfvars.example

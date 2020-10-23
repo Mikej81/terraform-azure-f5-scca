@@ -6,7 +6,7 @@ resource azurerm_lb internalLoadBalancer {
   sku                 = "Standard"
 
   frontend_ip_configuration {
-    name                          = "internal_LoadBalancerFrontEnd"
+    name                          = "subnetInternal_LoadBalancerFrontEnd"
     subnet_id                     = var.subnetInternal.id
     private_ip_address            = var.ilb01ip
     private_ip_address_allocation = "Static"
@@ -14,17 +14,32 @@ resource azurerm_lb internalLoadBalancer {
   }
 
   frontend_ip_configuration {
-    name                          = "waf_ext_LoadBalancerFrontEnd"
+    name                          = "waf_ext_LoadBalancerFrontEnd_Egress"
     subnet_id                     = var.subnetWafExt[0].id
     private_ip_address            = var.ilb02ip
     private_ip_address_allocation = "Static"
     private_ip_address_version    = "IPv4"
   }
+
+  frontend_ip_configuration {
+    name                          = "waf_ext_LoadBalancerFrontEnd_Ingress"
+    subnet_id                     = var.subnetWafExt[0].id
+    private_ip_address            = var.ilb03ip
+    private_ip_address_allocation = "Static"
+    private_ip_address_version    = "IPv4"
+  }
 }
 
-# Create the LB Pool for Internal Egree
+# Create the LB Pool for Internal Egress
 resource azurerm_lb_backend_address_pool internal_backend_pool {
-  name                = "InternalBackendPool1"
+  name                = "egress_pool"
+  resource_group_name = var.resourceGroup.name
+  loadbalancer_id     = azurerm_lb.internalLoadBalancer.id
+}
+
+# Create the LB Pool for WAF Ingress
+resource azurerm_lb_backend_address_pool waf_backend_pool {
+  name                = "waf_ingress"
   resource_group_name = var.resourceGroup.name
   loadbalancer_id     = azurerm_lb.internalLoadBalancer.id
 }
@@ -53,14 +68,14 @@ resource azurerm_lb_probe internal_tcp_probe {
 }
 
 resource azurerm_lb_rule internal_all_rule {
-  name                           = "all-protocol-ilb"
+  name                           = "internal-all-protocol-ilb-egress"
   resource_group_name            = var.resourceGroup.name
   loadbalancer_id                = azurerm_lb.internalLoadBalancer.id
   protocol                       = "all"
   frontend_port                  = 0
   backend_port                   = 0
   load_distribution              = "SourceIPProtocol"
-  frontend_ip_configuration_name = "internal_LoadBalancerFrontEnd"
+  frontend_ip_configuration_name = "subnetInternal_LoadBalancerFrontEnd"
   enable_floating_ip             = true
   backend_address_pool_id        = azurerm_lb_backend_address_pool.internal_backend_pool.id
   idle_timeout_in_minutes        = 5
@@ -69,14 +84,30 @@ resource azurerm_lb_rule internal_all_rule {
 }
 
 resource azurerm_lb_rule waf_ext_all_rule {
-  name                           = "all-protocol-ilb-waf-ext"
+  name                           = "waf-ext-all-protocol-ilb-egress"
   resource_group_name            = var.resourceGroup.name
   loadbalancer_id                = azurerm_lb.internalLoadBalancer.id
   protocol                       = "all"
   frontend_port                  = 0
   backend_port                   = 0
   load_distribution              = "SourceIPProtocol"
-  frontend_ip_configuration_name = "waf_ext_LoadBalancerFrontEnd"
+  frontend_ip_configuration_name = "waf_ext_LoadBalancerFrontEnd_Egress"
+  enable_floating_ip             = true
+  backend_address_pool_id        = azurerm_lb_backend_address_pool.internal_backend_pool.id
+  idle_timeout_in_minutes        = 5
+  probe_id                       = azurerm_lb_probe.internal_tcp_probe.id
+  depends_on                     = [azurerm_lb_probe.internal_tcp_probe]
+}
+
+resource azurerm_lb_rule waf_ext_ingress_rule {
+  name                           = "waf-ext-all-protocol-ilb-ingress"
+  resource_group_name            = var.resourceGroup.name
+  loadbalancer_id                = azurerm_lb.internalLoadBalancer.id
+  protocol                       = "all"
+  frontend_port                  = 0
+  backend_port                   = 0
+  load_distribution              = "SourceIPProtocol"
+  frontend_ip_configuration_name = "waf_ext_LoadBalancerFrontEnd_Ingress"
   enable_floating_ip             = true
   backend_address_pool_id        = azurerm_lb_backend_address_pool.internal_backend_pool.id
   idle_timeout_in_minutes        = 5

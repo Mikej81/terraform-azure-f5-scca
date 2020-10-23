@@ -51,6 +51,7 @@ variable cidr {}
 
 variable ilb01ip {}
 variable ilb02ip {}
+variable ilb03ip {}
 
 # BIGIP Setup
 variable licenses {

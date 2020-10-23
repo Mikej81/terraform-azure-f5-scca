@@ -122,17 +122,22 @@ variable f5_t3_int {
   }
 }
 
-#
 variable ilb01ip {
   type        = string
-  description = "REQUIRED: Used by One and Three Tier.  Azure internal load balancer ip, this is used as egress, must be in internal subnet"
+  description = "REQUIRED: Used by One and Three Tier.  Azure internal load balancer ip, this is used as egress, must be in internal subnet."
   default     = "10.90.2.10"
 }
 
 variable ilb02ip {
   type        = string
-  description = "REQUIRED: Used by Three Tier only.  Azure waf external load balancer ip, this is used as egress, must be in waf_ext subnet"
+  description = "REQUIRED: Used by Three Tier only.  Azure waf external load balancer ip, this is used as egress, must be in waf_ext subnet."
   default     = "10.90.6.10"
+}
+
+variable ilb03ip {
+  type        = string
+  description = "REQUIRED: Used by Three Tier only.  Azure waf external load balancer ip, this is used as ingress, must be in waf_ext subnet."
+  default     = "10.90.6.13"
 }
 
 variable app01ip {
@@ -144,6 +149,7 @@ variable app01ip {
 # Example IPS private ips
 variable ips01ext { default = "10.90.4.4" }
 variable ips01int { default = "10.90.5.4" }
+variable ips01mgmt { default = "10.90.0.8" }
 
 variable winjumpip {
   type        = string
