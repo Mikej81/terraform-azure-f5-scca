@@ -251,7 +251,18 @@ resource azurerm_network_interface_backend_address_pool_association primary_pool
   backend_address_pool_id = var.primaryPool.id
 }
 
+# attach interfaces to backend pool
+resource azurerm_network_interface_backend_address_pool_association int_bpool_assc_vm01 {
+  network_interface_id    = azurerm_network_interface.vm01-int-nic.id
+  ip_configuration_name   = "secondary"
+  backend_address_pool_id = var.internalBackPool.id
+}
 
+resource azurerm_network_interface_backend_address_pool_association int_bpool_assc_vm02 {
+  network_interface_id    = azurerm_network_interface.vm02-int-nic.id
+  ip_configuration_name   = "secondary"
+  backend_address_pool_id = var.internalBackPool.id
+}
 
 # Create F5 BIGIP VMs
 resource azurerm_virtual_machine f5vm01 {

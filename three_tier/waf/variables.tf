@@ -26,6 +26,10 @@ variable backendPool {
 }
 variable primaryPool {}
 variable managementPool {}
+variable wafEgressPool {}
+variable wafIngressPool {}
+
+variable ilb02ip {}
 
 # bigip networks
 variable f5_mgmt {}

@@ -25,6 +25,7 @@ variable app01ip {}
 variable backendPool {}
 variable managementPool {}
 variable primaryPool {}
+variable internalBackPool {}
 
 variable f5_mgmt {}
 variable f5_t1_ext {}

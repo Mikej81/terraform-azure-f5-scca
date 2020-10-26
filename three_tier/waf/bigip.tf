@@ -47,24 +47,6 @@ resource azurerm_network_interface vm03-mgmt-nic {
   tags = var.tags
 }
 
-# Associate the Network Interface to the ManagementPool
-resource azurerm_network_interface_backend_address_pool_association mpool_assc_vm01 {
-  network_interface_id    = azurerm_network_interface.vm03-mgmt-nic.id
-  ip_configuration_name   = "primary"
-  backend_address_pool_id = var.managementPool.id
-}
-# Associate the Network Interface to the ManagementPool
-resource azurerm_network_interface_backend_address_pool_association mpool_assc_vm02 {
-  network_interface_id    = azurerm_network_interface.vm04-mgmt-nic.id
-  ip_configuration_name   = "primary"
-  backend_address_pool_id = var.managementPool.id
-}
-
-resource azurerm_network_interface_security_group_association bigip03-mgmt-nsg {
-  network_interface_id      = azurerm_network_interface.vm03-mgmt-nic.id
-  network_security_group_id = var.securityGroup.id
-}
-
 resource azurerm_network_interface vm04-mgmt-nic {
   name                = "${var.prefix}-vm04-mgmt-nic"
   location            = var.resourceGroup.location
@@ -81,9 +63,27 @@ resource azurerm_network_interface vm04-mgmt-nic {
   tags = var.tags
 }
 
+resource azurerm_network_interface_security_group_association bigip03-mgmt-nsg {
+  network_interface_id      = azurerm_network_interface.vm03-mgmt-nic.id
+  network_security_group_id = var.securityGroup.id
+}
+
 resource azurerm_network_interface_security_group_association bigip04-mgmt-nsg {
   network_interface_id      = azurerm_network_interface.vm04-mgmt-nic.id
   network_security_group_id = var.securityGroup.id
+}
+
+# Associate the Network Interface to the ManagementPool
+resource azurerm_network_interface_backend_address_pool_association mpool_assc_vm01 {
+  network_interface_id    = azurerm_network_interface.vm03-mgmt-nic.id
+  ip_configuration_name   = "primary"
+  backend_address_pool_id = var.managementPool.id
+}
+# Associate the Network Interface to the ManagementPool
+resource azurerm_network_interface_backend_address_pool_association mpool_assc_vm02 {
+  network_interface_id    = azurerm_network_interface.vm04-mgmt-nic.id
+  ip_configuration_name   = "primary"
+  backend_address_pool_id = var.managementPool.id
 }
 
 # Create the second network interface card for External
@@ -163,6 +163,19 @@ resource azurerm_network_interface vm04-ext-nic {
 resource azurerm_network_interface_security_group_association bigip04-ext-nsg {
   network_interface_id      = azurerm_network_interface.vm04-ext-nic.id
   network_security_group_id = var.securityGroup.id
+}
+
+# Associate the External Network Interfaces to the Waf Backend Pools
+resource azurerm_network_interface_backend_address_pool_association bpool_assc_vm01 {
+  network_interface_id    = azurerm_network_interface.vm03-ext-nic.id
+  ip_configuration_name   = "secondary"
+  backend_address_pool_id = var.wafIngressPool.id
+}
+
+resource azurerm_network_interface_backend_address_pool_association bpool_assc_vm02 {
+  network_interface_id    = azurerm_network_interface.vm04-ext-nic.id
+  ip_configuration_name   = "secondary"
+  backend_address_pool_id = var.wafIngressPool.id
 }
 
 # Create the third network interface card for Internal

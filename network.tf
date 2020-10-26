@@ -141,7 +141,6 @@ resource azurerm_route_table ips_udr {
   resource_group_name           = azurerm_resource_group.main.name
   location                      = var.location
   disable_bgp_route_propagation = false
-
 }
 
 resource azurerm_route internaltoips {
@@ -156,6 +155,7 @@ resource azurerm_route internaltoips {
 }
 
 resource azurerm_subnet_route_table_association ips_associate {
+  count          = var.deploymentType == "three_tier" ? 1 : 0
   subnet_id      = azurerm_subnet.internal.id
   route_table_id = azurerm_route_table.ips_udr[0].id
 }
@@ -170,20 +170,20 @@ resource azurerm_route_table waf_udr {
 }
 
 # Create 3 Tier VDMS Egress Route, ILB FrontEnd IP
-resource azurerm_route waf_to_outbound {
-  count               = var.deploymentType == "three_tier" ? 1 : 0
-  name                = "waf_default_route"
-  resource_group_name = azurerm_resource_group.main.name
+# resource azurerm_route waf_to_outbound {
+#   count               = var.deploymentType == "three_tier" ? 1 : 0
+#   name                = "waf_default_route"
+#   resource_group_name = azurerm_resource_group.main.name
 
-  route_table_name       = azurerm_route_table.waf_udr[0].name
-  address_prefix         = var.cidr
-  next_hop_type          = "VirtualAppliance"
-  next_hop_in_ip_address = var.ilb02ip
-}
+#   route_table_name       = azurerm_route_table.waf_udr[0].name
+#   address_prefix         = var.cidr
+#   next_hop_type          = "VirtualAppliance"
+#   next_hop_in_ip_address = var.ilb02ip
+# }
 
 resource azurerm_route waf_default {
   count               = var.deploymentType == "three_tier" ? 1 : 0
-  name                = "default"
+  name                = "Default"
   resource_group_name = azurerm_resource_group.main.name
 
   route_table_name       = azurerm_route_table.waf_udr[0].name
@@ -192,6 +192,7 @@ resource azurerm_route waf_default {
   next_hop_in_ip_address = var.ilb02ip
 }
 
+#Testing with and without Routes for DSC
 resource azurerm_subnet_route_table_association waf_udr_associate {
   count          = var.deploymentType == "three_tier" ? 1 : 0
   subnet_id      = azurerm_subnet.waf_external[0].id
