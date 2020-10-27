@@ -72,10 +72,10 @@ checks=0
 while [[ "$checks" -lt 120 ]]; do
     tmsh -a show sys mcp-state field-fmt | grep -q running
    if [ $? == 0 ]; then
-       echo "mcpd ready"
+       echo "[INFO: mcpd ready]"
        break
    fi
-   echo "mcpd not ready yet"
+   echo "[WARN: mcpd not ready yet]"
    let checks=checks+1
    sleep 10
 done
@@ -85,10 +85,10 @@ checks=0
 while [[ "$checks" -lt 30 ]]; do
     tmsh -a show sys ready | grep -q no
    if [ $? == 1 ]; then
-       echo "system ready"
+       echo "[INFO: system ready]"
        break
    fi
-   echo "system not ready yet count: $checks"
+   echo "[WARN: system not ready yet count: $checks]"
    tmsh -a show sys ready | grep no
    let checks=checks+1
    sleep 10
@@ -100,13 +100,13 @@ while true
 do
   STATUS=$(curl -s -k -I example.com | grep HTTP)
   if [[ $STATUS == *"200"* ]]; then
-    echo "internet access check passed"
+    echo "[INFO: internet access check passed]"
     break
   elif [ $count -le 6 ]; then
     echo "Status code: $STATUS  Not done yet..."
     count=$[$count+1]
   else
-    echo "GIVE UP..."
+    echo "[WARN: GIVE UP...]"
     break
   fi
   sleep 10
@@ -187,23 +187,23 @@ do
         iappApiStatus=$(curl -s -i -u "$CREDS"  $local_host$rpmInstallUrl | grep HTTP | awk '{print $2}')
         case $iappApiStatus in
             404)
-                echo "api not ready status: $iappApiStatus"
+                echo "[WARN: api not ready status: $iappApiStatus]"
                 sleep 2
                 ;;
             200)
-                echo "api ready starting install task $filename"
+                echo "[INFO: api ready starting install task $filename]"
                 install=$(restcurl -s -u "$CREDS" -X POST -d $postBody $rpmInstallUrl | jq -r .id )
                 break
                 ;;
               *)
-                echo "api error other status: $iappApiStatus"
+                echo "[WARN: api error other status: $iappApiStatus]"
                 debug=$(restcurl -u "$CREDS" $rpmInstallUrl)
                 #echo "ipp install debug: $debug"
                 ;;
         esac
     done
   else
-    echo " file: $filename not found"
+    echo "[WARN: file: $filename not found]"
   fi
   while true
   do
@@ -245,9 +245,9 @@ function getDoStatus() {
         echo $doStatus
     elif [ "$doStatusType" == "array" ]; then
         doStatus=$(restcurl -u "$CREDS" -X GET $doTaskUrl/$task | jq -r .[].result.status)
-        echo $doStatus
+        echo "[INFO: $doStatus]"
     else
-        echo "unknown type:$doStatusType"
+        echo "[WARN: unknown type:$doStatusType]"
     fi
 }
 function checkDO() {
@@ -265,23 +265,23 @@ function checkDO() {
     elif [ "$doStatusType" == "array" ]; then
         doStatus=$(restcurl -u "$CREDS" -X GET $doCheckUrl | jq -r .[].result.code)
     else
-        echo "unknown type:$doStatusType"
+        echo "[WARN: unknown type:$doStatusType]"
     fi
     #echo "status $doStatus"
     if [[ $doStatus == "200" ]]; then
         #version=$(restcurl -u "$CREDS" -X GET $doCheckUrl | jq -r .version)
         version=$(restcurl -u "$CREDS" -X GET $doCheckUrl | jq -r .[].version)
-        echo "Declarative Onboarding $version online "
+        echo "[INFO: Declarative Onboarding $version online]"
         break
     elif [[ $doStatus == "404" ]]; then
         echo "DO Status: $doStatus"
         bigstart restart restnoded
-        sleep 60
+        sleep 30
         bigstart status restnoded | grep running
         status=$?
         echo "restnoded:$status"
     else
-        echo "DO Status $doStatus"
+        echo "[WARN: DO Status $doStatus]"
         count=$[$count+1]
     fi
     sleep 10
@@ -307,7 +307,7 @@ function checkAS3() {
     elif [[ $as3Status == "404" ]]; then
         echo "AS3 Status $as3Status"
         bigstart restart restnoded
-        sleep 60
+        sleep 30
         bigstart status restnoded | grep running
         status=$?
         echo "restnoded:$status"
@@ -438,7 +438,7 @@ while [ $count -le 4 ]
                 # wait for active-online-state
                 waitMcpd
                 if [[ "$taskCount" -le 5 ]]; then
-                    sleep 120
+                    sleep 60
                 fi
                 waitActive
                 #sleep 120
@@ -636,24 +636,13 @@ function runAS3 () {
         done
     done
 }
-#
-# create logging profiles
-# network profile
-#echo  -e 'create cli transaction;
-#create security log profile local_afm_log ip-intelligence { log-publisher local-db-publisher } network replace-all-with { local_afm_log { filter { log-acl-match-accept enabled log-acl-match-drop enabled log-acl-match-reject enabled log-geo-always enabled log-ip-errors enabled log-tcp-errors enabled log-tcp-events enabled log-translation-fields enabled } publisher local-db-publisher } }
-#submit cli transaction' | tmsh -q
-#
-# asm profile
-#echo  -e 'create cli transaction;
-#create security log profile local_sec_log application replace-all-with { local_sec_log { filter replace-all-with { log-challenge-failure-requests { values replace-all-with { enabled } } request-type { values replace-all-with { all } } } response-logging illegal } } bot-defense replace-all-with { local_sec_log { filter { log-alarm enabled log-block enabled log-browser enabled log-browser-verification-action enabled log-captcha enabled log-challenge-failure-request enabled log-device-id-collection-request enabled log-honey-pot-page enabled log-malicious-bot enabled log-mobile-application enabled log-none enabled log-rate-limit enabled log-redirect-to-pool enabled log-suspicious-browser enabled log-tcp-reset enabled log-trusted-bot enabled log-unknown enabled log-untrusted-bot enabled } local-publisher /Common/local-db-publisher } };
-#submit cli transaction' | tmsh -q
-# end asm profile
+
 # modify as3
 #sdToken=$(echo "$token" | base64)
 sed -i "s/-external-virtual-address-/$externalVip/g" /config/as3.json
 #sed -i "s/-sd-sa-token-b64-/$token/g" /config/as3.json
-
 # end modify as3
+
 # metadata route
 echo  -e 'create cli transaction;
 modify sys db config.allow.rfc3927 value enable;

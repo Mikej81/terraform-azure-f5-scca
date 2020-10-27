@@ -22,6 +22,14 @@ resource azurerm_public_ip f5vmpip02 {
   }
 }
 
+# Obtain Gateway IP for each Subnet
+locals {
+  depends_on = [var.subnetMgmt.id, var.subnetExternal.id]
+  mgmt_gw    = cidrhost(var.subnetMgmt.address_prefix, 1)
+  ext_gw     = cidrhost(var.subnetExternal.address_prefix, 1)
+  int_gw     = cidrhost(var.subnetInternal.address_prefix, 1)
+}
+
 # Create the first network interface card for Management
 resource azurerm_network_interface vm01-mgmt-nic {
   name                = "${var.prefix}-vm01-mgmt-nic"
@@ -243,12 +251,17 @@ resource azurerm_network_interface_backend_address_pool_association primary_pool
   backend_address_pool_id = var.primaryPool.id
 }
 
-# Obtain Gateway IP for each Subnet
-locals {
-  depends_on = [var.subnetMgmt.id, var.subnetExternal.id]
-  mgmt_gw    = cidrhost(var.subnetMgmt.address_prefix, 1)
-  ext_gw     = cidrhost(var.subnetExternal.address_prefix, 1)
-  int_gw     = cidrhost(var.subnetInternal.address_prefix, 1)
+# attach interfaces to backend pool
+resource azurerm_network_interface_backend_address_pool_association int_bpool_assc_vm01 {
+  network_interface_id    = azurerm_network_interface.vm01-int-nic.id
+  ip_configuration_name   = "secondary"
+  backend_address_pool_id = var.internalBackPool.id
+}
+
+resource azurerm_network_interface_backend_address_pool_association int_bpool_assc_vm02 {
+  network_interface_id    = azurerm_network_interface.vm02-int-nic.id
+  ip_configuration_name   = "secondary"
+  backend_address_pool_id = var.internalBackPool.id
 }
 
 # Create F5 BIGIP VMs
@@ -365,8 +378,6 @@ data template_file vm_onboard {
   }
 }
 
-# template ATC json
-
 # as3 uuid generation
 resource random_uuid as3_uuid {}
 
@@ -400,6 +411,7 @@ data template_file vm01_do_json {
     bigip_regKey    = var.licenses["license1"] != "" ? var.licenses["license1"] : ""
   }
 }
+
 data template_file vm02_do_json {
   template = data.http.onboard.body
   vars = {
@@ -438,16 +450,19 @@ data template_file as3_json {
     baseline_waf_policy = var.asm_policy
     exampleVipAddress   = var.f5_t1_ext["f5vm01ext"]
     exampleVipSubnet    = var.subnets["external"]
+    ips_pool_addresses  = var.f5_t3_ext["f5vm03ext_sec"]
     rdp_pool_addresses  = var.winjumpip
     ssh_pool_addresses  = var.linuxjumpip
-    app_pool_addresses  = var.app01ip
-    ips_pool_addresses  = var.app01ip
-    log_destination     = var.app01ip
-    example_vs_address  = var.subnets["external"]
-    mgmtVipAddress      = var.f5_t1_ext["f5vm01ext_sec"]
-    mgmtVipAddress2     = var.f5_t1_ext["f5vm02ext_sec"]
-    transitVipAddress   = var.f5_t1_int["f5vm01int_sec"]
-    transitVipAddress2  = var.f5_t1_int["f5vm02int_sec"]
+    app_pool_addresses  = var.f5_t3_ext["f5vm03ext_sec"]
+    # Need to point to WAS Tier / IPS
+    #app_pool_addresses  = var.app01ip
+    #ips_pool_addresses  = var.app01ip
+    log_destination    = var.app01ip
+    example_vs_address = var.subnets["external"]
+    mgmtVipAddress     = var.f5_t1_ext["f5vm01ext_sec"]
+    mgmtVipAddress2    = var.f5_t1_ext["f5vm02ext_sec"]
+    transitVipAddress  = var.f5_t1_int["f5vm01int_sec"]
+    transitVipAddress2 = var.f5_t1_int["f5vm02int_sec"]
   }
 }
 

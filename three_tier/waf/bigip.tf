@@ -47,11 +47,6 @@ resource azurerm_network_interface vm03-mgmt-nic {
   tags = var.tags
 }
 
-resource azurerm_network_interface_security_group_association bigip03-mgmt-nsg {
-  network_interface_id      = azurerm_network_interface.vm03-mgmt-nic.id
-  network_security_group_id = var.securityGroup.id
-}
-
 resource azurerm_network_interface vm04-mgmt-nic {
   name                = "${var.prefix}-vm04-mgmt-nic"
   location            = var.resourceGroup.location
@@ -68,9 +63,27 @@ resource azurerm_network_interface vm04-mgmt-nic {
   tags = var.tags
 }
 
+resource azurerm_network_interface_security_group_association bigip03-mgmt-nsg {
+  network_interface_id      = azurerm_network_interface.vm03-mgmt-nic.id
+  network_security_group_id = var.securityGroup.id
+}
+
 resource azurerm_network_interface_security_group_association bigip04-mgmt-nsg {
   network_interface_id      = azurerm_network_interface.vm04-mgmt-nic.id
   network_security_group_id = var.securityGroup.id
+}
+
+# Associate the Network Interface to the ManagementPool
+resource azurerm_network_interface_backend_address_pool_association mpool_assc_vm01 {
+  network_interface_id    = azurerm_network_interface.vm03-mgmt-nic.id
+  ip_configuration_name   = "primary"
+  backend_address_pool_id = var.managementPool.id
+}
+# Associate the Network Interface to the ManagementPool
+resource azurerm_network_interface_backend_address_pool_association mpool_assc_vm02 {
+  network_interface_id    = azurerm_network_interface.vm04-mgmt-nic.id
+  ip_configuration_name   = "primary"
+  backend_address_pool_id = var.managementPool.id
 }
 
 # Create the second network interface card for External
@@ -78,6 +91,7 @@ resource azurerm_network_interface vm03-ext-nic {
   name                          = "${var.prefix}-vm03-ext-nic"
   location                      = var.resourceGroup.location
   resource_group_name           = var.resourceGroup.name
+  enable_ip_forwarding          = true
   enable_accelerated_networking = var.bigip_version == "latest" ? true : false
 
   ip_configuration {
@@ -116,6 +130,7 @@ resource azurerm_network_interface vm04-ext-nic {
   name                          = "${var.prefix}-vm04-ext-nic"
   location                      = var.resourceGroup.location
   resource_group_name           = var.resourceGroup.name
+  enable_ip_forwarding          = true
   enable_accelerated_networking = var.bigip_version == "latest" ? true : false
 
   ip_configuration {
@@ -150,11 +165,25 @@ resource azurerm_network_interface_security_group_association bigip04-ext-nsg {
   network_security_group_id = var.securityGroup.id
 }
 
+# Associate the External Network Interfaces to the Waf Backend Pools
+resource azurerm_network_interface_backend_address_pool_association bpool_assc_vm01 {
+  network_interface_id    = azurerm_network_interface.vm03-ext-nic.id
+  ip_configuration_name   = "secondary"
+  backend_address_pool_id = var.wafIngressPool.id
+}
+
+resource azurerm_network_interface_backend_address_pool_association bpool_assc_vm02 {
+  network_interface_id    = azurerm_network_interface.vm04-ext-nic.id
+  ip_configuration_name   = "secondary"
+  backend_address_pool_id = var.wafIngressPool.id
+}
+
 # Create the third network interface card for Internal
 resource azurerm_network_interface vm03-int-nic {
   name                          = "${var.prefix}-vm03-int-nic"
   location                      = var.resourceGroup.location
   resource_group_name           = var.resourceGroup.name
+  enable_ip_forwarding          = true
   enable_accelerated_networking = var.bigip_version == "latest" ? true : false
 
   ip_configuration {
@@ -164,7 +193,6 @@ resource azurerm_network_interface vm03-int-nic {
     private_ip_address            = var.f5_t3_int["f5vm03int"]
     primary                       = true
   }
-
   tags = var.tags
 }
 
@@ -177,6 +205,7 @@ resource azurerm_network_interface vm04-int-nic {
   name                          = "${var.prefix}-vm04-int-nic"
   location                      = var.resourceGroup.location
   resource_group_name           = var.resourceGroup.name
+  enable_ip_forwarding          = true
   enable_accelerated_networking = var.bigip_version == "latest" ? true : false
 
   ip_configuration {
@@ -193,19 +222,6 @@ resource azurerm_network_interface vm04-int-nic {
 resource azurerm_network_interface_security_group_association bigip04-int-nsg {
   network_interface_id      = azurerm_network_interface.vm04-int-nic.id
   network_security_group_id = var.securityGroup.id
-}
-
-# Associate the Network Interface to the BackendPool
-resource azurerm_network_interface_backend_address_pool_association bpool_assc_vm03 {
-  network_interface_id    = azurerm_network_interface.vm03-ext-nic.id
-  ip_configuration_name   = "secondary"
-  backend_address_pool_id = var.backendPool.id
-}
-
-resource azurerm_network_interface_backend_address_pool_association bpool_assc_vm04 {
-  network_interface_id    = azurerm_network_interface.vm04-ext-nic.id
-  ip_configuration_name   = "secondary"
-  backend_address_pool_id = var.backendPool.id
 }
 
 # Create F5 BIGIP VMs
@@ -326,7 +342,7 @@ data template_file vm_onboard {
 resource random_uuid as3_uuid {}
 
 data http onboard {
-  url = "https://raw.githubusercontent.com/Mikej81/f5-bigip-hardening-DO/master/dist/terraform/latest/${var.licenses["license3"] != "" ? "byol" : "payg"}_cluster.json"
+  url = "https://raw.githubusercontent.com/Mikej81/f5-bigip-hardening-DO/master/dist/terraform/latest/${var.licenses["license3"] != "" ? "byol" : "payg"}_cluster_waf_tier.json"
 }
 
 data template_file vm03_do_json {
@@ -353,8 +369,6 @@ data template_file vm03_do_json {
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
     license         = var.licenses["license3"] != "" ? var.licenses["license3"] : ""
-    log_localip     = var.f5_t3_ext["f5vm03ext"]
-    log_destination = var.app01ip
   }
 }
 
@@ -382,8 +396,6 @@ data template_file vm04_do_json {
     admin_user      = var.adminUserName
     admin_password  = var.adminPassword
     license         = var.licenses["license4"] != "" ? var.licenses["license4"] : ""
-    log_localip     = var.f5_t3_ext["f5vm04ext"]
-    log_destination = var.app01ip
   }
 }
 
@@ -403,10 +415,10 @@ data template_file as3_json {
     ssh_pool_addresses  = var.linuxjumpip
     app_pool_addresses  = var.app01ip
     log_destination     = var.app01ip
-    mgmtVipAddress      = var.f5_t1_ext["f5vm01ext_sec"]
-    mgmtVipAddress2     = var.f5_t1_ext["f5vm02ext_sec"]
-    transitVipAddress   = var.f5_t1_int["f5vm01int_sec"]
-    transitVipAddress2  = var.f5_t1_int["f5vm02int_sec"]
+    mgmtVipAddress      = var.f5_t3_ext["f5vm03ext_sec"]
+    mgmtVipAddress2     = var.f5_t3_ext["f5vm04ext_sec"]
+    transitVipAddress   = var.f5_t3_int["f5vm03int_sec"]
+    transitVipAddress2  = var.f5_t3_int["f5vm04int_sec"]
   }
 }
 
@@ -430,7 +442,7 @@ resource azurerm_virtual_machine_extension f5vm03-run-startup-cmd {
 
 resource azurerm_virtual_machine_extension f5vm04-run-startup-cmd {
   name                 = "${var.prefix}-f5vm04-run-startup-cmd"
-  depends_on           = [azurerm_virtual_machine.f5vm04]
+  depends_on           = [azurerm_virtual_machine.f5vm03, azurerm_virtual_machine.f5vm04]
   virtual_machine_id   = azurerm_virtual_machine.f5vm04.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"

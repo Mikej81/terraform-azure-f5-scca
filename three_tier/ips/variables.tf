@@ -11,12 +11,19 @@ variable securityGroup {
 }
 
 variable subnets {}
+variable subnetMgmt {}
+variable subnetInspectExt {}
+variable subnetInspectInt {}
 variable virtual_network_name {}
 
 variable ips01ext {}
 variable ips01int {}
+variable ips01mgmt {}
 variable adminUserName {}
 variable adminPassword {}
+
+variable ipsIngressPool {}
+variable ipsEgressPool {}
 
 # device
 variable instanceType {}

@@ -48,6 +48,23 @@ resource azurerm_subnet vdms {
   address_prefixes     = [var.subnets["vdms"]]
 }
 
+# Create the external IPS subnet within the Vnet
+resource azurerm_subnet inspect_external {
+  count                = var.deploymentType == "three_tier" ? 1 : 0
+  name                 = "inspect_external"
+  virtual_network_name = azurerm_virtual_network.main.name
+  resource_group_name  = azurerm_resource_group.main.name
+  address_prefixes     = [var.subnets["inspect_ext"]]
+}
+# Create the internal IPS subnet within the Vnet
+resource azurerm_subnet inspect_internal {
+  count                = var.deploymentType == "three_tier" ? 1 : 0
+  name                 = "inspect_internal"
+  virtual_network_name = azurerm_virtual_network.main.name
+  resource_group_name  = azurerm_resource_group.main.name
+  address_prefixes     = [var.subnets["inspect_int"]]
+}
+
 #Create the external Subnet within the Virtual Network
 resource azurerm_subnet waf_external {
   count                = var.deploymentType == "three_tier" ? 1 : 0
@@ -68,6 +85,7 @@ resource azurerm_subnet waf_internal {
 
 # Create the Demo Application Subnet within the Virtual Network
 resource azurerm_subnet application {
+  count                = var.deployDemoApp == "deploy" ? 1 : 0
   name                 = "application"
   virtual_network_name = azurerm_virtual_network.main.name
   resource_group_name  = azurerm_resource_group.main.name
@@ -115,4 +133,69 @@ resource azurerm_route vdms_default {
 resource azurerm_subnet_route_table_association udr_associate {
   subnet_id      = azurerm_subnet.vdms.id
   route_table_id = azurerm_route_table.vdms_udr.id
+}
+
+# Create IPS UDR
+resource azurerm_route_table ips_udr {
+  count                         = var.deploymentType == "three_tier" ? 1 : 0
+  name                          = "${var.projectPrefix}_ips_user_defined_route_table"
+  resource_group_name           = azurerm_resource_group.main.name
+  location                      = var.location
+  disable_bgp_route_propagation = false
+}
+
+resource azurerm_route internaltoips {
+  count               = var.deploymentType == "three_tier" ? 1 : 0
+  name                = "internal_through_ips"
+  resource_group_name = azurerm_resource_group.main.name
+
+  route_table_name       = azurerm_route_table.ips_udr[0].name
+  address_prefix         = var.subnets["waf_ext"]
+  next_hop_type          = "VirtualAppliance"
+  next_hop_in_ip_address = var.ips01ext
+}
+
+resource azurerm_subnet_route_table_association ips_associate {
+  count          = var.deploymentType == "three_tier" ? 1 : 0
+  subnet_id      = azurerm_subnet.internal.id
+  route_table_id = azurerm_route_table.ips_udr[0].id
+}
+
+# Create WAF UDR
+resource azurerm_route_table waf_udr {
+  count                         = var.deploymentType == "three_tier" ? 1 : 0
+  name                          = "${var.projectPrefix}_waf_user_defined_route_table"
+  resource_group_name           = azurerm_resource_group.main.name
+  location                      = azurerm_resource_group.main.location
+  disable_bgp_route_propagation = false
+}
+
+# Create 3 Tier VDMS Egress Route, ILB FrontEnd IP
+# resource azurerm_route waf_to_outbound {
+#   count               = var.deploymentType == "three_tier" ? 1 : 0
+#   name                = "waf_default_route"
+#   resource_group_name = azurerm_resource_group.main.name
+
+#   route_table_name       = azurerm_route_table.waf_udr[0].name
+#   address_prefix         = var.cidr
+#   next_hop_type          = "VirtualAppliance"
+#   next_hop_in_ip_address = var.ilb02ip
+# }
+
+resource azurerm_route waf_default {
+  count               = var.deploymentType == "three_tier" ? 1 : 0
+  name                = "Default"
+  resource_group_name = azurerm_resource_group.main.name
+
+  route_table_name       = azurerm_route_table.waf_udr[0].name
+  address_prefix         = "0.0.0.0/0"
+  next_hop_type          = "VirtualAppliance"
+  next_hop_in_ip_address = var.ilb02ip
+}
+
+#Testing with and without Routes for DSC
+resource azurerm_subnet_route_table_association waf_udr_associate {
+  count          = var.deploymentType == "three_tier" ? 1 : 0
+  subnet_id      = azurerm_subnet.waf_external[0].id
+  route_table_id = azurerm_route_table.waf_udr[0].id
 }
