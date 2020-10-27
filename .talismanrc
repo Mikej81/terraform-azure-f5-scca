@@ -22,9 +22,9 @@ fileignoreconfig:
 - filename: three_tier/firewall/bigip.tf
   checksum: 0aa935732565f43cb1574f43a0c46867176ffb648a7d539824bcd4c463864131
 - filename: three_tier/ips/ips.sh
-  checksum: c7a73589d16bfabab9026abe55bae6e180c3e284a8f206dee3dc42ac9781d14a
+  checksum: 530722343079ee18f1d51ff88f6d81b95557c3c49c20bb25c76cd7e2c38671d9
 - filename: three_tier/ips/ips.tf
-  checksum: b2dee33e7ec3395ce5e56953e60471763d3e29f9d5a124dad27e2e440710d8b6
+  checksum: 94d66f0aa41bc127a29ee0da779235b94d72df8ea935c86fb545954d0b749034
 - filename: three_tier/waf/bigip.tf
   checksum: f66520637c23a0714c28c8791b6042c4d1efd8802a0196ece220b5dd1a19b318
 - filename: admin.auto.tfvars.example
@@ -35,3 +35,5 @@ fileignoreconfig:
   checksum: 2e58dea05f3e4c73847b8a5d4a9e4d09f8070198f28a8694c861c68876763171
 - filename: jumpboxes/windows.tf
   checksum: 5e62dc5baf743d52f22be67a66e4bcf045251461a81dc1d5886cfbe5e189277d
+- filename: three_tier/ips/proxy.conf
+  checksum: 1667139f9725c10e99f30d43b0597584212345b28a2b88deafb3145dd41962d7

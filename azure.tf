@@ -223,9 +223,9 @@ resource azurerm_lb_backend_address_pool internal_backend_pool {
 }
 
 # Create the LB Pool for Inspect Ingress
-resource azurerm_lb_backend_address_pool ids_backend_pool {
+resource azurerm_lb_backend_address_pool ips_backend_pool {
   count               = var.deploymentType == "three_tier" ? 1 : 0
-  name                = "ids_ingress_pool"
+  name                = "ips_ingress_pool"
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.internalLoadBalancer[0].id
 }

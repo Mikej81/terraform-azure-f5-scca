@@ -6,6 +6,19 @@ resource random_id randomId {
   byte_length = 8
 }
 
+# Create a Public IP for the Virtual Machines
+resource azurerm_public_ip ipspip01 {
+  name                = "${var.prefix}-ips-mgmt-pip01-delete-me"
+  location            = var.resourceGroup.location
+  resource_group_name = var.resourceGroup.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+
+  tags = {
+    Name = "${var.prefix}-ips-public-ip"
+  }
+}
+
 resource azurerm_storage_account ips_storageaccount {
   name                     = "diag${random_id.randomId.hex}"
   resource_group_name      = var.resourceGroup.name
@@ -30,6 +43,7 @@ resource azurerm_network_interface ips01-mgmt-nic {
     private_ip_address_allocation = "Static"
     private_ip_address            = var.ips01mgmt
     primary                       = true
+    public_ip_address_id          = azurerm_public_ip.ipspip01.id
   }
 
   tags = var.tags
@@ -103,13 +117,43 @@ resource azurerm_network_interface_security_group_association ips-mgmt-nsg {
   network_security_group_id = var.securityGroup.id
 }
 
+# set up proxy config
+
+data template_file nginx_config {
+  template = file("./three_tier/ips/nginx.conf")
+  vars = {
+    app_address = var.app01ip
+  }
+}
+
+data template_file proxy01_config {
+  template = file("./three_tier/ips/proxy.conf")
+  vars = {
+    listener_ip = var.ips01ext
+    pip_dns     = "server_"
+    app_address = var.app01ip
+  }
+}
+
+data template_file startup_script01 {
+  template = file("./three_tier/ips/ips.sh")
+  vars = {
+    adminUserName = var.adminUserName
+    adminPassword = var.adminPassword
+    nginx_config  = base64encode(data.template_file.nginx_config.rendered)
+    proxy_config  = base64encode(data.template_file.proxy01_config.rendered)
+    fqdn          = "server_"
+  }
+}
+
+
 # ips01-VM
 resource azurerm_linux_virtual_machine ips01-vm {
   name                = "${var.prefix}-ips01-vm"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
 
-  network_interface_ids = [azurerm_network_interface.ips01-ext-nic.id, azurerm_network_interface.ips01-int-nic.id, azurerm_network_interface.ips01-mgmt-nic.id]
+  network_interface_ids = [azurerm_network_interface.ips01-mgmt-nic.id, azurerm_network_interface.ips01-ext-nic.id, azurerm_network_interface.ips01-int-nic.id]
   size                  = var.instanceType
 
   admin_username                  = var.adminUserName
@@ -131,25 +175,10 @@ resource azurerm_linux_virtual_machine ips01-vm {
 
   # custom_data = base64encode("apt-get update -y;")
 
-  # os_profile {
-  #   computer_name  = "ips01"
-  #   admin_username = var.adminUserName
-  #   admin_password = var.adminPassword
-  #   custom_data    = <<-EOF
-  #             #!/bin/bash
-  #             apt-get update -y;
-  #             apt-get install -y docker.io;
-  #             # snort version
-  #             docker run -it --rm satchm0h/alpine-snort3 snort --version;
-  #             # snort run
-  #             docker run -it --rm satchm0h/alpine-snort3 snort -i eth0
-  #             EOF
+  # admin_ssh_key {
+  #   username   = var.adminUserName
+  #   public_key = file("~/.ssh/id_rsa.pub")
   # }
-
-  admin_ssh_key {
-    username   = var.adminUserName
-    public_key = file("~/.ssh/id_rsa.pub")
-  }
 
   boot_diagnostics {
     storage_account_uri = azurerm_storage_account.ips_storageaccount.primary_blob_endpoint
@@ -168,7 +197,7 @@ resource azurerm_virtual_machine_extension ips01-vm-run-startup {
 
   settings = <<SETTINGS
     {
-        "script": "${base64encode(file("./three_tier/ips/ips.sh"))}"
+        "script": "${base64encode(data.template_file.startup_script01.rendered)}"
     }
     SETTINGS
 

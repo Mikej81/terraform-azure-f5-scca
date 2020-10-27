@@ -19,6 +19,7 @@ variable virtual_network_name {}
 variable ips01ext {}
 variable ips01int {}
 variable ips01mgmt {}
+variable app01ip {}
 variable adminUserName {}
 variable adminPassword {}
 

@@ -27,12 +27,12 @@ variable region {
 variable deploymentType {
   type        = string
   description = "REQUIRED: This determines the type of deployment; one tier versus three tier: one_tier, three_tier"
-  default     = "one_tier"
+  default     = "three_tier"
 }
 variable deployDemoApp {
   type        = string
   description = "OPTIONAL: Deploy Demo Application with Stack. Recommended to show functionality.  Options: deploy, anything else."
-  default     = "no-deploy"
+  default     = "deploy"
 }
 variable sshPublicKey {
   type        = string
@@ -50,6 +50,7 @@ variable cidr {
   description = "REQUIRED: VNET Network CIDR"
   default     = "10.90.0.0/16"
 }
+
 variable subnets {
   type        = map(string)
   description = "REQUIRED: Subnet CIDRs"

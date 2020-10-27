@@ -147,12 +147,13 @@ module ips_three {
   resourceGroup        = azurerm_resource_group.main
   virtual_network_name = azurerm_virtual_network.main.name
   securityGroup        = azurerm_network_security_group.main
-  ipsIngressPool       = azurerm_lb_backend_address_pool.waf_ingress_pool[0]
+  ipsIngressPool       = azurerm_lb_backend_address_pool.ips_backend_pool[0]
   ipsEgressPool        = azurerm_lb_backend_address_pool.waf_egress_pool[0]
   instanceType         = var.instanceType
   ips01ext             = var.ips01ext
   ips01int             = var.ips01int
   ips01mgmt            = var.ips01mgmt
+  app01ip              = var.app01ip
   adminUserName        = var.adminUserName
   adminPassword        = var.adminPassword
   subnets              = var.subnets
