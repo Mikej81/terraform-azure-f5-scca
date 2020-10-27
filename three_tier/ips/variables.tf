@@ -22,6 +22,9 @@ variable ips01mgmt {}
 variable adminUserName {}
 variable adminPassword {}
 
+variable ipsIngressPool {}
+variable ipsEgressPool {}
+
 # device
 variable instanceType {}
 

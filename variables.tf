@@ -32,7 +32,7 @@ variable deploymentType {
 variable deployDemoApp {
   type        = string
   description = "OPTIONAL: Deploy Demo Application with Stack. Recommended to show functionality.  Options: deploy, anything else."
-  default     = "deploy"
+  default     = "no-deploy"
 }
 variable sshPublicKey {
   type        = string
@@ -122,6 +122,12 @@ variable f5_t3_int {
   }
 }
 
+variable internalILBIPs {
+  description = "REQUIRED: Used by One and Three Tier.  Azure internal load balancer ips, these are used for ingress and egress."
+  type        = map(string)
+  default     = {}
+}
+
 variable ilb01ip {
   type        = string
   description = "REQUIRED: Used by One and Three Tier.  Azure internal load balancer ip, this is used as egress, must be in internal subnet."
@@ -138,6 +144,12 @@ variable ilb03ip {
   type        = string
   description = "REQUIRED: Used by Three Tier only.  Azure waf external load balancer ip, this is used as ingress, must be in waf_ext subnet."
   default     = "10.90.6.13"
+}
+
+variable ilb04ip {
+  type        = string
+  description = "REQUIRED: Used by Three Tier only.  Azure waf external load balancer ip, this is used as ingress, must be in inspect_external subnet."
+  default     = "10.90.4.13"
 }
 
 variable app01ip {

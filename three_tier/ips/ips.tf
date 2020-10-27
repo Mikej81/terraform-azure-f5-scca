@@ -74,6 +74,19 @@ resource azurerm_network_interface ips01-int-nic {
   tags = var.tags
 }
 
+# Associate the External Network Interface to the BackendPool
+resource azurerm_network_interface_backend_address_pool_association ips_pool_assc_ingress {
+  network_interface_id    = azurerm_network_interface.ips01-ext-nic.id
+  ip_configuration_name   = "primary"
+  backend_address_pool_id = var.ipsIngressPool.id
+}
+
+resource azurerm_network_interface_backend_address_pool_association ips_pool_assc_egress {
+  network_interface_id    = azurerm_network_interface.ips01-int-nic.id
+  ip_configuration_name   = "primary"
+  backend_address_pool_id = var.ipsEgressPool.id
+}
+
 # network interface for ips vm
 resource azurerm_network_interface_security_group_association ips-ext-nsg {
   network_interface_id      = azurerm_network_interface.ips01-ext-nic.id

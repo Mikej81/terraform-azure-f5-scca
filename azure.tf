@@ -7,7 +7,7 @@ resource azurerm_resource_group main {
 
 # Create Availability Set
 resource azurerm_availability_set avset {
-  name                         = "${var.projectPrefix}avset"
+  name                         = "${var.projectPrefix}-avset"
   location                     = azurerm_resource_group.main.location
   resource_group_name          = azurerm_resource_group.main.name
   platform_fault_domain_count  = 2
@@ -17,7 +17,8 @@ resource azurerm_availability_set avset {
 
 # Create Availability Set 2 only for 3 tier tho
 resource azurerm_availability_set avset2 {
-  name                         = "${var.projectPrefix}avset2"
+  count                        = var.deploymentType == "three_tier" ? 1 : 0
+  name                         = "${var.projectPrefix}-avset-2"
   location                     = azurerm_resource_group.main.location
   resource_group_name          = azurerm_resource_group.main.name
   platform_fault_domain_count  = 2
@@ -27,31 +28,31 @@ resource azurerm_availability_set avset2 {
 
 # Create Azure LB
 resource azurerm_lb lb {
-  name                = "${var.projectPrefix}lb"
+  name                = "${var.projectPrefix}-alb"
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   sku                 = "Standard"
 
   frontend_ip_configuration {
-    name                 = "LoadBalancerFrontEnd"
+    name                 = "Public-LoadBalancerFrontEnd"
     public_ip_address_id = azurerm_public_ip.lbpip.id
   }
 }
 
 resource azurerm_lb_backend_address_pool backend_pool {
-  name                = "BackendPool1"
+  name                = "IngressBackendPool"
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.lb.id
 }
 
 resource azurerm_lb_backend_address_pool management_pool {
-  name                = "ManagementPool1"
+  name                = "EgressManagementPool"
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.lb.id
 }
 
 resource azurerm_lb_backend_address_pool primary_pool {
-  name                = "PrimaryPool1"
+  name                = "EgressPrimaryPool"
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.lb.id
 }
@@ -103,7 +104,7 @@ resource azurerm_lb_rule https_rule {
   protocol                       = "tcp"
   frontend_port                  = 443
   backend_port                   = 443
-  frontend_ip_configuration_name = "LoadBalancerFrontEnd"
+  frontend_ip_configuration_name = "Public-LoadBalancerFrontEnd"
   enable_floating_ip             = false
   disable_outbound_snat          = true
   backend_address_pool_id        = azurerm_lb_backend_address_pool.backend_pool.id
@@ -119,7 +120,7 @@ resource azurerm_lb_rule http_rule {
   protocol                       = "tcp"
   frontend_port                  = 8080
   backend_port                   = 8080
-  frontend_ip_configuration_name = "LoadBalancerFrontEnd"
+  frontend_ip_configuration_name = "Public-LoadBalancerFrontEnd"
   enable_floating_ip             = false
   disable_outbound_snat          = true
   backend_address_pool_id        = azurerm_lb_backend_address_pool.backend_pool.id
@@ -135,7 +136,7 @@ resource azurerm_lb_rule ssh_rule {
   protocol                       = "tcp"
   frontend_port                  = 22
   backend_port                   = 22
-  frontend_ip_configuration_name = "LoadBalancerFrontEnd"
+  frontend_ip_configuration_name = "Public-LoadBalancerFrontEnd"
   enable_floating_ip             = false
   disable_outbound_snat          = true
   backend_address_pool_id        = azurerm_lb_backend_address_pool.backend_pool.id
@@ -150,7 +151,7 @@ resource azurerm_lb_rule rdp_rule {
   protocol                       = "tcp"
   frontend_port                  = 3389
   backend_port                   = 3389
-  frontend_ip_configuration_name = "LoadBalancerFrontEnd"
+  frontend_ip_configuration_name = "Public-LoadBalancerFrontEnd"
   enable_floating_ip             = false
   disable_outbound_snat          = true
   backend_address_pool_id        = azurerm_lb_backend_address_pool.backend_pool.id
@@ -168,7 +169,7 @@ resource azurerm_lb_outbound_rule egress_rule {
   allocated_outbound_ports = "16000"
   enable_tcp_reset         = true
   frontend_ip_configuration {
-    name = "LoadBalancerFrontEnd"
+    name = "Public-LoadBalancerFrontEnd"
   }
 }
 
@@ -184,6 +185,14 @@ resource azurerm_lb internalLoadBalancer {
     name                          = "Internal_LoadBalancerFrontEnd"
     subnet_id                     = azurerm_subnet.internal.id
     private_ip_address            = var.ilb01ip
+    private_ip_address_allocation = "Static"
+    private_ip_address_version    = "IPv4"
+  }
+
+  frontend_ip_configuration {
+    name                          = "IDS_LoadBalancerFrontEnd"
+    subnet_id                     = azurerm_subnet.inspect_external[0].id
+    private_ip_address            = var.ilb04ip
     private_ip_address_allocation = "Static"
     private_ip_address_version    = "IPv4"
   }
@@ -213,17 +222,25 @@ resource azurerm_lb_backend_address_pool internal_backend_pool {
   loadbalancer_id     = azurerm_lb.internalLoadBalancer[0].id
 }
 
+# Create the LB Pool for Inspect Ingress
+resource azurerm_lb_backend_address_pool ids_backend_pool {
+  count               = var.deploymentType == "three_tier" ? 1 : 0
+  name                = "ids_ingress_pool"
+  resource_group_name = azurerm_resource_group.main.name
+  loadbalancer_id     = azurerm_lb.internalLoadBalancer[0].id
+}
+
 # Create the LB Pool for WAF Ingress
 resource azurerm_lb_backend_address_pool waf_ingress_pool {
   count               = var.deploymentType == "three_tier" ? 1 : 0
-  name                = "waf_ingress"
+  name                = "waf_ingress_pool"
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.internalLoadBalancer[0].id
 }
 # Create the LB Pool for WAF Egress
 resource azurerm_lb_backend_address_pool waf_egress_pool {
   count               = var.deploymentType == "three_tier" ? 1 : 0
-  name                = "waf_egress"
+  name                = "waf_egress_pool"
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.internalLoadBalancer[0].id
 }

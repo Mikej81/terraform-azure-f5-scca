@@ -85,6 +85,7 @@ resource azurerm_subnet waf_internal {
 
 # Create the Demo Application Subnet within the Virtual Network
 resource azurerm_subnet application {
+  count                = var.deployDemoApp == "deploy" ? 1 : 0
   name                 = "application"
   virtual_network_name = azurerm_virtual_network.main.name
   resource_group_name  = azurerm_resource_group.main.name
