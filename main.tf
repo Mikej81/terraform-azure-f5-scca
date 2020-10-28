@@ -84,9 +84,9 @@ module firewall_one {
   dns_server       = var.dns_server
 }
 
-#
-# Three Tier
-# Deploy firewall HA cluster
+# #
+# # Three Tier
+# # Deploy firewall HA cluster
 module firewall_three {
   count            = var.deploymentType == "three_tier" ? 1 : 0
   source           = "./three_tier/firewall"
@@ -160,7 +160,7 @@ module ips_three {
   tags                 = var.tags
   timezone             = var.timezone
 }
-# Deploy waf HA cluster
+# # Deploy waf HA cluster
 module waf_three {
   count            = var.deploymentType == "three_tier" ? 1 : 0
   source           = "./three_tier/waf"

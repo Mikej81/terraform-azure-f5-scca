@@ -316,6 +316,7 @@ resource azurerm_virtual_machine f5vm04 {
 }
 
 # Setup Onboarding scripts
+
 data template_file vm_onboard {
   template = file("./templates/onboard.tpl")
   vars = {
@@ -335,6 +336,7 @@ data template_file vm_onboard {
     DO1_Document              = data.template_file.vm03_do_json.rendered
     DO2_Document              = data.template_file.vm04_do_json.rendered
     AS3_Document              = data.template_file.as3_json.rendered
+    #WAF_Document              = "aintno"
   }
 }
 

@@ -119,33 +119,25 @@ resource azurerm_network_interface_security_group_association ips-mgmt-nsg {
 
 # set up proxy config
 
-data template_file nginx_config {
-  template = file("./three_tier/ips/nginx.conf")
+data template_file vm_onboard {
+  template = file("./templates/ips-cloud-init.yaml")
   vars = {
-    app_address = var.app01ip
+    #gateway = gateway
+    #nameservers = nameservers
   }
 }
 
-data template_file proxy01_config {
-  template = file("./three_tier/ips/proxy.conf")
-  vars = {
-    listener_ip = var.ips01ext
-    pip_dns     = "server_"
-    app_address = var.app01ip
+data template_cloudinit_config config {
+  gzip          = true
+  base64_encode = true
+
+  # Main cloud-config configuration file.
+  part {
+    filename     = "init.cfg"
+    content_type = "text/cloud-config"
+    content      = data.template_file.vm_onboard.rendered
   }
 }
-
-data template_file startup_script01 {
-  template = file("./three_tier/ips/ips.sh")
-  vars = {
-    adminUserName = var.adminUserName
-    adminPassword = var.adminPassword
-    nginx_config  = base64encode(data.template_file.nginx_config.rendered)
-    proxy_config  = base64encode(data.template_file.proxy01_config.rendered)
-    fqdn          = "server_"
-  }
-}
-
 
 # ips01-VM
 resource azurerm_linux_virtual_machine ips01-vm {
@@ -169,16 +161,12 @@ resource azurerm_linux_virtual_machine ips01-vm {
   source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "16.04.0-LTS"
+    sku       = "18.04-LTS"
     version   = "latest"
   }
 
-  # custom_data = base64encode("apt-get update -y;")
-
-  # admin_ssh_key {
-  #   username   = var.adminUserName
-  #   public_key = file("~/.ssh/id_rsa.pub")
-  # }
+  #custom_data = base64encode(file("./templates/ips-cloud-init.yaml"))
+  custom_data = data.template_cloudinit_config.config.rendered
 
   boot_diagnostics {
     storage_account_uri = azurerm_storage_account.ips_storageaccount.primary_blob_endpoint
@@ -187,19 +175,19 @@ resource azurerm_linux_virtual_machine ips01-vm {
   tags = var.tags
 }
 
-resource azurerm_virtual_machine_extension ips01-vm-run-startup {
-  name                 = "ips-run-startup-cmd"
-  depends_on           = [azurerm_linux_virtual_machine.ips01-vm]
-  virtual_machine_id   = azurerm_linux_virtual_machine.ips01-vm.id
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.0"
+# resource azurerm_virtual_machine_extension ips01-vm-run-startup {
+#   name                 = "ips-run-startup-cmd"
+#   depends_on           = [azurerm_linux_virtual_machine.ips01-vm]
+#   virtual_machine_id   = azurerm_linux_virtual_machine.ips01-vm.id
+#   publisher            = "Microsoft.Azure.Extensions"
+#   type                 = "CustomScript"
+#   type_handler_version = "2.0"
 
-  settings = <<SETTINGS
-    {
-        "script": "${base64encode(data.template_file.startup_script01.rendered)}"
-    }
-    SETTINGS
+#   settings = <<SETTINGS
+#     {
+#         "script": "${base64encode(data.template_file.startup_script01.rendered)}"
+#     }
+#     SETTINGS
 
-  tags = var.tags
-}
+#   tags = var.tags
+# }

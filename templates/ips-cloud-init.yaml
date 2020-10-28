@@ -1,0 +1,85 @@
+#cloud-config
+
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      match:
+        name: enp1*
+      dhcp4: true
+      dhcp4-overrides:
+        route-metric: 100
+      gateway4: 10.90.0.1
+      nameservers:
+        adresses: [168.63.129.16, 8.8.8.8, 8.8.4.4]
+      set-name: eth0
+    eth1:
+      match:
+        name: enp2*
+      dhcp4: false
+      set-name: eth1
+    eth2:
+      match:
+        name: enp3*
+      dhcp4: false
+      set-name: eth2
+  bridges:
+    br0:
+      interfaces: [eth1, eth2]
+      dhcp4: true
+      parameters:
+        stp: false
+        forward-delay: 0
+#apt_update: true
+packages:
+  - build-essential
+  - bridge-utilites
+  - libpcap-dev
+  - libpcre3-dev
+  - libdumbnet-dev
+  - bison
+  - flex
+  - zlib1g-dev
+  - liblzma-dev
+  - openssl
+  - libssl-dev
+  - ethtool
+  - pwgen
+  - autoconf
+  - libtool
+  - libtool-bin
+  - pkg-config
+  - gcc
+  - zlib1g-dev
+  - libluajit-5.1-dev
+  - libnghttp2-dev
+  - libdnet
+runcmd:
+  - DIR=$(pwd)
+  - sudo ethtool -K eth1 gro off
+  - sudo ethtool -K eth1 lro off
+  - sudo ethtool -K eth2 gro off
+  - sudo ethtool -K eth2 lro off
+  - sudo mkdir /etc/snort
+  - sudo -p mkdir $DIR/snort_src
+  - cd $DIR/snort_src
+  - [wget, "https://www.snort.org/downloads/snort/daq-2.0.7.tar.gz"]
+  - [wget, "https://www.snort.org/downloads/snort/snort-2.9.16.1.tar.gz"]
+  - tar -xvzf daq-2.0.7.tar.gz
+  - tar -xvzf snort-2.9.16.1.tar.gz
+  - cd daq-2.0.7
+  - autoreconf -f -i
+  - ./configure
+  - make
+  - sudo make install
+  - cd $DIR/snort_src/snort-2.9.16.1
+  - autoreconf -f -i
+  - ./configure --enable-sourcefire
+  - make
+  - sudo make install
+  - sudo ldconfig
+  - sudo ln -s /usr/local/bin/snort /usr/sbin/snort
+  - sudo touch /usr/lib/networkd-dispatcher/routable.d/10-disable-lrogro
+  - sudo chmod +x /usr/lib/networkd-dispatcher/routable.d/10-disable-lrogro
+final_message: "The system is finally up, after $UPTIME seconds"

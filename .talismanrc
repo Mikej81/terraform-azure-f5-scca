@@ -22,7 +22,7 @@ fileignoreconfig:
 - filename: three_tier/firewall/bigip.tf
   checksum: 0aa935732565f43cb1574f43a0c46867176ffb648a7d539824bcd4c463864131
 - filename: three_tier/ips/ips.sh
-  checksum: 530722343079ee18f1d51ff88f6d81b95557c3c49c20bb25c76cd7e2c38671d9
+  checksum: 82f358b76449c4ac76d0142cfba162a024ac5d992a2ba7b9eb96ee36c327a13b
 - filename: three_tier/ips/ips.tf
   checksum: 94d66f0aa41bc127a29ee0da779235b94d72df8ea935c86fb545954d0b749034
 - filename: three_tier/waf/bigip.tf
