@@ -1,40 +1,90 @@
 #cloud-config
 
-network:
-  version: 2
-  renderer: networkd
-  ethernets:
-    eth0:
-      match:
-        name: enp1*
-      dhcp4: true
-      dhcp4-overrides:
-        route-metric: 100
-      gateway4: 10.90.0.1
-      nameservers:
-        adresses: [168.63.129.16, 8.8.8.8, 8.8.4.4]
-      set-name: eth0
-    eth1:
-      match:
-        name: enp2*
-      dhcp4: false
-      set-name: eth1
-    eth2:
-      match:
-        name: enp3*
-      dhcp4: false
-      set-name: eth2
-  bridges:
-    br0:
-      interfaces: [eth1, eth2]
-      dhcp4: true
-      parameters:
-        stp: false
-        forward-delay: 0
-#apt_update: true
+write_files:
+  # - path: /etc/netplan/90-hotplug-azure.yaml
+  #   content: |
+  #     network:
+  #       version: 2
+  #       renderer: networkd
+  #       ethernets:
+  #         eth0:
+  #           dhcp4: true
+  #           dhcp6: true
+  #           addresses:
+  #             - 10.90.0.8/24
+  #           gateway4: 10.90.0.1
+  #           dhcp4-overrides:
+  #            route-metric: 100
+  #           dhcp6: false
+  #           match:
+  #             driver: hv_netvsc
+  #             name: enp1*
+  #           set-name: eth0
+  #           routes:
+  #             - to: 0.0.0.0/0
+  #               via: 10.90.0.1
+  #               metric: 1
+  #         eth1:
+  #           dhcp4: false
+  #           dhcp6: true
+  #           optional: true
+  #           match:
+  #             driver: hv_netvsc
+  #             name: enp2*
+  #           set-name: eth1
+  #           gateway4: 10.90.4.1
+  #           routes:
+  #             - to: 10.90.2.0/24
+  #               via: 10.90.4.1
+  #               metric: 100
+  #         eth2:
+  #           dhcp4: false
+  #           dhcp6: true
+  #           optional: true
+  #           match:
+  #             driver: hv_netvsc
+  #             name: enp3*
+  #           set-name: eth2
+  #           gateway4: 10.90.5.1
+  #           routes:
+  #             - to: 10.90.6.0/24
+  #               via: 10.90.5.1
+  #               metric: 100
+
+  - path: /etc/networkd-dispatcher/routable.d/10-ifup-hooks
+    content: |
+      #!/bin/sh
+      # ifconfig $IFACE 0.0.0.0 up
+      # ip link set $IFACE promisc on
+      # exit 0
+  - path: /etc/networkd-dispatcher/routable.d/50-postup-hooks
+    content: |
+      #!/bin/sh
+      ethtool -K eth1 gro off lro off
+      ethtool -K eth2 gro off lro off
+      exit 0
+  - path: /etc/networkd-dispatcher/dormant.d/promisc_bridge
+    content: |
+      #!/bin/sh
+      set -e
+      ip link set eth1 up promisc on
+      ip link set eth2 up promisc on
+      exit 0
+  - path: /etc/networkd-dispatcher/off.d/50-ifdown-hooks
+    content: |
+      #!/bin/sh
+      ip link set $IFACE promisc off
+      ifconfig $IFACE down
+      exit 0
+
+apt:
+  primary:
+    - arches: [default]
+      search_dns: True
+package_upgrade: true
 packages:
   - build-essential
-  - bridge-utilites
+  - bridge-utils
   - libpcap-dev
   - libpcre3-dev
   - libdumbnet-dev
@@ -45,7 +95,6 @@ packages:
   - openssl
   - libssl-dev
   - ethtool
-  - pwgen
   - autoconf
   - libtool
   - libtool-bin
@@ -55,31 +104,61 @@ packages:
   - libluajit-5.1-dev
   - libnghttp2-dev
   - libdnet
+  - git
+  - libcrypt-ssleay-perl
+  - liblwp-useragent-determined-perl
+  - libnetfilter-queue-dev
+
 runcmd:
-  - DIR=$(pwd)
-  - sudo ethtool -K eth1 gro off
-  - sudo ethtool -K eth1 lro off
-  - sudo ethtool -K eth2 gro off
-  - sudo ethtool -K eth2 lro off
+  - sudo chmod +x /etc/networkd-dispatcher/routable.d/10-ifup-hooks
+  - sudo chmod +x /etc/networkd-dispatcher/routable.d/50-postup-hooks
+  - sudo chmod +x /etc/networkd-dispatcher/dormant.d/promisc_bridge
+  - sudo chmod +x /etc/networkd-dispatcher/off.d/50-ifdown-hooks
+  - sudo echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+  - sudo apt autoremove -y
   - sudo mkdir /etc/snort
-  - sudo -p mkdir $DIR/snort_src
-  - cd $DIR/snort_src
+  - sudo mkdir /etc/snort/rules
+  - sudo mkdir /var/log/snort
+  - sudo mkdir -p /home/root/snort_src
+  - cd /home/root/snort_src
   - [wget, "https://www.snort.org/downloads/snort/daq-2.0.7.tar.gz"]
   - [wget, "https://www.snort.org/downloads/snort/snort-2.9.16.1.tar.gz"]
+  - [wget, "https://www.snort.org/downloads/community/community-rules.tar.gz"]
+  - git clone https://github.com/John-Lin/docker-snort.git
   - tar -xvzf daq-2.0.7.tar.gz
   - tar -xvzf snort-2.9.16.1.tar.gz
-  - cd daq-2.0.7
+  - tar -xvzf community-rules.tar.gz
+  - cd /home/root/snort_src/daq-2.0.7
   - autoreconf -f -i
   - ./configure
   - make
   - sudo make install
-  - cd $DIR/snort_src/snort-2.9.16.1
+  - cd /home/root/snort_src/snort-2.9.16.1
   - autoreconf -f -i
   - ./configure --enable-sourcefire
   - make
   - sudo make install
   - sudo ldconfig
   - sudo ln -s /usr/local/bin/snort /usr/sbin/snort
-  - sudo touch /usr/lib/networkd-dispatcher/routable.d/10-disable-lrogro
-  - sudo chmod +x /usr/lib/networkd-dispatcher/routable.d/10-disable-lrogro
+  - sudo mkdir -p /usr/local/lib/snort_dynamicrules
+  - sudo cp /home/root/snort_src/snort-2.9.16.1/etc/* /etc/snort/
+  - sudo touch /etc/snort/rules/white_list.rules /etc/snort/rules/black_list.rules
+  - sudo cp /home/root/snort_src/docker-snort/snortrules-snapshot-2972/rules/* /etc/snort/rules
+  - sudo sed -i 's/..\/rules/\/etc\/snort\/rules/g' /etc/snort/snort.conf
+  - "sudo sed -i 's/# config daq: <type>/config daq: afpacket/g' /etc/snort/snort.conf"
+  - "sudo sed -i 's/# config daq_mode: <mode>/config daq_mode: inline/g' /etc/snort/snort.conf"
+  - "sudo sed -i 's/config daq_var: <var>/config daq_var: queue=4/g' /etc/snort/snort.conf"
+  - sudo echo 'alert icmp any any -> $HOME_NET any (msg:"ICMP test detected"; GID:1; sid:10000001; rev:001; classtype:icmp-event;)' >> /home/root/local.rules
+  - sudo rm -rf /etc/snort/rules/local.rules
+  - sudo cp /home/root/local.rules /etc/snort/rules/local.rules
+  - sysctl -p
+  #- sudo netplan --debug generate
+  #- sudo netplan apply
+  #- sudo iptables -I FORWARD -j NFQUEUE --queue-num=4
+  #- sudo iptables -R FORWARD 1 -j NFQUEUE --queue-num=4 --queue-bypass
+  - sudo iptables -I FORWARD -i eth1 -o eth2 -j NFQUEUE --queue-num=4
+  - sudo iptables -I FORWARD -i eth2 -o eth1 -j NFQUEUE --queue-num=4
+  - sudo sh -c "iptables-save > /etc/network/iptables.rules"
+  - sudo snort -D -c /etc/snort/snort.conf -Q -i eth1:eth2
+
 final_message: "The system is finally up, after $UPTIME seconds"

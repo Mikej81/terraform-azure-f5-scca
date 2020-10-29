@@ -165,7 +165,6 @@ resource azurerm_linux_virtual_machine ips01-vm {
     version   = "latest"
   }
 
-  #custom_data = base64encode(file("./templates/ips-cloud-init.yaml"))
   custom_data = data.template_cloudinit_config.config.rendered
 
   boot_diagnostics {
@@ -174,20 +173,3 @@ resource azurerm_linux_virtual_machine ips01-vm {
 
   tags = var.tags
 }
-
-# resource azurerm_virtual_machine_extension ips01-vm-run-startup {
-#   name                 = "ips-run-startup-cmd"
-#   depends_on           = [azurerm_linux_virtual_machine.ips01-vm]
-#   virtual_machine_id   = azurerm_linux_virtual_machine.ips01-vm.id
-#   publisher            = "Microsoft.Azure.Extensions"
-#   type                 = "CustomScript"
-#   type_handler_version = "2.0"
-
-#   settings = <<SETTINGS
-#     {
-#         "script": "${base64encode(data.template_file.startup_script01.rendered)}"
-#     }
-#     SETTINGS
-
-#   tags = var.tags
-# }

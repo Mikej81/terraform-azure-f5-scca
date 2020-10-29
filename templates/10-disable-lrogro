@@ -1,5 +1,0 @@
-#!/bin/sh
-ethtool -K eth1 gro off
-ethtool -K eth1 lro off
-ethtool -K eth2 gro off
-ethtool -K eth2 lro off

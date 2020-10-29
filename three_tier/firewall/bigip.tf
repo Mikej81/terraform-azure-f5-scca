@@ -450,19 +450,16 @@ data template_file as3_json {
     baseline_waf_policy = var.asm_policy
     exampleVipAddress   = var.f5_t1_ext["f5vm01ext"]
     exampleVipSubnet    = var.subnets["external"]
-    ips_pool_addresses  = var.f5_t3_ext["f5vm03ext_sec"]
+    ips_pool_addresses  = var.ilb03ip
     rdp_pool_addresses  = var.winjumpip
     ssh_pool_addresses  = var.linuxjumpip
-    app_pool_addresses  = var.f5_t3_ext["f5vm03ext_sec"]
-    # Need to point to WAS Tier / IPS
-    #app_pool_addresses  = var.app01ip
-    #ips_pool_addresses  = var.app01ip
-    log_destination    = var.app01ip
-    example_vs_address = var.subnets["external"]
-    mgmtVipAddress     = var.f5_t1_ext["f5vm01ext_sec"]
-    mgmtVipAddress2    = var.f5_t1_ext["f5vm02ext_sec"]
-    transitVipAddress  = var.f5_t1_int["f5vm01int_sec"]
-    transitVipAddress2 = var.f5_t1_int["f5vm02int_sec"]
+    app_pool_addresses  = var.ilb03ip
+    log_destination     = var.app01ip
+    example_vs_address  = var.subnets["external"]
+    mgmtVipAddress      = var.f5_t1_ext["f5vm01ext_sec"]
+    mgmtVipAddress2     = var.f5_t1_ext["f5vm02ext_sec"]
+    transitVipAddress   = var.f5_t1_int["f5vm01int_sec"]
+    transitVipAddress2  = var.f5_t1_int["f5vm02int_sec"]
   }
 }
 
