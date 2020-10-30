@@ -245,7 +245,7 @@ resource azurerm_virtual_machine f5vm03 {
   }
 
   storage_os_disk {
-    name              = "${var.prefix}vm03-osdisk"
+    name              = "${var.prefix}-vm03-osdisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
@@ -290,7 +290,7 @@ resource azurerm_virtual_machine f5vm04 {
   }
 
   storage_os_disk {
-    name              = "${var.prefix}vm04-osdisk"
+    name              = "${var.prefix}-vm04-osdisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
@@ -336,7 +336,6 @@ data template_file vm_onboard {
     DO1_Document              = data.template_file.vm03_do_json.rendered
     DO2_Document              = data.template_file.vm04_do_json.rendered
     AS3_Document              = data.template_file.as3_json.rendered
-    #WAF_Document              = "aintno"
   }
 }
 

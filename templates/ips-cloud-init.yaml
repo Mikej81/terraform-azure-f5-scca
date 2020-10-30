@@ -1,74 +1,29 @@
 #cloud-config
 
 write_files:
-  # - path: /etc/netplan/90-hotplug-azure.yaml
-  #   content: |
-  #     network:
-  #       version: 2
-  #       renderer: networkd
-  #       ethernets:
-  #         eth0:
-  #           dhcp4: true
-  #           dhcp6: true
-  #           addresses:
-  #             - 10.90.0.8/24
-  #           gateway4: 10.90.0.1
-  #           dhcp4-overrides:
-  #            route-metric: 100
-  #           dhcp6: false
-  #           match:
-  #             driver: hv_netvsc
-  #             name: enp1*
-  #           set-name: eth0
-  #           routes:
-  #             - to: 0.0.0.0/0
-  #               via: 10.90.0.1
-  #               metric: 1
-  #         eth1:
-  #           dhcp4: false
-  #           dhcp6: true
-  #           optional: true
-  #           match:
-  #             driver: hv_netvsc
-  #             name: enp2*
-  #           set-name: eth1
-  #           gateway4: 10.90.4.1
-  #           routes:
-  #             - to: 10.90.2.0/24
-  #               via: 10.90.4.1
-  #               metric: 100
-  #         eth2:
-  #           dhcp4: false
-  #           dhcp6: true
-  #           optional: true
-  #           match:
-  #             driver: hv_netvsc
-  #             name: enp3*
-  #           set-name: eth2
-  #           gateway4: 10.90.5.1
-  #           routes:
-  #             - to: 10.90.6.0/24
-  #               via: 10.90.5.1
-  #               metric: 100
-
   - path: /etc/networkd-dispatcher/routable.d/10-ifup-hooks
     content: |
       #!/bin/sh
       # ifconfig $IFACE 0.0.0.0 up
       # ip link set $IFACE promisc on
-      # exit 0
+      sudo iptables -I FORWARD -i eth1 -o eth2 -j NFQUEUE --queue-num=4
+      sudo iptables -I FORWARD -i eth2 -o eth1 -j NFQUEUE --queue-num=4
+      exit 0
   - path: /etc/networkd-dispatcher/routable.d/50-postup-hooks
     content: |
       #!/bin/sh
-      ethtool -K eth1 gro off lro off
-      ethtool -K eth2 gro off lro off
+      if [ $IFACE != "eth0"]
+      ethtool -K $IFACE gro off lro off
+      fi
       exit 0
   - path: /etc/networkd-dispatcher/dormant.d/promisc_bridge
     content: |
       #!/bin/sh
       set -e
+      if [ $IFACE != "eth0"]
       ip link set eth1 up promisc on
       ip link set eth2 up promisc on
+      fi
       exit 0
   - path: /etc/networkd-dispatcher/off.d/50-ifdown-hooks
     content: |
@@ -116,9 +71,10 @@ runcmd:
   - sudo chmod +x /etc/networkd-dispatcher/off.d/50-ifdown-hooks
   - sudo echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
   - sudo apt autoremove -y
-  - sudo mkdir /etc/snort
-  - sudo mkdir /etc/snort/rules
+  - sudo mkdir -p /etc/snort/rules
+  - sudo chmod -R 5775 /etc/snort
   - sudo mkdir /var/log/snort
+  - sudo chmod -R 5775 /var/log/snort
   - sudo mkdir -p /home/root/snort_src
   - cd /home/root/snort_src
   - [wget, "https://www.snort.org/downloads/snort/daq-2.0.7.tar.gz"]
@@ -144,21 +100,19 @@ runcmd:
   - sudo cp /home/root/snort_src/snort-2.9.16.1/etc/* /etc/snort/
   - sudo touch /etc/snort/rules/white_list.rules /etc/snort/rules/black_list.rules
   - sudo cp /home/root/snort_src/docker-snort/snortrules-snapshot-2972/rules/* /etc/snort/rules
+  - sudo echo "config policy_mode:inline" >> /etc/snort/snort.conf
   - sudo sed -i 's/..\/rules/\/etc\/snort\/rules/g' /etc/snort/snort.conf
-  - "sudo sed -i 's/# config daq: <type>/config daq: afpacket/g' /etc/snort/snort.conf"
+  - "sudo sed -i 's/# config daq: <type>/config daq: nfq/g' /etc/snort/snort.conf"
   - "sudo sed -i 's/# config daq_mode: <mode>/config daq_mode: inline/g' /etc/snort/snort.conf"
-  - "sudo sed -i 's/config daq_var: <var>/config daq_var: queue=4/g' /etc/snort/snort.conf"
+  - "sudo sed -i 's/# config daq_var: <var>/config daq_var: queue=4/g' /etc/snort/snort.conf"
   - sudo echo 'alert icmp any any -> $HOME_NET any (msg:"ICMP test detected"; GID:1; sid:10000001; rev:001; classtype:icmp-event;)' >> /home/root/local.rules
   - sudo rm -rf /etc/snort/rules/local.rules
   - sudo cp /home/root/local.rules /etc/snort/rules/local.rules
-  - sysctl -p
-  #- sudo netplan --debug generate
-  #- sudo netplan apply
-  #- sudo iptables -I FORWARD -j NFQUEUE --queue-num=4
-  #- sudo iptables -R FORWARD 1 -j NFQUEUE --queue-num=4 --queue-bypass
+  - sudo sysctl -p
+  - sudo route add -net 10.90.6.0 netmask 255.255.255.0 gw 10.90.5.1
+  - sudo route add -net 10.90.2.0 netmask 255.255.255.0 gw 10.90.4.1
   - sudo iptables -I FORWARD -i eth1 -o eth2 -j NFQUEUE --queue-num=4
   - sudo iptables -I FORWARD -i eth2 -o eth1 -j NFQUEUE --queue-num=4
-  - sudo sh -c "iptables-save > /etc/network/iptables.rules"
-  - sudo snort -D -c /etc/snort/snort.conf -Q -i eth1:eth2
+  - sudo snort -D -c /etc/snort/snort.conf -Q
 
 final_message: "The system is finally up, after $UPTIME seconds"

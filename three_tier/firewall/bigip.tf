@@ -285,7 +285,7 @@ resource azurerm_virtual_machine f5vm01 {
   }
 
   storage_os_disk {
-    name              = "${var.prefix}vm01-osdisk"
+    name              = "${var.prefix}-vm01-osdisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
@@ -330,7 +330,7 @@ resource azurerm_virtual_machine f5vm02 {
   }
 
   storage_os_disk {
-    name              = "${var.prefix}vm02-osdisk"
+    name              = "${var.prefix}-vm02-osdisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
