@@ -14,6 +14,8 @@ variable subnets {}
 variable subnetMgmt {}
 variable subnetInspectExt {}
 variable subnetInspectInt {}
+variable internalSubnet {}
+variable wafSubnet {}
 variable virtual_network_name {}
 
 variable ips01ext {}

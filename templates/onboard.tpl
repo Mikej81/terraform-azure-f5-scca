@@ -649,6 +649,8 @@ modify sys db config.allow.rfc3927 value enable;
 create sys management-route metadata-route network 169.254.169.254/32 gateway ${mgmtGateway};
 submit cli transaction' | tmsh -q
 tmsh save /sys config
+# add management route with metric 0 for the win
+route add -net default gw ${mgmtGateway} netmask 0.0.0.0 dev mgmt metric 0
 #  run as3
 count=0
 while [ $count -le 4 ]

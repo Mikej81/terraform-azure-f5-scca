@@ -1,6 +1,9 @@
 #cloud-config
 
 write_files:
+  - path: /etc/rsyslog.d/10-rsyslog.conf
+    content: |
+      *.*   @${log_destination}:514
   - path: /etc/networkd-dispatcher/routable.d/10-ifup-hooks
     content: |
       #!/bin/sh
@@ -31,6 +34,18 @@ write_files:
       ip link set $IFACE promisc off
       ifconfig $IFACE down
       exit 0
+  - path: /lib/systemd/system/snort.service
+    content: |
+      [Unit]
+      Description=Snort NIDS Daemon
+      After=syslog.target network.target
+
+      [Service]
+      Type=simple
+      ExecStart=/usr/sbin/snort -D -c /etc/snort/snort.conf -Q
+
+      [Install]
+      WantedBy=multi-user.target
 
 apt:
   primary:
@@ -109,10 +124,12 @@ runcmd:
   - sudo rm -rf /etc/snort/rules/local.rules
   - sudo cp /home/root/local.rules /etc/snort/rules/local.rules
   - sudo sysctl -p
-  - sudo route add -net 10.90.6.0 netmask 255.255.255.0 gw 10.90.5.1
-  - sudo route add -net 10.90.2.0 netmask 255.255.255.0 gw 10.90.4.1
+  - sudo route add -net ${wafSubnetPrefix} netmask ${internalMask} gw ${wafGateway}
+  - sudo route add -net ${internalSubnetPrefix} netmask ${wafMask} gw ${internalGateway}
   - sudo iptables -I FORWARD -i eth1 -o eth2 -j NFQUEUE --queue-num=4
   - sudo iptables -I FORWARD -i eth2 -o eth1 -j NFQUEUE --queue-num=4
-  - sudo snort -D -c /etc/snort/snort.conf -Q
+  - sudo systemctl enable snort
+  - sudo systemctl start snort
+  #- sudo snort -D -c /etc/snort/snort.conf -Q
 
 final_message: "The system is finally up, after $UPTIME seconds"

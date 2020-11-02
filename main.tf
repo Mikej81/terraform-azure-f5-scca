@@ -144,6 +144,8 @@ module ips_three {
   subnetMgmt           = azurerm_subnet.mgmt
   subnetInspectExt     = azurerm_subnet.inspect_external[0]
   subnetInspectInt     = azurerm_subnet.inspect_internal[0]
+  internalSubnet       = azurerm_subnet.internal
+  wafSubnet            = azurerm_subnet.waf_external[0]
   resourceGroup        = azurerm_resource_group.main
   virtual_network_name = azurerm_virtual_network.main.name
   securityGroup        = azurerm_network_security_group.main

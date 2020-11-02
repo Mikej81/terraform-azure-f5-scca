@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 start=$SECONDS
 terraform init
 terraform fmt

@@ -2,7 +2,7 @@
 variable projectPrefix {
   type        = string
   description = "REQUIRED: Prefix to prepend to all objects created, minus Windows Jumpbox"
-  default     = "bedfe9b5"
+  default     = "bedfe9e3"
 }
 variable adminUserName {
   type        = string
@@ -17,12 +17,12 @@ variable adminPassword {
 variable location {
   type        = string
   description = "REQUIRED: Azure Region: usgovvirginia, usgovarizona, etc"
-  default     = "usgovarizona"
+  default     = "usgovvirginia"
 }
 variable region {
   type        = string
   description = "Azure Region: US Gov Virginia, US Gov Arizona, etc"
-  default     = "USGov Arizona"
+  default     = "US Gov Virginia"
 }
 variable deploymentType {
   type        = string

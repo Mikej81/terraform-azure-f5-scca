@@ -256,6 +256,17 @@ resource azurerm_lb_probe internal_tcp_probe {
   number_of_probes    = 2
 }
 
+resource azurerm_lb_probe waf_probe {
+  count               = var.deploymentType == "three_tier" ? 1 : 0
+  resource_group_name = azurerm_resource_group.main.name
+  loadbalancer_id     = azurerm_lb.internalLoadBalancer[0].id
+  name                = "${var.projectPrefix}-waf-tcp-probe"
+  protocol            = "tcp"
+  port                = 8080
+  interval_in_seconds = 5
+  number_of_probes    = 2
+}
+
 resource azurerm_lb_rule internal_all_rule {
   count                          = var.deploymentType == "three_tier" ? 1 : 0
   name                           = "internal-all-protocol-ilb-egress"
@@ -303,6 +314,6 @@ resource azurerm_lb_rule waf_ext_ingress_rule {
   enable_floating_ip             = true
   backend_address_pool_id        = azurerm_lb_backend_address_pool.waf_ingress_pool[0].id
   idle_timeout_in_minutes        = 5
-  probe_id                       = azurerm_lb_probe.internal_tcp_probe[0].id
-  depends_on                     = [azurerm_lb_probe.internal_tcp_probe[0]]
+  probe_id                       = azurerm_lb_probe.waf_probe[0].id
+  depends_on                     = [azurerm_lb_probe.waf_probe[0]]
 }

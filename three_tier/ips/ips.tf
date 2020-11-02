@@ -119,11 +119,29 @@ resource azurerm_network_interface_security_group_association ips-mgmt-nsg {
 
 # set up proxy config
 
+# Obtain Gateway IP for each Subnet
+locals {
+  depends_on   = [var.subnetMgmt, var.internalSubnet, var.wafSubnet]
+  mgmt_gw      = cidrhost(var.subnetMgmt.address_prefix, 1)
+  int_gw       = cidrhost(var.internalSubnet.address_prefix, 1)
+  int_mask     = cidrnetmask(var.internalSubnet.address_prefix)
+  extInspectGw = cidrhost(var.subnetInspectExt.address_prefix, 1)
+  intInspectGw = cidrhost(var.subnetInspectInt.address_prefix, 1)
+  waf_ext_gw   = cidrhost(var.wafSubnet.address_prefix, 1)
+  waf_ext_mask = cidrnetmask(var.wafSubnet.address_prefix)
+}
+
 data template_file vm_onboard {
   template = file("./templates/ips-cloud-init.yaml")
   vars = {
     #gateway = gateway
-    #nameservers = nameservers
+    internalSubnetPrefix = cidrhost(var.internalSubnet.address_prefix, 0)
+    internalMask         = local.int_mask
+    internalGateway      = local.extInspectGw
+    wafSubnetPrefix      = cidrhost(var.wafSubnet.address_prefix, 0)
+    wafMask              = local.waf_ext_mask
+    wafGateway           = local.intInspectGw
+    log_destination      = var.app01ip
   }
 }
 
@@ -172,4 +190,9 @@ resource azurerm_linux_virtual_machine ips01-vm {
   }
 
   tags = var.tags
+}
+
+resource local_file cloud_init_file {
+  content  = data.template_file.vm_onboard.rendered
+  filename = "${path.module}/cloud-init.yml"
 }
