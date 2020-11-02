@@ -4,7 +4,7 @@ terraform {
 
 # Configure the Microsoft Azure Provider, replace Service Principal and Subscription with your own
 provider "azurerm" {
-  version = "~> 2.15.0"
+  version = "~> 2.30.0"
   features {}
 }
 

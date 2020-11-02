@@ -245,7 +245,7 @@ resource azurerm_virtual_machine f5vm03 {
   }
 
   storage_os_disk {
-    name              = "${var.prefix}vm03-osdisk"
+    name              = "${var.prefix}-vm03-osdisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
@@ -290,7 +290,7 @@ resource azurerm_virtual_machine f5vm04 {
   }
 
   storage_os_disk {
-    name              = "${var.prefix}vm04-osdisk"
+    name              = "${var.prefix}-vm04-osdisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
@@ -316,6 +316,7 @@ resource azurerm_virtual_machine f5vm04 {
 }
 
 # Setup Onboarding scripts
+
 data template_file vm_onboard {
   template = file("./templates/onboard.tpl")
   vars = {

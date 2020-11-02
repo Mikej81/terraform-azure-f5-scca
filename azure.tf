@@ -223,9 +223,9 @@ resource azurerm_lb_backend_address_pool internal_backend_pool {
 }
 
 # Create the LB Pool for Inspect Ingress
-resource azurerm_lb_backend_address_pool ids_backend_pool {
+resource azurerm_lb_backend_address_pool ips_backend_pool {
   count               = var.deploymentType == "three_tier" ? 1 : 0
-  name                = "ids_ingress_pool"
+  name                = "ips_ingress_pool"
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.internalLoadBalancer[0].id
 }
@@ -252,6 +252,17 @@ resource azurerm_lb_probe internal_tcp_probe {
   name                = "${var.projectPrefix}-internal-tcp-probe"
   protocol            = "tcp"
   port                = 34568
+  interval_in_seconds = 5
+  number_of_probes    = 2
+}
+
+resource azurerm_lb_probe waf_probe {
+  count               = var.deploymentType == "three_tier" ? 1 : 0
+  resource_group_name = azurerm_resource_group.main.name
+  loadbalancer_id     = azurerm_lb.internalLoadBalancer[0].id
+  name                = "${var.projectPrefix}-waf-tcp-probe"
+  protocol            = "tcp"
+  port                = 8080
   interval_in_seconds = 5
   number_of_probes    = 2
 }
@@ -303,6 +314,6 @@ resource azurerm_lb_rule waf_ext_ingress_rule {
   enable_floating_ip             = true
   backend_address_pool_id        = azurerm_lb_backend_address_pool.waf_ingress_pool[0].id
   idle_timeout_in_minutes        = 5
-  probe_id                       = azurerm_lb_probe.internal_tcp_probe[0].id
-  depends_on                     = [azurerm_lb_probe.internal_tcp_probe[0]]
+  probe_id                       = azurerm_lb_probe.waf_probe[0].id
+  depends_on                     = [azurerm_lb_probe.waf_probe[0]]
 }

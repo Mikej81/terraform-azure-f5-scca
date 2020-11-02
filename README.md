@@ -43,25 +43,25 @@ The BIG-IP VEs have the following features / modules enabled:
 | Name | Version |
 |------|---------|
 | terraform | ~> 0.13 |
-| azurerm | ~> 2.15.0 |
+| azurerm | ~> 2.30.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| azurerm | ~> 2.15.0 |
+| azurerm | ~> 2.30.0 |
 
 ## Inputs
 
 | Name | Description | Type | Default |
 |------|-------------|------|---------|
-| projectPrefix | REQUIRED: Prefix to prepend to all objects created, minus Windows Jumpbox | `string` | `"mjcscca"` |
+| projectPrefix | REQUIRED: Prefix to prepend to all objects created, minus Windows Jumpbox | `string` | `"bedfe9e3"` |
 | adminUserName | REQUIRED: Admin Username for All systems | `string` | `"xadmin"` |
 | adminPassword | REQUIRED: Admin Password for all systems | `string` | `"pleaseUseVault123!!"` |
 | location | REQUIRED: Azure Region: usgovvirginia, usgovarizona, etc | `string` | `"usgovvirginia"` |
-| region | Azure Region: US Gov Virginia, US Gov Arizona, etc | `string` | `"USGov Virginia"` |
-| deploymentType | REQUIRED: This determines the type of deployment; one tier versus three tier: one\_tier, three\_tier | `string` | `"one_tier"` |
-| deployDemoApp | OPTIONAL: Deploy Demo Application with Stack. Recommended to show functionality.  Options: deploy, anything else. | `string` | `"no-deploy"` |
+| region | Azure Region: US Gov Virginia, US Gov Arizona, etc | `string` | `"US Gov Virginia"` |
+| deploymentType | REQUIRED: This determines the type of deployment; one tier versus three tier: one\_tier, three\_tier | `string` | `"three_tier"` |
+| deployDemoApp | OPTIONAL: Deploy Demo Application with Stack. Recommended to show functionality.  Options: deploy, anything else. | `string` | `"deploy"` |
 | sshPublicKey | OPTIONAL: ssh public key for instances | `string` | `""` |
 | sshPublicKeyPath | OPTIONAL: ssh public key path for instances | `string` | `"/mykey.pub"` |
 | cidr | REQUIRED: VNET Network CIDR | `string` | `"10.90.0.0/16"` |
