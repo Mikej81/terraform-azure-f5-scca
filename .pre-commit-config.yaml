@@ -18,6 +18,10 @@ repos:
       - id: sort-simple-yaml
       - id: check-yaml
       - id: trailing-whitespace
+  - repo: https://github.com/frnmst/md-toc
+    rev: master  # or a specific git tag from md-toc
+    hooks:
+      - id: md-toc
   - repo: https://github.com/thoughtworks/talisman
     rev: v1.9.0
     hooks:

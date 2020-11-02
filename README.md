@@ -1,18 +1,31 @@
-# Deploying BIG-IP VEs in Azure - ConfigSync Cluster (Active/Standby): Two NICs
+# F5 & Azure Secure Cloud Computing Architecture
 
-## Contents
+<!--TOC-->
 
-- [Deploying BIG-IP VEs in Azure - ConfigSync Cluster (Active/Standby): Two NICs](#deploying-big-ip-ves-in-azure---configsync-cluster-activestandby-two-nics)
-  - [Contents](#contents)
+- [F5 & Azure Secure Cloud Computing Architecture](#f5--azure-secure-cloud-computing-architecture)
   - [Introduction](#introduction)
   - [Prerequisites](#prerequisites)
   - [Important configuration notes](#important-configuration-notes)
-  - [docker](#docker)
-    - [requirements](#requirements)
+  - [Variables](#variables)
+  - [Requirements](#requirements)
+  - [Providers](#providers)
+  - [Inputs](#inputs)
+  - [Outputs](#outputs)
+  - [Deployment](#deployment)
+    - [Docker](#docker)
+  - [Destruction](#destruction)
+    - [Docker](#docker-1)
+  - [Development](#development)
+
+<!--TOC-->
 
 ## Introduction
 
-This solution uses an Terraform template to launch a three NIC deployment of a cloud-focused BIG-IP VE cluster (Active/Standby) in Microsoft Azure. Traffic flows from an ALB to the BIG-IP VE which then processes the traffic to application servers. This is the standard cloud design where the BIG-IP VE instance is running with a dual interface, where both management and data plane traffic is processed on each one.
+Moving to the Cloud can be tough. The Department of Defense (DoD) has requirements to protect the Defense Information System Networks (DISN) and DoD Information Networks (DoDIN), even for workloads residing in a Cloud Service Provider (CSP). Per the SCCA Functional Requirements Document, the purpose of SCCA is to provide a barrier of protection between the DISN and commercial cloud services used by the DoD.
+
+“It specifically addresses attacks originating from mission applications that reside within the Cloud Service Environment (CSE) upon both the DISN infrastructure and neighboring tenants in a multi-tenant environment. It provides a consistent CSP independent level of security that enables the use of commercially available Cloud Service Offerings (CSO) for hosting DoD mission applications operating at all DoD Information System Impact Levels (i.e. 2, 4, 5, & 6).” * [https://iasecontent.disa.mil/stigs/pdf/SCCA_FRD_v2-9.pdf](https://iasecontent.disa.mil/stigs/pdf/SCCA_FRD_v2-9.pdf)
+
+This solution uses Terraform to launch a Single Tiered or Three Tier deployment of three NIC cloud-focused BIG-IP VE cluster(s) (Active/Standby) in Microsoft Azure. This is the standard cloud design where the BIG-IP VE instance is running with three interfaces, where both management and data plane traffic is segregated.
 
 The BIG-IP VEs have the following features / modules enabled:
 
@@ -34,8 +47,15 @@ The BIG-IP VEs have the following features / modules enabled:
 ## Important configuration notes
 
 - All variables are configured in variables.tf
+- **MOST** STIG / SRG configurations settings have been addressed in the Declarative Onboarding and Application Services templates used in this example.
+- An Example application is optionally deployed with this template.  The example appliation includes several apps running in docker on the host:
+  - Juiceshop on port 3000
+  - F5 Demo app by Eric Chen on ports 80 and 443
+  - rsyslogd with PimpMyLogs on port 808
+  - **Note** Juiceshop and PimpMyLogs URLS are part of the terraform output when deployed.
+- All Configuration should happen at the root level; auto.tfvars or variables.tf.
 
-## variables
+## Variables
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -118,8 +138,18 @@ terraform plan
 terraform apply
 ```
 
+OR
+
 ```bash
 ./demo.sh
+```
+
+### Docker
+There is also a dockerfile provided, use make [options] to build as needed.
+
+```bash
+make build
+make shell || make azure || make gov
 ```
 
 ## Destruction
@@ -130,8 +160,16 @@ For destruction / tear down you can do the trafitional terraform commands or use
 terraform destroy
 ```
 
+OR
+
 ```bash
 ./cleanup.sh
+```
+
+### Docker
+
+```bash
+make destroy || make revolution
 ```
 
 ## Development
