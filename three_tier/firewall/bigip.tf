@@ -451,10 +451,10 @@ data template_file as3_json {
     exampleVipAddress   = var.f5_t1_ext["f5vm01ext"]
     exampleVipSubnet    = var.subnets["external"]
     ips_pool_addresses  = var.ilb03ip
-    rdp_pool_addresses  = var.winjumpip
-    ssh_pool_addresses  = var.linuxjumpip
+    rdp_pool_addresses  = var.ilb03ip
+    ssh_pool_addresses  = var.ilb03ip
     app_pool_addresses  = var.ilb03ip
-    log_destination     = var.app01ip
+    log_destination     = var.ilb03ip
     example_vs_address  = var.subnets["external"]
     mgmtVipAddress      = var.f5_t1_ext["f5vm01ext_sec"]
     mgmtVipAddress2     = var.f5_t1_ext["f5vm02ext_sec"]
