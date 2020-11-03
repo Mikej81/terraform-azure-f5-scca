@@ -114,10 +114,23 @@ resource azurerm_route vdms_to_outbound {
   name                = "vdms_default_route"
   resource_group_name = azurerm_resource_group.main.name
 
-  route_table_name       = azurerm_route_table.vdms_udr.name
-  address_prefix         = var.cidr
+  route_table_name = azurerm_route_table.vdms_udr.name
+  #address_prefix         = var.cidr
+  address_prefix         = var.subnets["internal"]
   next_hop_type          = "VirtualAppliance"
   next_hop_in_ip_address = var.ilb01ip
+}
+
+resource azurerm_route threetier_vdms_to_outbound {
+  count               = var.deploymentType == "three_tier" ? 1 : 0
+  name                = "threetier_vdms_default_route"
+  resource_group_name = azurerm_resource_group.main.name
+
+  route_table_name = azurerm_route_table.vdms_udr.name
+  #address_prefix         = var.cidr
+  address_prefix = var.subnets["waf_int"]
+  next_hop_type  = "VnetLocal"
+  #next_hop_in_ip_address = var.ilb01ip
 }
 
 resource azurerm_route vdms_default {
@@ -169,18 +182,6 @@ resource azurerm_route_table waf_udr {
   location                      = azurerm_resource_group.main.location
   disable_bgp_route_propagation = false
 }
-
-# Create 3 Tier VDMS Egress Route, ILB FrontEnd IP
-# resource azurerm_route waf_to_outbound {
-#   count               = var.deploymentType == "three_tier" ? 1 : 0
-#   name                = "waf_default_route"
-#   resource_group_name = azurerm_resource_group.main.name
-
-#   route_table_name       = azurerm_route_table.waf_udr[0].name
-#   address_prefix         = var.cidr
-#   next_hop_type          = "VirtualAppliance"
-#   next_hop_in_ip_address = var.ilb02ip
-# }
 
 resource azurerm_route waf_default {
   count               = var.deploymentType == "three_tier" ? 1 : 0
