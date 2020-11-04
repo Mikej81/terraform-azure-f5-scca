@@ -61,7 +61,7 @@ resource azurerm_lb_probe https_probe {
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.lb.id
   name                = "443Probe"
-  protocol            = "tcp"
+  protocol            = "Tcp"
   port                = 443
   interval_in_seconds = 5
   number_of_probes    = 2
@@ -71,7 +71,7 @@ resource azurerm_lb_probe http_probe {
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.lb.id
   name                = "8080Probe"
-  protocol            = "tcp"
+  protocol            = "Tcp"
   port                = 8080
   interval_in_seconds = 5
   number_of_probes    = 2
@@ -81,7 +81,7 @@ resource azurerm_lb_probe ssh_probe {
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.lb.id
   name                = "sshProbe"
-  protocol            = "tcp"
+  protocol            = "Tcp"
   port                = 22
   interval_in_seconds = 5
   number_of_probes    = 2
@@ -91,7 +91,7 @@ resource azurerm_lb_probe rdp_probe {
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.lb.id
   name                = "rdpProbe"
-  protocol            = "tcp"
+  protocol            = "Tcp"
   port                = 3389
   interval_in_seconds = 5
   number_of_probes    = 2
@@ -101,7 +101,7 @@ resource azurerm_lb_rule https_rule {
   name                           = "HTTPS_Rule"
   resource_group_name            = azurerm_resource_group.main.name
   loadbalancer_id                = azurerm_lb.lb.id
-  protocol                       = "tcp"
+  protocol                       = "Tcp"
   frontend_port                  = 443
   backend_port                   = 443
   frontend_ip_configuration_name = "Public-LoadBalancerFrontEnd"
@@ -117,7 +117,7 @@ resource azurerm_lb_rule http_rule {
   name                           = "HTTPRule"
   resource_group_name            = azurerm_resource_group.main.name
   loadbalancer_id                = azurerm_lb.lb.id
-  protocol                       = "tcp"
+  protocol                       = "Tcp"
   frontend_port                  = 8080
   backend_port                   = 8080
   frontend_ip_configuration_name = "Public-LoadBalancerFrontEnd"
@@ -133,7 +133,7 @@ resource azurerm_lb_rule ssh_rule {
   name                           = "SSH_Rule"
   resource_group_name            = azurerm_resource_group.main.name
   loadbalancer_id                = azurerm_lb.lb.id
-  protocol                       = "tcp"
+  protocol                       = "Tcp"
   frontend_port                  = 22
   backend_port                   = 22
   frontend_ip_configuration_name = "Public-LoadBalancerFrontEnd"
@@ -148,7 +148,7 @@ resource azurerm_lb_rule rdp_rule {
   name                           = "RDP_Rule"
   resource_group_name            = azurerm_resource_group.main.name
   loadbalancer_id                = azurerm_lb.lb.id
-  protocol                       = "tcp"
+  protocol                       = "Tcp"
   frontend_port                  = 3389
   backend_port                   = 3389
   frontend_ip_configuration_name = "Public-LoadBalancerFrontEnd"
@@ -245,12 +245,12 @@ resource azurerm_lb_backend_address_pool waf_egress_pool {
   loadbalancer_id     = azurerm_lb.internalLoadBalancer[0].id
 }
 
-resource azurerm_lb_probe internal_tcp_probe {
+resource azurerm_lb_probe internal_Tcp_probe {
   count               = var.deploymentType == "three_tier" ? 1 : 0
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.internalLoadBalancer[0].id
-  name                = "${var.projectPrefix}-internal-tcp-probe"
-  protocol            = "tcp"
+  name                = "${var.projectPrefix}-internal-Tcp-probe"
+  protocol            = "Tcp"
   port                = 34568
   interval_in_seconds = 5
   number_of_probes    = 2
@@ -260,8 +260,8 @@ resource azurerm_lb_probe waf_probe {
   count               = var.deploymentType == "three_tier" ? 1 : 0
   resource_group_name = azurerm_resource_group.main.name
   loadbalancer_id     = azurerm_lb.internalLoadBalancer[0].id
-  name                = "${var.projectPrefix}-waf-tcp-probe"
-  protocol            = "tcp"
+  name                = "${var.projectPrefix}-waf-Tcp-probe"
+  protocol            = "Tcp"
   port                = 8080
   interval_in_seconds = 5
   number_of_probes    = 2
@@ -280,8 +280,8 @@ resource azurerm_lb_rule internal_all_rule {
   enable_floating_ip             = true
   backend_address_pool_id        = azurerm_lb_backend_address_pool.internal_backend_pool[0].id
   idle_timeout_in_minutes        = 5
-  probe_id                       = azurerm_lb_probe.internal_tcp_probe[0].id
-  depends_on                     = [azurerm_lb_probe.internal_tcp_probe[0]]
+  probe_id                       = azurerm_lb_probe.internal_Tcp_probe[0].id
+  depends_on                     = [azurerm_lb_probe.internal_Tcp_probe[0]]
 }
 
 resource azurerm_lb_rule waf_ext_all_rule {
@@ -297,8 +297,8 @@ resource azurerm_lb_rule waf_ext_all_rule {
   enable_floating_ip             = true
   backend_address_pool_id        = azurerm_lb_backend_address_pool.waf_egress_pool[0].id
   idle_timeout_in_minutes        = 5
-  probe_id                       = azurerm_lb_probe.internal_tcp_probe[0].id
-  depends_on                     = [azurerm_lb_probe.internal_tcp_probe[0]]
+  probe_id                       = azurerm_lb_probe.internal_Tcp_probe[0].id
+  depends_on                     = [azurerm_lb_probe.internal_Tcp_probe[0]]
 }
 
 resource azurerm_lb_rule waf_ext_ingress_rule {
