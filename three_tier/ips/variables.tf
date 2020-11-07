@@ -27,6 +27,7 @@ variable adminPassword {}
 
 variable ipsIngressPool {}
 variable ipsEgressPool {}
+variable primaryPool {}
 
 # device
 variable instanceType {}

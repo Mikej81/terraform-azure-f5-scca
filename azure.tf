@@ -166,7 +166,7 @@ resource azurerm_lb_outbound_rule egress_rule {
   loadbalancer_id          = azurerm_lb.lb.id
   protocol                 = "All"
   backend_address_pool_id  = azurerm_lb_backend_address_pool.primary_pool.id
-  allocated_outbound_ports = "16000"
+  allocated_outbound_ports = "9136"
   enable_tcp_reset         = true
   frontend_ip_configuration {
     name = "Public-LoadBalancerFrontEnd"
