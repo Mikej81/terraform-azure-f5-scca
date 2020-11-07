@@ -81,7 +81,7 @@ The BIG-IP VEs have the following features / modules enabled:
 | adminPassword | REQUIRED: Admin Password for all systems | `string` | `"pleaseUseVault123!!"` |
 | location | REQUIRED: Azure Region: usgovvirginia, usgovarizona, etc | `string` | `"usgovvirginia"` |
 | region | Azure Region: US Gov Virginia, US Gov Arizona, etc | `string` | `"US Gov Virginia"` |
-| deploymentType | REQUIRED: This determines the type of deployment; one tier versus three tier: one\_tier, three\_tier | `string` | `"three_tier"` |
+| deploymentType | REQUIRED: This determines the type of deployment; one tier versus three tier: one\_tier, three\_tier | `string` | `"one_tier"` |
 | deployDemoApp | OPTIONAL: Deploy Demo Application with Stack. Recommended to show functionality.  Options: deploy, anything else. | `string` | `"deploy"` |
 | sshPublicKey | OPTIONAL: ssh public key for instances | `string` | `""` |
 | sshPublicKeyPath | OPTIONAL: ssh public key path for instances | `string` | `"/mykey.pub"` |
