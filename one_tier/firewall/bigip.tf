@@ -1,27 +1,27 @@
-# Create a Public IP for the Virtual Machines
-resource azurerm_public_ip f5vmpip01 {
-  name                = "${var.prefix}-vm01-mgmt-pip01-delete-me"
-  location            = var.resourceGroup.location
-  resource_group_name = var.resourceGroup.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
+# # Create a Public IP for the Virtual Machines
+# resource azurerm_public_ip f5vmpip01 {
+#   name                = "${var.prefix}-vm01-mgmt-pip01-delete-me"
+#   location            = var.resourceGroup.location
+#   resource_group_name = var.resourceGroup.name
+#   allocation_method   = "Static"
+#   sku                 = "Standard"
 
-  tags = {
-    Name = "${var.prefix}-f5vm-public-ip-delete-me"
-  }
-}
+#   tags = {
+#     Name = "${var.prefix}-f5vm-public-ip-delete-me"
+#   }
+# }
 
-resource azurerm_public_ip f5vmpip02 {
-  name                = "${var.prefix}-vm02-mgmt-pip02-delete-me"
-  location            = var.resourceGroup.location
-  resource_group_name = var.resourceGroup.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
+# resource azurerm_public_ip f5vmpip02 {
+#   name                = "${var.prefix}-vm02-mgmt-pip02-delete-me"
+#   location            = var.resourceGroup.location
+#   resource_group_name = var.resourceGroup.name
+#   allocation_method   = "Static"
+#   sku                 = "Standard"
 
-  tags = {
-    Name = "${var.prefix}-f5vm-public-ip-delete-me"
-  }
-}
+#   tags = {
+#     Name = "${var.prefix}-f5vm-public-ip-delete-me"
+#   }
+# }
 
 # Create the first network interface card for Management
 resource azurerm_network_interface vm01-mgmt-nic {
@@ -34,7 +34,7 @@ resource azurerm_network_interface vm01-mgmt-nic {
     subnet_id                     = var.subnetMgmt.id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.f5_mgmt["f5vm01mgmt"]
-    public_ip_address_id          = azurerm_public_ip.f5vmpip01.id
+    #public_ip_address_id          = azurerm_public_ip.f5vmpip01.id
   }
 
   tags = var.tags
@@ -42,15 +42,17 @@ resource azurerm_network_interface vm01-mgmt-nic {
 
 # Associate the Network Interface to the ManagementPool
 resource azurerm_network_interface_backend_address_pool_association mpool_assc_vm01 {
-  network_interface_id    = azurerm_network_interface.vm01-mgmt-nic.id
-  ip_configuration_name   = "primary"
-  backend_address_pool_id = var.managementPool.id
+  network_interface_id  = azurerm_network_interface.vm01-mgmt-nic.id
+  ip_configuration_name = "primary"
+  #backend_address_pool_id = var.managementPool.id
+  backend_address_pool_id = var.primaryPool.id
 }
 # Associate the Network Interface to the ManagementPool
 resource azurerm_network_interface_backend_address_pool_association mpool_assc_vm02 {
-  network_interface_id    = azurerm_network_interface.vm02-mgmt-nic.id
-  ip_configuration_name   = "primary"
-  backend_address_pool_id = var.managementPool.id
+  network_interface_id  = azurerm_network_interface.vm02-mgmt-nic.id
+  ip_configuration_name = "primary"
+  #backend_address_pool_id = var.managementPool.id
+  backend_address_pool_id = var.primaryPool.id
 }
 
 resource azurerm_network_interface_security_group_association bigip01-mgmt-nsg {
@@ -68,7 +70,7 @@ resource azurerm_network_interface vm02-mgmt-nic {
     subnet_id                     = var.subnetMgmt.id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.f5_mgmt["f5vm02mgmt"]
-    public_ip_address_id          = azurerm_public_ip.f5vmpip02.id
+    #public_ip_address_id          = azurerm_public_ip.f5vmpip02.id
   }
 
   tags = var.tags
@@ -455,7 +457,7 @@ data template_file as3_json {
 # Run Startup Script
 resource azurerm_virtual_machine_extension f5vm01-run-startup-cmd {
   name                 = "${var.prefix}-f5vm01-run-startup-cmd"
-  depends_on           = [azurerm_virtual_machine.f5vm01]
+  depends_on           = [azurerm_virtual_machine.f5vm01, azurerm_network_interface_backend_address_pool_association.mpool_assc_vm01, azurerm_network_interface_backend_address_pool_association.mpool_assc_vm02]
   virtual_machine_id   = azurerm_virtual_machine.f5vm01.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
@@ -472,7 +474,7 @@ resource azurerm_virtual_machine_extension f5vm01-run-startup-cmd {
 
 resource azurerm_virtual_machine_extension f5vm02-run-startup-cmd {
   name                 = "${var.prefix}-f5vm02-run-startup-cmd"
-  depends_on           = [azurerm_virtual_machine.f5vm01, azurerm_virtual_machine.f5vm02]
+  depends_on           = [azurerm_virtual_machine.f5vm01, azurerm_virtual_machine.f5vm02, azurerm_network_interface_backend_address_pool_association.mpool_assc_vm01, azurerm_network_interface_backend_address_pool_association.mpool_assc_vm02]
   virtual_machine_id   = azurerm_virtual_machine.f5vm02.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"

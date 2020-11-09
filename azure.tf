@@ -166,7 +166,7 @@ resource azurerm_lb_outbound_rule egress_rule {
   loadbalancer_id          = azurerm_lb.lb.id
   protocol                 = "All"
   backend_address_pool_id  = azurerm_lb_backend_address_pool.primary_pool.id
-  allocated_outbound_ports = "16000"
+  allocated_outbound_ports = "9136"
   enable_tcp_reset         = true
   frontend_ip_configuration {
     name = "Public-LoadBalancerFrontEnd"
@@ -272,7 +272,7 @@ resource azurerm_lb_rule internal_all_rule {
   name                           = "internal-all-protocol-ilb-egress"
   resource_group_name            = azurerm_resource_group.main.name
   loadbalancer_id                = azurerm_lb.internalLoadBalancer[0].id
-  protocol                       = "all"
+  protocol                       = "All"
   frontend_port                  = 0
   backend_port                   = 0
   load_distribution              = "SourceIPProtocol"
@@ -289,7 +289,7 @@ resource azurerm_lb_rule waf_ext_all_rule {
   name                           = "waf-ext-all-protocol-ilb-egress"
   resource_group_name            = azurerm_resource_group.main.name
   loadbalancer_id                = azurerm_lb.internalLoadBalancer[0].id
-  protocol                       = "all"
+  protocol                       = "All"
   frontend_port                  = 0
   backend_port                   = 0
   load_distribution              = "SourceIPProtocol"
@@ -306,7 +306,7 @@ resource azurerm_lb_rule waf_ext_ingress_rule {
   name                           = "waf-ext-all-protocol-ilb-ingress"
   resource_group_name            = azurerm_resource_group.main.name
   loadbalancer_id                = azurerm_lb.internalLoadBalancer[0].id
-  protocol                       = "all"
+  protocol                       = "All"
   frontend_port                  = 0
   backend_port                   = 0
   load_distribution              = "SourceIPProtocol"

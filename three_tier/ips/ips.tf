@@ -6,18 +6,18 @@ resource random_id randomId {
   byte_length = 8
 }
 
-# Create a Public IP for the Virtual Machines
-resource azurerm_public_ip ipspip01 {
-  name                = "${var.prefix}-ips-mgmt-pip01-delete-me"
-  location            = var.resourceGroup.location
-  resource_group_name = var.resourceGroup.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
+# # Create a Public IP for the Virtual Machines
+# resource azurerm_public_ip ipspip01 {
+#   name                = "${var.prefix}-ips-mgmt-pip01-delete-me"
+#   location            = var.resourceGroup.location
+#   resource_group_name = var.resourceGroup.name
+#   allocation_method   = "Static"
+#   sku                 = "Standard"
 
-  tags = {
-    Name = "${var.prefix}-ips-public-ip"
-  }
-}
+#   tags = {
+#     Name = "${var.prefix}-ips-public-ip"
+#   }
+# }
 
 resource azurerm_storage_account ips_storageaccount {
   name                     = "diag${random_id.randomId.hex}"
@@ -43,10 +43,16 @@ resource azurerm_network_interface ips01-mgmt-nic {
     private_ip_address_allocation = "Static"
     private_ip_address            = var.ips01mgmt
     primary                       = true
-    public_ip_address_id          = azurerm_public_ip.ipspip01.id
+    #public_ip_address_id          = azurerm_public_ip.ipspip01.id
   }
 
   tags = var.tags
+}
+
+resource azurerm_network_interface_backend_address_pool_association mpool_assc_ips01 {
+  network_interface_id    = azurerm_network_interface.ips01-mgmt-nic.id
+  ip_configuration_name   = "primary"
+  backend_address_pool_id = var.primaryPool.id
 }
 
 resource azurerm_network_interface ips01-ext-nic {
@@ -162,6 +168,7 @@ resource azurerm_linux_virtual_machine ips01-vm {
   name                = "${var.prefix}-ips01-vm"
   location            = var.resourceGroup.location
   resource_group_name = var.resourceGroup.name
+  depends_on          = [azurerm_network_interface_backend_address_pool_association.mpool_assc_ips01]
 
   network_interface_ids = [azurerm_network_interface.ips01-mgmt-nic.id, azurerm_network_interface.ips01-ext-nic.id, azurerm_network_interface.ips01-int-nic.id]
   size                  = var.instanceType

@@ -151,6 +151,7 @@ module ips_three {
   securityGroup        = azurerm_network_security_group.main
   ipsIngressPool       = azurerm_lb_backend_address_pool.ips_backend_pool[0]
   ipsEgressPool        = azurerm_lb_backend_address_pool.waf_egress_pool[0]
+  primaryPool          = azurerm_lb_backend_address_pool.primary_pool
   instanceType         = var.instanceType
   ips01ext             = var.ips01ext
   ips01int             = var.ips01int
